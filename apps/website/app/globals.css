@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Background - warm off-white */
+    --background: 40 20% 98%;
+    /* Foreground - warm black */
+    --foreground: 24 10% 10%;
+    /* Muted backgrounds */
+    --muted: 40 20% 96%;
+    --muted-foreground: 24 6% 45%;
+    /* Accent colors */
+    --accent-green: 153 42% 18%;
+    --accent-gold: 43 87% 38%;
+    /* Borders */
+    --border: 30 10% 90%;
+    --input: 30 10% 90%;
+    --ring: 153 42% 18%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

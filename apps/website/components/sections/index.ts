@@ -1,0 +1,8 @@
+export { Hero } from './hero'
+export { BrandPositioning } from './brand-positioning'
+export { ProductShowcase } from './product-showcase'
+export { HiddenCollectionTeaser } from './hidden-collection-teaser'
+export { ServicesOverview } from './services-overview'
+export { BoutiquePreview } from './boutique-preview'
+export { TrustSignals } from './trust-signals'
+export { FinalCTA } from './final-cta'
