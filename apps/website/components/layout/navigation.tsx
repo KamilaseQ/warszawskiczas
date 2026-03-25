@@ -22,9 +22,10 @@ const navItems = [
 
 interface NavigationProps {
   className?: string
+  isTransparent?: boolean
 }
 
-export function Navigation({ className }: NavigationProps) {
+export function Navigation({ className, isTransparent = false }: NavigationProps) {
   const pathname = usePathname()
 
   return (
@@ -38,22 +39,22 @@ export function Navigation({ className }: NavigationProps) {
               <Link
                 href={item.href}
                 className={cn(
-                  'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors',
+                  'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-500 ease-in-out',
                   isActive
-                    ? 'text-accent-green'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
+                    : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 {item.label}
               </Link>
-              <div className="invisible absolute left-0 top-full min-w-[200px] pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+              <div className="invisible absolute left-0 top-full min-w-[200px] pt-2 opacity-0 transition-all duration-500 group-hover:visible group-hover:opacity-100">
                 <div className="rounded border border-border bg-background p-2 shadow-lg">
                   {item.children.map((child) => (
                     <Link
                       key={child.href}
                       href={child.href}
                       className={cn(
-                        'block rounded px-4 py-2 text-sm transition-colors',
+                        'block rounded px-4 py-2 text-sm transition-colors duration-500',
                         pathname === child.href
                           ? 'bg-muted text-accent-green'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -73,10 +74,10 @@ export function Navigation({ className }: NavigationProps) {
             key={item.href}
             href={item.href}
             className={cn(
-              'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors',
+              'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-500 ease-in-out',
               isActive
-                ? 'text-accent-green'
-                : 'text-muted-foreground hover:text-foreground'
+                ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
+                : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
             )}
           >
             {item.label}
