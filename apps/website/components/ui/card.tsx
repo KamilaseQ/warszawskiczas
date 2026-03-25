@@ -28,7 +28,6 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-md',
         variantClasses[variant],
         paddingClasses[padding],
         className

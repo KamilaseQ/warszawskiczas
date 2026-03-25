@@ -12,16 +12,16 @@ interface ProductCardProps {
 export function ProductCard({ product, className }: ProductCardProps) {
   const formattedPrice = product.price
     ? new Intl.NumberFormat('pl-PL', {
-        style: 'currency',
-        currency: 'PLN',
-        minimumFractionDigits: 0,
-      }).format(product.price)
+      style: 'currency',
+      currency: 'PLN',
+      minimumFractionDigits: 0,
+    }).format(product.price)
     : null
 
   return (
     <article
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-md border border-border bg-background transition-colors hover:border-accent-green/30',
+        'group relative flex flex-col overflow-hidden border border-border bg-background transition-colors hover:border-accent-green/30',
         className
       )}
     >
@@ -42,27 +42,30 @@ export function ProductCard({ product, className }: ProductCardProps) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <p className="text-sm font-serif italic tracking-widest text-accent-gold">
           {product.brand}
         </p>
-        <h3 className="mt-1 font-serif text-lg font-semibold text-foreground">
+        <h3 className="mt-2 font-sans text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-accent-green">
           {product.name}
         </h3>
         <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
           {product.description}
         </p>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm font-medium text-foreground">
+        <div className="mt-6 flex items-center justify-between">
+          <span className="text-sm font-semibold tracking-wider text-foreground">
             {formattedPrice || 'Cena na zapytanie'}
           </span>
           <Link
             href="/kontakt"
-            className="text-sm font-medium text-accent-green transition-colors hover:text-accent-green/80"
+            className="group/link flex items-center text-[10px] font-serif uppercase tracking-widest text-accent-green transition-colors hover:text-accent-gold"
           >
             Zapytaj
           </Link>
         </div>
       </div>
+
+      {/* Animated Vogue Accent Line on Hover */}
+      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-accent-green to-accent-gold transition-all duration-700 ease-out group-hover:w-full" />
     </article>
   )
 }

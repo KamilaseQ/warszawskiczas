@@ -7,14 +7,14 @@ import { FadeIn } from '@/components/ui/fade-in'
 export function Hero() {
   return (
     <section className="relative flex min-h-[90vh] w-full flex-col items-center justify-start overflow-hidden bg-background pt-20 lg:pt-28">
-      
+
       {/* Full Background Video Placeholder - Much Darker */}
       <div className="absolute inset-0 z-0 bg-black">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
           className="h-full w-full object-cover object-center opacity-60 transition-opacity duration-1000"
           poster="https://images.unsplash.com/photo-1542496658-e326770f1ce4?q=80&w=2000&auto=format&fit=crop"
         >
@@ -31,7 +31,7 @@ export function Hero() {
             Mokotowska 71 | Warszawa
           </span>
         </FadeIn>
-        
+
         <FadeIn delay={0.1} direction="up">
           <h1 className="font-serif text-5xl font-medium tracking-tight text-white sm:text-6xl md:text-7xl drop-shadow-xl text-balance">
             Luksusowe Zegarki
@@ -47,7 +47,7 @@ export function Hero() {
         <FadeIn delay={0.4} direction="up" className="mt-12 flex items-center justify-center gap-4 relative">
           {/* Invisible soft glow/shadow protecting CTA contrast */}
           <div className="absolute -inset-8 bg-black/40 blur-2xl z-0 rounded-full pointer-events-none" />
-          
+
           <Button asChild className="relative z-10 h-12 px-8 bg-foreground text-background shadow-lg hover:bg-white hover:text-black transition-all">
             <Link href="/produkty">Odkryj kolekcję</Link>
           </Button>

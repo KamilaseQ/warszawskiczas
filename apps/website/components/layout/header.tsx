@@ -21,11 +21,11 @@ export function Header() {
   }, [])
 
   return (
-    <header 
+    <header
       className={cn(
         "fixed top-0 z-50 w-full transition-all duration-500 ease-in-out border-b",
-        isScrolled 
-          ? "border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 text-foreground" 
+        isScrolled
+          ? "border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 text-foreground"
           : "border-transparent bg-transparent text-white"
       )}
     >
@@ -49,12 +49,12 @@ export function Header() {
             <Phone className="h-4 w-4 text-accent-gold transition-colors duration-500 ease-in-out" />
             +48 123 456 789
           </a>
-          <Button 
-            asChild 
+          <Button
+            asChild
             className={cn(
               "transition-all duration-500 ease-in-out border-transparent",
-              !isScrolled 
-                ? "bg-white text-black hover:text-accent-gold shadow-xl" 
+              !isScrolled
+                ? "bg-white text-black hover:text-accent-gold shadow-xl"
                 : "bg-accent-green text-white hover:bg-white hover:text-black hover:shadow-xl"
             )}
           >

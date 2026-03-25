@@ -40,14 +40,14 @@ export function ProductShowcase() {
           </Link>
         </FadeIn>
       </Container>
-      
+
       {/* Embla Carousel */}
       <FadeIn delay={0.2} direction="up" className="relative mx-auto max-w-[100vw] px-4 md:px-8">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
             {featuredProducts.map((product) => (
-              <div 
-                key={product.id} 
+              <div
+                key={product.id}
                 className="min-w-0 flex-[0_0_85%] pl-4 sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] py-4 transition-transform duration-500 ease-in-out"
               >
                 <ProductCard product={product} className="h-full" />
