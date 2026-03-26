@@ -39,7 +39,8 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
               <Link
                 href={item.href}
                 className={cn(
-                  'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-500 ease-in-out',
+                  'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
+                  isActive ? 'active' : '',
                   isActive
                     ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
                     : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
@@ -74,7 +75,8 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
             key={item.href}
             href={item.href}
             className={cn(
-              'inline-flex items-center px-4 py-2 text-sm font-medium transition-colors duration-500 ease-in-out',
+              'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
+              isActive ? 'active' : '',
               isActive
                 ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
                 : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'

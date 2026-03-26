@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const navItems = [
   { href: '/', label: 'Strona główna' },
@@ -25,11 +26,17 @@ interface MobileMenuProps {
 
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Close menu on route change
   useEffect(() => {
     onClose()
-  }, [pathname, onClose])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
   // Prevent scroll when menu is open
   useEffect(() => {
@@ -43,12 +50,14 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
     }
   }, [open])
 
-  return (
+  if (!mounted) return null
+
+  const menuContent = (
     <>
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 z-50 bg-foreground/20 backdrop-blur-sm transition-opacity lg:hidden',
+          'fixed inset-0 z-[200] bg-foreground/20 backdrop-blur-sm transition-opacity lg:hidden',
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         )}
         onClick={onClose}
@@ -58,7 +67,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       {/* Menu Panel */}
       <div
         className={cn(
-          'fixed inset-y-0 right-0 z-50 w-full max-w-sm transform bg-background shadow-xl transition-transform duration-300 ease-in-out lg:hidden',
+          'fixed inset-y-0 right-0 z-[201] w-full max-w-sm transform bg-background shadow-xl transition-transform duration-300 ease-in-out lg:hidden',
           open ? 'translate-x-0' : 'translate-x-full'
         )}
       >
@@ -113,4 +122,6 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       </div>
     </>
   )
+
+  return createPortal(menuContent, document.body)
 }
