@@ -69,7 +69,31 @@
     color: #0a0a0a;
   }
 
-  /* 2. Nav Link with Gold Underline */
+  /* 2. Premium White Button */
+  .btn-premium-white {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    border-radius: 0px;
+    padding: 1rem 2rem;
+    background-color: #f5f3ef;
+    color: #0a0a0a;
+    border: 1px solid #f5f3ef;
+    cursor: pointer;
+    transition: all 0.35s ease-out;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .btn-premium-white:hover {
+    background-color: transparent;
+    color: #c9a962;
+    border-color: #c9a962;
+  }
+
+  /* 3. Nav Link with Gold Underline */
   .nav-link {
     font-family: var(--font-playfair), 'Playfair Display', serif;
     font-size: 0.875rem;

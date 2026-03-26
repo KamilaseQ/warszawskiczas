@@ -11,14 +11,6 @@ export function Hero() {
 
       {/* Cinematic Background — grayscale + contrast filters */}
       <div className="absolute inset-0 z-0 bg-black">
-        {/* Fallback/Placeholder Image behind video */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
-          style={{
-            backgroundImage: "url('/Gemini_Generated_Image_xi4mwxxi4mwxxi4m.png')",
-            opacity: 0.6,
-          }}
-        />
         <video
           autoPlay
           muted
@@ -49,7 +41,7 @@ export function Hero() {
       {/* Content — z-index 20, sharp above overlay */}
       <div className="relative z-20 flex w-full max-w-4xl flex-col items-center px-6 text-center mt-0">
         <FadeIn direction="up" className="mb-4">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold">
+          <span className="text-[11px] font-bold uppercase tracking-[0.4em] text-accent-gold">
             Mokotowska 71 | Warszawa
           </span>
         </FadeIn>
@@ -70,7 +62,7 @@ export function Hero() {
           {/* Invisible soft glow protecting CTA contrast */}
           <div className="absolute -inset-8 bg-black/40 blur-2xl z-0 rounded-full pointer-events-none" />
 
-          <Link href="/produkty" className="btn-sharp relative z-10">
+          <Link href="/produkty" className="btn-premium-white relative z-10">
             Odkryj kolekcję
           </Link>
           <Link

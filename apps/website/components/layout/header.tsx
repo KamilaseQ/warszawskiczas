@@ -53,7 +53,7 @@ export function Header() {
 
           {/* Desktop CTA & Phone */}
           <div className="hidden lg:flex items-center gap-8">
-            <a href="tel:+48123456789" className={cn("group flex items-center gap-2 text-sm font-semibold tracking-wide transition-colors duration-500 ease-in-out", isSolid ? "text-foreground hover:text-accent-gold" : "text-white hover:text-white/80")}>
+            <a href="tel:+48123456789" className={cn("group flex items-center gap-2 text-sm font-semibold tracking-wide transition-colors duration-500 ease-in-out", isSolid ? "text-foreground hover:text-accent-gold" : "text-white hover:text-accent-gold")}>
               <Phone className="h-4 w-4 text-accent-gold transition-colors duration-500 ease-in-out" />
               +48 123 456 789
             </a>

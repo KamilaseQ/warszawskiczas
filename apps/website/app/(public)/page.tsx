@@ -13,8 +13,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <BrandPositioning />
       <ProductShowcase />
+      <BrandPositioning />
       <HiddenCollectionTeaser />
       <ServicesOverview />
       <BoutiquePreview />
