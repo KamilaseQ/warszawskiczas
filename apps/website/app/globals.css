@@ -46,6 +46,7 @@
 /* ===== LUXURY PREMIUM UI COMPONENTS ===== */
 
 @layer components {
+
   /* 1. Sharp CTA Button */
   .btn-sharp {
     font-family: 'Inter', sans-serif;
@@ -159,10 +160,13 @@
 
 /* 5. Scroll Indicator Animation */
 @keyframes scroll-bounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(-25%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
+
   50% {
     transform: none;
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
@@ -187,4 +191,55 @@
 
 .scroll-indicator-group:hover .scroll-indicator-icon {
   color: #c9a962;
+}
+
+/* ===== SHOWCASE CAROUSEL ===== */
+
+/* Side cards — muted (no scale here; scale on image only via JSX) */
+.showcase-card--side {
+  filter: saturate(0.65);
+  opacity: 0.85;
+  transition: filter 1s ease, opacity 1s ease;
+}
+
+/* Center card — emphasized */
+.showcase-card--active {
+  z-index: 2;
+  filter: saturate(1);
+  opacity: 1;
+  transition: filter 1s ease, opacity 1s ease;
+}
+
+/* Gentle float for center card image */
+@keyframes showcase-float {
+  0%, 100% { transform: scale(1.04) translateY(0); }
+  50% { transform: scale(1.04) translateY(-6px); }
+}
+
+/* Text content fade-in */
+@keyframes showcase-text-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.showcase-fade-in {
+  animation: showcase-text-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Progress bar fill */
+@keyframes showcase-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
 }

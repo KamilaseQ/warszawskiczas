@@ -53,8 +53,8 @@ export function Hero() {
         </FadeIn>
 
         <FadeIn delay={0.2} direction="up" className="mt-8">
-          <p className="max-w-2xl font-sans text-xs md:text-sm font-extralight tracking-[0.2em] uppercase text-white/90 text-balance leading-loose drop-shadow-sm">
-            Butik luksusowych zegarków i biżuterii. Profesjonalny serwis, skup oraz komis unikatowych egzemplarzy w sercu Warszawy.
+          <p className="max-w-xl font-sans text-xs md:text-sm font-extralight tracking-[0.22em] uppercase text-white/70 text-balance leading-loose drop-shadow-sm">
+            Mokotowska 71 &nbsp;·&nbsp; Kolekcja wyselekcjonowana z pasji &nbsp;·&nbsp; Warszawa
           </p>
         </FadeIn>
 
