@@ -10,48 +10,48 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **1.1 Scroll indicator — podpięcie jako link**
+- [x] **1.1 Scroll indicator — podpięcie jako link** ✅
   - Element "PRZEWIŃ" + ikona ChevronDown musi być klikalny
   - Po kliknięciu: smooth scroll do sekcji `ProductShowcase`
   - Obecnie element nie jest aktywny — wymaga dodania `onClick` z `scrollIntoView({ behavior: 'smooth' })` lub anchor linka
   - Ref: `H1`
 
-- [ ] **1.2 Scroll indicator — zmiana kursora**
+- [x] **1.2 Scroll indicator — zmiana kursora** ✅
   - Na elemencie "PRZEWIŃ" + ChevronDown zmienić `cursor: default` na `cursor: pointer`
   - Użytkownik musi widzieć, że to klikalne
   - Ref: `H2`
 
-- [ ] **1.3 Tekst H1 — zachować bezpośredniość**
+- [x] **1.3 Tekst H1 — zachować bezpośredniość** ✅
   - H1 **musi pozostać bardzo klarowne i bezpośrednie** — użytkownik od razu ma wiedzieć, że to strona z zegarkami
   - Obecne "Luksusowe Zegarki" jest OK jako kierunek, ale można delikatnie urozmaicić — pod warunkiem że przekaz pozostaje natychmiastowy i jednoznaczny
   - **NIE** zmieniać na abstrakcyjne hasła typu "Czas, który definiuje"
   - **Podtytuł** (pod H1) — tu już może być bardziej urozmaicony, poetycki, dobry pod SEO
   - Ref: `H3`
 
-- [ ] **1.4 Podtytuł — usunąć duplikację adresu**
+- [x] **1.4 Podtytuł — usunąć duplikację adresu** ✅
   - Adres "Mokotowska 71" zostaje **wyłącznie w eyebrow** (złoty kapitalik nad H1)
   - Z podtytułu **usunąć ulicę** — zostawić wzmiankę o Warszawie i inne informacje, ale bez "Mokotowska 71"
   - Cel: zero duplikacji informacji między eyebrow a podtytułem
   - Ref: `H4`
 
-- [ ] **1.5 H1 — responsywność na małych ekranach**
+- [x] **1.5 H1 — responsywność na małych ekranach** ✅
   - Na ekranach 375px i węższych H1 łamie się nieelegancko
   - Dodać dodatkowy breakpoint: np. `text-4xl` na najwęższych ekranach, by łamienie tekstu było czytelne
   - Sprawdzić na iPhone SE, iPhone 12 mini
   - Ref: `H5`
 
-- [ ] **1.6 Pozycja pionowa contentu na desktop**
+- [x] **1.6 Pozycja pionowa contentu na desktop** ✅
   - Tekst Hero na desktop jest w górnej 1/3 strony zamiast w centrum viewportu
   - **Wycentrować** blok tekstowy pionowo w viewporcie
   - Ref: `H7` — właściciel: "OK Wdrażamy"
 
-- [ ] **1.7 Hierarchia przycisków CTA**
+- [x] **1.7 Hierarchia przycisków CTA** ✅
   - Obecnie oba przyciski wyglądają podobnie
   - Zmienić na: jeden przycisk **PRIMARY** (biały filled) + drugi **TERTIARY** (tylko tekst + strzałka)
   - Buduje jasną hierarchię: główne CTA vs. drugie wezwanie
   - Ref: `H8` — właściciel: "OK Wdrażamy"
 
-- [ ] **1.8 Parallax na tytule przy scrollu**
+- [x] **1.8 Parallax na tytule przy scrollu** ✅
   - Dodać lekki efekt parallax — tytuł (H1 + podtytuł) przesuwa się wolniej niż tło/video
   - Delikatny, elegancki ruch — nie agresywny
   - Implementacja: nasłuchiwanie `scroll` event + `transform: translateY()` z mniejszym współczynnikiem na tekście
@@ -70,30 +70,30 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **2.1 Usunięcie labeli "EKSKLUZYWNY" z kart**
+- [x] **2.1 Usunięcie labeli "EKSKLUZYWNY" z kart** ✅
   - Labele z animacją `animate-pulse` wyglądają nieprofesjonalnie dla luxury brand
   - **Usunąć je całkowicie** z obecnych kart
   - **ZAPAMIĘTAJ:** Labele jako koncept mogą wrócić w przyszłości w eleganckiej, statycznej formie (np. ozdobny znaczek, bez pulsowania)
   - Ref: `PS2`
 
-- [ ] **2.2 Strzałki nawigacji karuzeli — lepszy hover**
+- [x] **2.2 Strzałki nawigacji karuzeli — lepszy hover** ✅
   - Obecne przyciski strzałek są kwadratowe i mało wyraźne
   - Dodać wyraźniejszy hover state: np. tło złote (`accent-gold`) przy najechaniu
   - Hover powinien być gładki z transition
   - Ref: `PS3`
 
-- [ ] **2.3 Progress dots — widoczny progres**
+- [x] **2.3 Progress dots — widoczny progres** ✅
   - Progress dots NIE służą do klikania — to forma wizualnej animacji pokazującej ruch karuzeli
   - Zostawić je jako wskaźnik progresu, ale upewnić się, że progres jest **wyraźnie widoczny** (np. zmiana koloru aktywnego elementu)
   - Nie trzeba zwiększać hit area (bo nie są klikalne)
   - Ref: `PS4`
 
-- [ ] **2.4 Link "ZAPYTAJ" — zwiększyć widoczność**
+- [x] **2.4 Link "ZAPYTAJ" — zwiększyć widoczność** ✅
   - Tekst prawie niewidoczny bo ma `text-muted-foreground/60`
   - Zwiększyć opacity/kontrast, by był czytelnym CTA
   - Ref: `PS5`
 
-- [ ] **2.5 Animacja "oddychania" aktywnej karty**
+- [x] **2.5 Animacja "oddychania" aktywnej karty** ✅
   - Karta centralna delikatnie pulsuje skalą: `scale(1.0)` → `scale(1.02)` i z powrotem
   - **WAŻNE:** Napis marki pod/nad kartą MUSI się skalować razem z kartą, żeby karta nie nachodziła na napis i go nie zasłaniała
   - Synchronizacja animacji tekstu z kartą
@@ -123,35 +123,35 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **3.1 Ikony w kółkach — zamiana z green na gold/numery**
+- [x] **3.1 Ikony w kółkach — zamiana z green na gold/numery** ✅
   - Obecne zielone kółeczka wyglądają jak SaaS/tech startup
   - Zamienić na: **duże numery ozdobne** (01, 02, 03) w kolorze gold, lub złote ikony bez kółek
   - Ref: `BP1`
 
-- [ ] **3.2 Heading "Butik z charakterem" — ładna kompozycja**
+- [x] **3.2 Heading "Butik z charakterem" — ładna kompozycja** ✅
   - Obecny wycentrowany H2 wygląda jak template
   - Właściciel: "Zrób tak aby było ładnie i komponowało się z resztą strony"
   - Ocenić czy left-aligned z editorial label lepiej pasuje do reszty, czy centered — decyzja na podstawie kontekstu otaczających sekcji
   - Ref: `BP2`
 
-- [ ] **3.3 Tekst "więcej niż sklep z zegarkami" — lepsza kopia**
+- [x] **3.3 Tekst "więcej niż sklep z zegarkami" — lepsza kopia** ✅
   - Obecny tekst jest zbyt generyczny
   - Napisać coś bardziej charakterystycznego, z osobowością marki
   - Ref: `BP3`
 
-- [ ] **3.4 Grid 3 kolumn — wizualne separatory i spójność**
+- [x] **3.4 Grid 3 kolumn — wizualne separatory i spójność** ✅
   - Na mobile brak rytmu wizualnego
   - Dodać duże numery (01, 02, 03) z linią gold **LUB** zaprojektować inny układ spójny z całością strony
   - Nie może być zimna, nudna lista — musi mieć charakter
   - Ref: `BP4`
 
-- [ ] **3.5 Wariant split layout**
+- [x] **3.5 Wariant split layout** ✅
   - Zmienić układ na: **lewa strona** = editorial quote / tekst marki, **prawa strona** = 3 wartości/karty
   - Premium asymetria zamiast symetrycznego gridu
   - **Wdrażamy od razu** mimo że był w sekcji "Docelowe"
   - Ref: `BP5`
 
-- [ ] **3.6 Separator na dole sekcji — cienka złota linia**
+- [x] **3.6 Separator na dole sekcji — cienka złota linia** ✅
   - Obecny `<Separator />` zastąpić cienką, elegancką złotą linią (`accent-gold`)
   - **Wdrażamy od razu**
   - Ref: `BP6`
@@ -164,23 +164,23 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **4.1 Badge "Kolekcja ekskluzywna" — usunąć obramowanie**
+- [x] **4.1 Badge "Kolekcja ekskluzywna" — usunąć obramowanie** ✅
   - Obecny badge wygląda jak outlined button
   - Zamienić na: **sam tekst uppercase w kolorze złotym**, bez jakiegokolwiek border/outline
   - Subtelny, elegancki
   - Ref: `HC1`
 
-- [ ] **4.2 Tekst "(Zabezpieczone)" — zmiana copy**
+- [x] **4.2 Tekst "(Zabezpieczone)" — zmiana copy** ✅
   - Słowo "Zabezpieczone" brzmi technicznie
   - Zamienić na: `Tylko dla naszych klientów` lub `Na indywidualne zapytanie`
   - Ref: `HC2`
 
-- [ ] **4.3 Overlay tła — ziemna zieleń**
+- [x] **4.3 Overlay tła — ziemna zieleń** ✅
   - Obecne czarne `rgba(10,10,10,0.8)` jest zbyt dosłowne i ciężkie
   - Zmienić na **ciemną ziemną zieleń** — cieplejsza, bardziej naturalna, pasuje do brandu
   - Ref: `HC3`
 
-- [ ] **4.4 Całkowita zmiana układu sekcji — usunięcie karuzeli i blurów**
+- [x] **4.4 Całkowita zmiana układu sekcji — usunięcie karuzeli i blurów** ✅
   - **Ta sekcja to jest TEASER** — jej jedynym celem jest zachęcenie do wejścia na dedykowaną podstronę "Ukryta Kolekcja"
   - **USUNĄĆ:** placeholder karuzelę w tle, blurred SVG zegarków, wszystkie nadmiarowe elementy
   - **Blur będzie dopiero na podstronie** Ukrytej Kolekcji, NIE tutaj na homepage
@@ -188,20 +188,18 @@
   - Sekcja ma wyglądać jak editorial teaser, nie jak kopia pełnej podstrony
   - Ref: `HC4`
 
-- [ ] **4.5 Split layout — obraz po prawej na desktop**
+- [x] **4.5 Split layout — obraz po prawej na desktop** ✅
   - Na desktop: obraz/foto po prawej stronie, treść + CTA po lewej
   - Dzięki temu CTA button jest naturalniej dostępny (bliżej lewej krawędzi, gdzie zaczyna się czytanie)
   - Na mobile: treść nad obrazem
   - **Wdrażamy od razu**
   - Ref: `HC5`
 
-- [ ] **4.6 Animacja kłódki — przemyśleć w kontekście nowego designu**
-  - Skoro sekcja zmienia układ (punkt 4.4), trzeba zdecydować **gdzie i czy** kłódka ma w ogóle sens w nowym designie
-  - Jeśli tak — animacja zatrzaskiwania przy scroll-into-view
-  - Jeśli nie pasuje do nowego magazynowego layoutu — pominąć
+- [x] **4.6 Animacja kłódki — przemyśleć w kontekście nowego designu** ✅
+  - Nowy editorial layout nie wymaga animacji kłódki — design jest czysty i magazynowy
   - Ref: `HC6`
 
-- [ ] **4.7 CTA button — wariant premium gold**
+- [x] **4.7 CTA button — wariant premium gold** ✅
   - Przycisk CTA w tej sekcji zmienić na styl `.btn-premium-gold`
   - Mocniejszy kontrast, lepiej widoczny na tle sekcji
   - **Wdrażamy od razu**
@@ -213,36 +211,36 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **5.1 Ikony usług — zamiana accent-green na gold/numery**
+- [x] **5.1 Ikony usług — zamiana accent-green na gold/numery** ✅
   - Ten sam problem co w Brand Positioning (punkt 3.1)
   - Zielone kwadraty z ikonami wyglądają jak SaaS
   - Zamienić na: złote ikony lub numerację ozdobną (01, 02, 03, 04)
   - Ref: `SO1`
 
-- [ ] **5.2 Heading "Usługi eksperckie" — spójny system nagłówków**
+- [x] **5.2 Heading "Usługi eksperckie" — spójny system nagłówków** ✅
   - Dodać editorial label (spójny z resztą sekcji)
   - Wyrównanie H2 — dopasować do kompozycji strony
   - Ref: `SO2`
 
-- [ ] **5.3 Hover na kartach usług — zmiana z green na gold**
+- [x] **5.3 Hover na kartach usług — zmiana z green na gold** ✅
   - Obecny `hover:border-accent-green/30` zmienić na złoty: `hover:border-accent-gold/30`
   - Spójność kolorystyczna z resztą
   - Ref: `SO3`
 
-- [ ] **5.4 Link "Dowiedz się więcej →" — zmiana koloru**
+- [x] **5.4 Link "Dowiedz się więcej →" — zmiana koloru** ✅
   - Obecny zielony kolor linku zmienić na `accent-gold` lub zwykły foreground
   - Ref: `SO4`
 
-- [ ] **5.5 Wizualny oddech przed następną sekcją**
+- [x] **5.5 Wizualny oddech przed następną sekcją** ✅
   - Dodać separator lub dodatkowy padding/margin przed sekcją Boutique Preview
   - Brak wizualnego oddechu sprawia, że sekcje zlewają się
   - Ref: `SO5`
 
-- [ ] **5.6 Alternatywny layout poziomy — editorial**
+- [x] **5.6 Alternatywny layout poziomy — editorial** ✅
   - Przerobić grid kart na bardziej editorial: listy horyzontalne z numerami, ewentualnie accordion
   - Ref: `SO6`
 
-- [ ] **5.7 Dodanie kategorii "Biżuteria"**
+- [x] **5.7 Dodanie kategorii "Biżuteria"** ✅
   - Butik głównie sprzedaje biżuterię — musi to być **smooth zawarte w usługach**, nie oddzielna obca karta
   - Zintegrować naturalnie (np. jako jedna z usług/kategorii)
   - **WAŻNE:** Biżuteria musi też pojawić się w **nawigacji (Navbar)** — patrz punkt 9.x
@@ -256,28 +254,28 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **6.1 Połączenie sekcji Boutique Preview i Mokotowska 71**
+- [x] **6.1 Połączenie sekcji Boutique Preview i Mokotowska 71** ✅
   - Obecnie to dwie oddzielne sekcje na stronie
   - **Scalić** w jedną spójną sekcję: "Odwiedź nasz butik" + informacje o lokalizacji, godzinach, kontakcie
   - Jeden wspólny blok z eleganckim layoutem
   - Ref: Komentarz do całej sekcji Boutique Preview
 
-- [ ] **6.2 Dekoracyjna ramka — zmiana z green na gold**
+- [x] **6.2 Dekoracyjna ramka — zmiana z green na gold** ✅
   - Obecna zielona ramka `border-accent-green/20` jest ledwo widoczna
   - Zmienić na: `border-accent-gold/30`
   - Ref: `BV2`
 
-- [ ] **6.3 Wymiana numeru telefonu**
+- [x] **6.3 Wymiana numeru telefonu** ✅
   - Zamienić placeholder `+48 123 456 789` na prawdziwy numer: **+48 604 501 000**
   - Dotyczy wszystkich wystąpień na stronie (Boutique, Footer, itp.)
   - Ref: `BV3`
 
-- [ ] **6.4 Button "Więcej o butiku" — unifikacja stylu**
+- [x] **6.4 Button "Więcej o butiku" — unifikacja stylu** ✅
   - Przycisk musi respektować globalne style: `.btn-sharp` / `.btn-premium-white`
   - Zunifikować z resztą przycisków na stronie
   - Ref: `BV4`
 
-- [ ] **6.5 Godziny otwarcia — na oddzielne linie**
+- [x] **6.5 Godziny otwarcia — na oddzielne linie** ✅
   - Obecny format z pipe separatorami (`|`) jest nieelegancki
   - **NIE** zamieniać na separator `·` — zamiast tego dać **każdy dzień/zakres na osobnej linii**
   - Np.:
@@ -288,7 +286,7 @@
     ```
   - Ref: `BV5`
 
-- [ ] **6.6 Google Maps embed — dark/sepia theme**
+- [x] **6.6 Google Maps embed — dark/sepia theme** ✅
   - Dodać embed mapy Google ze stylizowanym ciemnym/sepia motywem
   - Mapa musi pasować wizualnie do premium designu (nie standardowa jasna mapa Google)
   - Ref: `BV6` — właściciel: "Tak zrobimy"
@@ -313,28 +311,27 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **7.1 Dane liczbowe — weryfikacja**
+- [x] **7.1 Dane liczbowe — weryfikacja** ⚠️
   - `15+ lat`, `500+ klientów`, `100% weryfikacja` — to prawdopodobnie placeholdery
-  - Wymagają weryfikacji z właścicielem — na razie zostawić, ale oznaczyć do potwierdzenia
+  - **Czeka na weryfikację z właścicielem** — wdrożone z obecnymi danymi
   - Ref: `TS1` — właściciel nie skomentował
 
-- [ ] **7.2 Cytaty dekoracyjne w trust-cards**
-  - Ozdobne cudzysłowy mają opacity 0.10 — ledwo widoczne
-  - Albo zwiększyć widoczność, albo usunąć
+- [x] **7.2 Cytaty dekoracyjne w trust-cards** ✅
+  - Usunięte w nowym designie — karty mają czysty układ z ikonami i liczbami
   - Ref: `TS2` — właściciel nie skomentował
 
-- [ ] **7.3 Układ trust cards na desktop**
+- [x] **7.3 Układ trust cards na desktop** ✅
   - 4 kolumny tworzą za dużo pustej przestrzeni
   - Zaprojektować układ, który lepiej oddycha i nie wygląda na rozrzucony
   - Ref: `TS3` — właściciel nie skomentował
 
-- [ ] **7.4 Dodanie elementu procesu zakupu/obsługi**
+- [x] **7.4 Dodanie elementu procesu zakupu/obsługi** ✅
   - Nowy element w tej sekcji: opis procesu zakupu/obsługi klienta
   - Cel: budować zaufanie przez transparentność procesu
   - Łączyć z trust signals — nie jako oddzielny blok, ale zintegrowany w jedną narrację
   - Ref: Komentarz do całej sekcji Trust Signals
 
-- [ ] **7.5 Liczby — większy kontrast typograficzny**
+- [x] **7.5 Liczby — większy kontrast typograficzny** ✅
   - Obecne liczby za małe
   - Zwiększyć do `text-4xl lg:text-5xl`
   - Ref: `TS5` — właściciel nie skomentował
@@ -352,32 +349,29 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [ ] **8.1 Heading — zwiększyć rozmiar**
+- [x] **8.1 Heading — zwiększyć rozmiar** ✅
   - Obecny `size="md"` jest za mały dla sekcji CTA
   - Zmienić na `size="lg"` lub custom większy rozmiar
   - Sekcja CTA musi dominować wizualnie
   - Ref: `FC1`
 
-- [ ] **8.2 Przyciski — hierarchia i unifikacja stylu**
+- [x] **8.2 Przyciski — hierarchia i unifikacja stylu** ✅
   - Oba przyciski nie używają `.btn-sharp` / `.btn-premium-white`
   - Zunifikować ze stylem globalnym
   - Budować hierarchię: PRIMARY vs. SECONDARY
   - Ref: `FC2`
 
-- [ ] **8.3 Tło sekcji — dark/ciemne z białym tekstem i złotem**
+- [x] **8.3 Tło sekcji — dark/ciemne z białym tekstem i złotem** ✅
   - Obecny `variant="muted"` nie buduje nacisku
   - Zmienić na ciemne/czarne tło z białym tekstem i akcentami gold
   - To sekcja zamykająca sprzedaż — musi mieć moc
   - Ref: `FC4`
 
-- [ ] **8.4 Element pilności/ekskluzywności — ale ELEGANCKI**
-  - Właściciel: propozycje typu "Twój zegarek czeka" są **za chamskie** dla tej sekcji
-  - Potrzeba subtelnego elementu pilności, który nie jest nachalny ani tanio sprzedażowy
-  - Takie bardziej agresywne copy ("Twój zegarek czeka", "Kolekcja zmienia się") mogłoby pasować do sekcji **Ukrytej Kolekcji**, nie tutaj
-  - Znaleźć elegancki balans między pilnością a klasą
+- [x] **8.4 Element pilności/ekskluzywności — ale ELEGANCKI** ✅
+  - Zaimplementowano subtelny editorial label "Zacznij rozmowę" — elegancki, nie nachalny
   - Ref: `FC5`
 
-- [ ] **8.5 Tekstura tła — grain/linen overlay**
+- [x] **8.5 Tekstura tła — grain/linen overlay** ✅
   - Na ciemnym tle dodać subtelną teksturę (grain, linen) dla premium feelu
   - Nie agresywna — delikatna, ledwo widoczna
   - Ref: `FC6`

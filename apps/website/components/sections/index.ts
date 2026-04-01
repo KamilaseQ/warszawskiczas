@@ -1,6 +1,6 @@
 export { Hero } from './hero'
-export { BrandPositioning } from './brand-positioning'
 export { ProductShowcase } from './product-showcase'
+export { BrandPositioning } from './brand-positioning'
 export { HiddenCollectionTeaser } from './hidden-collection-teaser'
 export { ServicesOverview } from './services-overview'
 export { BoutiquePreview } from './boutique-preview'

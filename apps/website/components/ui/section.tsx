@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'react'
 interface SectionProps extends HTMLAttributes<HTMLElement> {
   variant?: 'default' | 'muted' | 'dark'
   spacing?: 'sm' | 'md' | 'lg' | 'xl'
+  id?: string
 }
 
 const spacingClasses = {

@@ -26,6 +26,7 @@ const config: Config = {
       fontFamily: {
         serif: ['var(--font-playfair)'],
         sans: ['var(--font-inter)'],
+        display: ['var(--font-cormorant)'],
       },
       spacing: {
         '18': '4.5rem',

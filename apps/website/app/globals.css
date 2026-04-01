@@ -13,7 +13,7 @@
     --muted-foreground: 24 6% 45%;
     /* Accent colors */
     --accent-green: 153 42% 18%;
-    --accent-gold: 46 65% 52%;
+    --accent-gold: 42 50% 45%;
     /* Borders */
     --border: 30 10% 90%;
     --input: 30 10% 90%;
@@ -216,6 +216,16 @@
   50% { transform: scale(1.04) translateY(-6px); }
 }
 
+/* 2.5 Breathing animation — active card subtle scale pulse */
+@keyframes showcase-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.018); }
+}
+
+.showcase-card--active {
+  animation: showcase-breathe 4s ease-in-out infinite;
+}
+
 /* Text content fade-in */
 @keyframes showcase-text-in {
   from {
@@ -243,3 +253,106 @@
     transform: scaleX(1);
   }
 }
+
+/* ===== GOLD SHIMMER EFFECT (15.4) ===== */
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    hsl(42 50% 45%) 0%,
+    hsl(42 70% 65%) 40%,
+    hsl(42 50% 45%) 60%,
+    hsl(42 50% 45%) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gold-shimmer 2.5s linear infinite;
+}
+
+.btn-sharp:hover,
+.btn-premium-white:hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sharp::before,
+.btn-premium-white::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transition: none;
+}
+
+.btn-sharp:hover::before,
+.btn-premium-white:hover::before {
+  animation: shimmer-slide 0.5s ease-out forwards;
+}
+
+@keyframes shimmer-slide {
+  to { left: 150%; }
+}
+
+/* ===== GRAIN TEXTURE UTILITY (12.5) ===== */
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* ===== 9.5 PREMIUM DROPDOWN (glassmorphism) ===== */
+.dropdown-premium {
+  background: rgba(250, 249, 247, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 169, 98, 0.15);
+  box-shadow:
+    0 20px 60px -12px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(201, 169, 98, 0.08);
+}
+
+/* ===== 13.3 MOBILE SCROLL INDICATOR ===== */
+@media (max-width: 640px) {
+  .scroll-indicator-label {
+    font-size: 7px;
+    letter-spacing: 0.5em;
+  }
+  .scroll-indicator-bounce {
+    height: 12px;
+    width: 12px;
+  }
+}
+
+/* ===== 13.1 HERO MOBILE SPACING ===== */
+@media (max-width: 640px) {
+  .hero-mobile-breathe {
+    padding-bottom: 2rem;
+  }
+  .hero-mobile-breathe .btn-premium-white,
+  .hero-mobile-breathe .btn-sharp {
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+/* ===== HOVER ELEVATION na kartach (15.2) ===== */
+.trust-card {
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trust-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 169, 98, 0.4);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}

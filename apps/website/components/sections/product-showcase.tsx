@@ -16,7 +16,7 @@ export function ProductShowcase() {
     align: 'center',
     loop: true,
     skipSnaps: false,
-    duration: 65, // smooth, fluid slide
+    duration: 65,
   })
 
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -39,7 +39,6 @@ export function ProductShowcase() {
     onSelect()
   }, [emblaApi, onSelect])
 
-  // Auto-play
   useEffect(() => {
     if (!emblaApi || isPaused) return
     autoplayRef.current = setInterval(() => emblaApi.scrollNext(), AUTO_INTERVAL)
@@ -52,7 +51,7 @@ export function ProductShowcase() {
       : 'Cena na zapytanie'
 
   return (
-    <Section spacing="lg" className="overflow-hidden">
+    <Section id="product-showcase" spacing="lg" className="overflow-hidden">
       <Container>
         {/* Editorial Header */}
         <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
@@ -75,7 +74,7 @@ export function ProductShowcase() {
         </FadeIn>
       </Container>
 
-      {/* Embla Carousel — cards physically slide */}
+      {/* Embla Carousel */}
       <FadeIn delay={0.15} direction="up">
         <div className="relative mx-auto max-w-[1400px] overflow-hidden">
           <div ref={emblaRef}>
@@ -86,7 +85,7 @@ export function ProductShowcase() {
                 return (
                   <div
                     key={product.id}
-                    className="relative min-w-0 flex-[0_0_80%] sm:flex-[0_0_45%] lg:flex-[0_0_33.333%]"
+                    className="relative min-w-0 flex-[0_0_75%] sm:flex-[0_0_45%] lg:flex-[0_0_33.333%]"
                     style={{ paddingLeft: 'clamp(0.5rem, 1.2vw, 1.25rem)', paddingRight: 'clamp(0.5rem, 1.2vw, 1.25rem)' }}
                   >
                     <div
@@ -115,8 +114,9 @@ export function ProductShowcase() {
                           </span>
                         </div>
 
-                        {/* Image area — outer clip prevents scale from overflowing into brand text */}
-                        <div className="relative overflow-hidden bg-muted aspect-[3/4]">
+                        {/* Image area */}
+                        {/* 13.2 Mniejsza wysokość karty na mobile */}
+                        <div className="relative overflow-hidden bg-muted aspect-[4/5] sm:aspect-[3/4]">
                           <div className={cn(
                             'absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.02]',
                             isActive ? 'scale-[1.04] animate-[showcase-float_6s_ease-in-out_infinite]' : 'scale-100'
@@ -147,14 +147,7 @@ export function ProductShowcase() {
                               </svg>
                             </div>
 
-                            {/* Badge */}
-                            {isActive && (product.isNew || product.isExclusive) && (
-                              <div className="absolute top-4 left-4">
-                                <span className="text-[8px] font-bold uppercase tracking-[0.45em] text-accent-gold animate-pulse">
-                                  {product.isExclusive ? 'Ekskluzywny' : 'Nowość'}
-                                </span>
-                              </div>
-                            )}
+                            {/* 2.1 USUNIĘTE labele animate-pulse — BRAK */}
 
                             <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/[0.03] transition-colors duration-500" />
                           </div>
@@ -183,9 +176,10 @@ export function ProductShowcase() {
                                 )}>
                                   {formatPrice(product.price)}
                                 </span>
+                                {/* 2.4 ZAPYTAJ — pełna widoczność */}
                                 <Link
                                   href="/kontakt"
-                                  className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-muted-foreground/60 hover:text-accent-gold transition-colors duration-300 border-b border-transparent hover:border-accent-gold pb-px"
+                                  className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/80 hover:text-accent-gold transition-colors duration-300 border-b border-foreground/30 hover:border-accent-gold pb-px"
                                 >
                                   Zapytaj
                                 </Link>
@@ -207,41 +201,42 @@ export function ProductShowcase() {
 
           {/* Navigation */}
           <div className="flex items-center justify-between mt-12 px-4 sm:px-8 lg:px-12">
+            {/* 2.3 Progress dots — wyraźny progres */}
             <div className="flex items-center gap-2">
               {scrollSnaps.map((_, i) => (
-                <button
+                <div
                   key={i}
-                  onClick={() => emblaApi?.scrollTo(i)}
                   className={cn(
                     'relative h-0.5 overflow-hidden transition-all duration-500',
-                    i === selectedIndex ? 'w-10 bg-border' : 'w-4 bg-border'
+                    i === selectedIndex ? 'w-10 bg-border' : 'w-4 bg-border/40'
                   )}
-                  aria-label={`Zegarek ${i + 1}`}
+                  aria-hidden="true"
                 >
                   {i === selectedIndex && (
                     <div
-                      className="absolute inset-0 bg-foreground"
+                      className="absolute inset-0 bg-accent-gold"
                       style={{
                         transformOrigin: 'left',
                         animation: isPaused ? 'none' : `showcase-progress ${AUTO_INTERVAL}ms linear both`,
                       }}
                     />
                   )}
-                </button>
+                </div>
               ))}
             </div>
 
+            {/* 2.2 Strzałki — hover gold */}
             <div className="flex items-center gap-3">
               <button
                 onClick={scrollPrev}
-                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-foreground transition-all duration-300"
+                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-accent-gold hover:text-accent-gold transition-all duration-300"
                 aria-label="Poprzedni"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={scrollNext}
-                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-foreground transition-all duration-300"
+                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-accent-gold hover:text-accent-gold transition-all duration-300"
                 aria-label="Następny"
               >
                 <ArrowRight className="h-4 w-4" />

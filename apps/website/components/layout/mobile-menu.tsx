@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { X, ChevronRight } from 'lucide-react'
+import { X, ChevronRight, Phone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom'
 const navItems = [
   { href: '/', label: 'Strona główna' },
   { href: '/produkty', label: 'Produkty' },
-  { href: '/kolekcja-na-zapytanie', label: 'Kolekcja na zapytanie' },
+  { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
   { href: '/uslugi', label: 'Usługi', isHeader: true },
   { href: '/uslugi/naprawa-i-serwis', label: 'Naprawa i serwis', indent: true },
   { href: '/uslugi/skup', label: 'Skup', indent: true },
@@ -96,7 +96,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                   item.indent && 'ml-4',
                   item.isHeader && 'mt-4 font-medium',
                   isActive
-                    ? 'bg-muted text-accent-green'
+                    ? 'bg-muted text-accent-gold'
                     : 'text-foreground hover:bg-muted'
                 )}
                 onClick={onClose}
@@ -110,10 +110,17 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-border p-6">
+        <div className="absolute bottom-0 left-0 right-0 border-t border-border p-6 space-y-3">
+          <a
+            href="tel:+48604501000"
+            className="flex w-full items-center justify-center gap-2 border border-accent-gold/30 px-6 py-3 text-sm font-medium text-accent-gold transition-colors hover:bg-accent-gold/10"
+          >
+            <Phone className="h-4 w-4" />
+            +48 604 501 000
+          </a>
           <Link
             href="/butik"
-            className="flex w-full items-center justify-center rounded bg-accent-green px-6 py-3 text-base font-medium text-white transition-colors hover:bg-accent-green/90"
+            className="btn-sharp flex w-full items-center justify-center"
             onClick={onClose}
           >
             Odwiedź butik

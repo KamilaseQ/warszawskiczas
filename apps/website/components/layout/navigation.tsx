@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/produkty', label: 'Produkty' },
-  { href: '/kolekcja-na-zapytanie', label: 'Kolekcja na zapytanie' },
+  { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
   {
     href: '/uslugi',
     label: 'Usługi',
@@ -42,14 +42,15 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
                   'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
                   isActive ? 'active' : '',
                   isActive
-                    ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
+                    ? 'text-accent-gold'
                     : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 {item.label}
               </Link>
               <div className="invisible absolute left-0 top-full min-w-[200px] pt-2 opacity-0 transition-all duration-500 group-hover:visible group-hover:opacity-100">
-                <div className="rounded border border-border bg-background p-2 shadow-lg">
+                {/* 9.5 Premium glassmorphism dropdown */}
+                <div className="dropdown-premium rounded p-2">
                   {item.children.map((child) => (
                     <Link
                       key={child.href}
@@ -57,7 +58,7 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
                       className={cn(
                         'block rounded px-4 py-2 text-sm transition-colors duration-500',
                         pathname === child.href
-                          ? 'bg-muted text-accent-green'
+                          ? 'bg-muted text-accent-gold'
                           : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                       )}
                     >
@@ -78,7 +79,7 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
               'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
               isActive ? 'active' : '',
               isActive
-                ? (isTransparent ? 'text-accent-gold' : 'text-accent-green')
+                ? 'text-accent-gold'
                 : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
             )}
           >

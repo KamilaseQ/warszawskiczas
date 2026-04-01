@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -12,6 +12,14 @@ const inter = Inter({
   subsets: ['latin', 'latin-ext'],
   variable: '--font-inter',
   display: 'swap',
+})
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-cormorant',
+  display: 'swap',
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
 })
 
 export const metadata: Metadata = {
@@ -39,7 +47,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1B4332',
+  themeColor: '#faf9f7',
   width: 'device-width',
   initialScale: 1,
 }
@@ -50,8 +58,39 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pl" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="font-sans">{children}</body>
+    <html lang="pl" className={`${playfair.variable} ${inter.variable} ${cormorant.variable}`}>
+      <body className="font-sans">
+        {children}
+        {/* 16.3 Schema.org LocalBusiness */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'LocalBusiness',
+              name: 'Warszawski Czas',
+              description: 'Butik zegarków premium w sercu Warszawy. Ekskluzywna kolekcja zegarków, profesjonalny serwis zegarmistrzowski, skup i komis.',
+              url: 'https://warszawskiczas.pl',
+              telephone: '+48604501000',
+              email: 'biuro@warszawskiczas.pl',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'ul. Mokotowska 71',
+                addressLocality: 'Warszawa',
+                postalCode: '00-530',
+                addressCountry: 'PL',
+              },
+              openingHoursSpecification: [
+                { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '10:00', closes: '18:00' },
+                { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday'], opens: '10:00', closes: '15:00' },
+              ],
+              priceRange: '$$$$',
+              currenciesAccepted: 'PLN',
+              paymentAccepted: 'Cash, Credit Card',
+            })
+          }}
+        />
+      </body>
     </html>
   )
 }
