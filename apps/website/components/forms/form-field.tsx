@@ -26,7 +26,7 @@ export function FormField(props: FormFieldProps) {
 
   const inputClasses = cn(
     'w-full rounded border border-border bg-background px-4 py-3 text-foreground placeholder:text-muted-foreground transition-colors',
-    'focus:border-accent-green focus:outline-none focus:ring-1 focus:ring-accent-green',
+    'focus:border-accent-gold focus:outline-none focus:ring-1 focus:ring-accent-gold',
     error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
     className
   )

@@ -97,8 +97,8 @@ export default function KolekcjaNaZapytaniePage() {
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {reasons.map((reason, index) => (
               <Card key={index} variant="outlined" padding="lg">
-                <div className="flex h-12 w-12 items-center justify-center rounded bg-accent-green/10">
-                  <reason.icon className="h-6 w-6 text-accent-green" />
+                <div className="flex h-12 w-12 items-center justify-center rounded bg-accent-gold/10">
+                  <reason.icon className="h-6 w-6 text-accent-gold" />
                 </div>
                 <h3 className="mt-6 font-serif text-xl font-semibold">
                   {reason.title}

@@ -125,7 +125,7 @@ export default function NaprawaISerwisPage() {
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {process.map((item, index) => (
               <div key={index} className="flex gap-4">
-                <span className="font-serif text-3xl font-bold text-accent-green/20">
+                <span className="font-serif text-3xl font-bold text-accent-gold/20">
                   {item.step}
                 </span>
                 <div>

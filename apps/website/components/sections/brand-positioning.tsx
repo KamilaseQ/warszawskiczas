@@ -40,7 +40,7 @@ export function BrandPositioning() {
           <FadeIn direction="right">
             <div className="lg:sticky lg:top-32">
               <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-6">
-                II &nbsp;——&nbsp; O nas
+                III &nbsp;——&nbsp; O nas
               </p>
               <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground text-balance leading-snug">
                 Więcej niż kolekcja zegarków.<br />

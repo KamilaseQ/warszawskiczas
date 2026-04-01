@@ -81,8 +81,8 @@ export default function SkupPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-green/10">
-                  <benefit.icon className="h-6 w-6 text-accent-green" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-gold/10">
+                  <benefit.icon className="h-6 w-6 text-accent-gold" />
                 </div>
                 <h3 className="mt-6 font-serif text-lg font-semibold">
                   {benefit.title}
@@ -107,7 +107,7 @@ export default function SkupPage() {
               <ul className="mt-8 space-y-4">
                 {whatWeBuy.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-green" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-gold" />
                     <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
@@ -140,7 +140,7 @@ export default function SkupPage() {
           </Heading>
           <div className="mx-auto mt-12 grid max-w-3xl gap-8 md:grid-cols-3">
             <div className="text-center">
-              <span className="font-serif text-4xl font-bold text-accent-green/30">
+              <span className="font-serif text-4xl font-bold text-accent-gold/30">
                 01
               </span>
               <h3 className="mt-4 font-semibold">Kontakt</h3>
@@ -149,7 +149,7 @@ export default function SkupPage() {
               </p>
             </div>
             <div className="text-center">
-              <span className="font-serif text-4xl font-bold text-accent-green/30">
+              <span className="font-serif text-4xl font-bold text-accent-gold/30">
                 02
               </span>
               <h3 className="mt-4 font-semibold">Spotkanie</h3>
@@ -158,7 +158,7 @@ export default function SkupPage() {
               </p>
             </div>
             <div className="text-center">
-              <span className="font-serif text-4xl font-bold text-accent-green/30">
+              <span className="font-serif text-4xl font-bold text-accent-gold/30">
                 03
               </span>
               <h3 className="mt-4 font-semibold">Płatność</h3>

@@ -14,7 +14,7 @@ export function BoutiquePreview() {
           <FadeIn direction="right">
             <div>
               <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-6">
-                V &nbsp;——&nbsp; Butik
+                VI &nbsp;——&nbsp; Butik
               </p>
               <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground text-balance">
                 Odwiedź nas<br />

@@ -16,7 +16,7 @@ const spacingClasses = {
 
 const variantClasses = {
   default: 'bg-background',
-  muted: 'bg-muted',
+  muted: 'bg-muted relative grain-overlay',
   dark: 'bg-foreground text-background',
 }
 

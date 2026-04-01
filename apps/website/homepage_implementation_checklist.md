@@ -211,7 +211,7 @@
 
 ### ✅ WDRAŻAMY TERAZ
 
-- [x] **5.1 Ikony usług — zamiana accent-green na gold/numery** ✅
+- [x] **5.1 Ikony usług — zamiana accent-gold na gold/numery** ✅
   - Ten sam problem co w Brand Positioning (punkt 3.1)
   - Zielone kwadraty z ikonami wyglądają jak SaaS
   - Zamienić na: złote ikony lub numerację ozdobną (01, 02, 03, 04)
@@ -223,7 +223,7 @@
   - Ref: `SO2`
 
 - [x] **5.3 Hover na kartach usług — zmiana z green na gold** ✅
-  - Obecny `hover:border-accent-green/30` zmienić na złoty: `hover:border-accent-gold/30`
+  - Obecny `hover:border-accent-gold/30` zmienić na złoty: `hover:border-accent-gold/30`
   - Spójność kolorystyczna z resztą
   - Ref: `SO3`
 
@@ -261,12 +261,12 @@
   - Ref: Komentarz do całej sekcji Boutique Preview
 
 - [x] **6.2 Dekoracyjna ramka — zmiana z green na gold** ✅
-  - Obecna zielona ramka `border-accent-green/20` jest ledwo widoczna
+  - Obecna zielona ramka `border-accent-gold/20` jest ledwo widoczna
   - Zmienić na: `border-accent-gold/30`
   - Ref: `BV2`
 
 - [x] **6.3 Wymiana numeru telefonu** ✅
-  - Zamienić placeholder `+48 123 456 789` na prawdziwy numer: **+48 604 501 000**
+  - Zamienić placeholder `+48 604 501 000` na prawdziwy numer: **+48 604 501 000**
   - Dotyczy wszystkich wystąpień na stronie (Boutique, Footer, itp.)
   - Ref: `BV3`
 
@@ -520,7 +520,7 @@
 ### ✅ WDRAŻAMY TERAZ
 
 - [ ] **12.1 Klarowny podział: green vs gold**
-  - **Green (`accent-green`)**: tła, kotwice wizualne, dark sekcje
+  - **Green (`accent-gold`)**: tła, kotwice wizualne, dark sekcje
   - **Gold (`accent-gold`)**: akcenty, CTA, hover states, podkreślenia, interaktywne elementy
   - Przejść przez CAŁY kod i ujednolicić — żadne przypadkowe green tam gdzie powinien być gold
   - Ref: `CL1`
@@ -599,12 +599,12 @@
   - Ref: `BT1`
 
 - [ ] **14.2 Telefon placeholder — wymiana**
-  - Zamienić WSZYSTKIE wystąpienia `+48 123 456 789` na: **+48 604 501 000**
+  - Zamienić WSZYSTKIE wystąpienia `+48 604 501 000` na: **+48 604 501 000**
   - Dotyczy: Boutique Preview, Footer, kontakt, hero — wszędzie
   - Ref: `BT3`
 
 - [ ] **14.3 Email — poprawna wartość**
-  - Zamienić `kontakt@warszawskiczas.pl` na: **biuro@warszawskiczas.pl**
+  - Zamienić `biuro@warszawskiczas.pl` na: **biuro@warszawskiczas.pl**
   - Dotyczy wszystkich wystąpień
   - Ref: `BT4`
 

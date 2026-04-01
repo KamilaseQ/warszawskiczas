@@ -20,15 +20,15 @@ const contactMethods = [
   {
     icon: Phone,
     title: 'Telefon',
-    content: '+48 123 456 789',
-    link: 'tel:+48123456789',
+    content: '+48 604 501 000',
+    link: 'tel:+48604501000',
     linkText: 'Zadzwoń',
   },
   {
     icon: Mail,
     title: 'Email',
-    content: 'kontakt@warszawskiczas.pl',
-    link: 'mailto:kontakt@warszawskiczas.pl',
+    content: 'biuro@warszawskiczas.pl',
+    link: 'mailto:biuro@warszawskiczas.pl',
     linkText: 'Napisz',
   },
   {
@@ -63,8 +63,8 @@ export default function KontaktPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {contactMethods.map((method, index) => (
               <Card key={index} variant="outlined" padding="md" className="bg-background">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-green/10">
-                  <method.icon className="h-5 w-5 text-accent-green" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-gold/10">
+                  <method.icon className="h-5 w-5 text-accent-gold" />
                 </div>
                 <h3 className="mt-4 font-semibold">{method.title}</h3>
                 <p className="mt-2 whitespace-pre-line text-sm text-muted-foreground">
@@ -73,7 +73,7 @@ export default function KontaktPage() {
                 {method.link && (
                   <a
                     href={method.link}
-                    className="mt-4 inline-block text-sm font-medium text-accent-green transition-colors hover:text-accent-green/80"
+                    className="mt-4 inline-block text-sm font-medium text-accent-gold transition-colors hover:text-accent-gold/80"
                   >
                     {method.linkText}
                   </a>
@@ -109,7 +109,7 @@ export default function KontaktPage() {
                       key={index}
                       className="flex items-center gap-3 text-sm text-muted-foreground"
                     >
-                      <span className="h-1 w-1 rounded-full bg-accent-green" />
+                      <span className="h-1 w-1 rounded-full bg-accent-gold" />
                       {question}
                     </li>
                   ))}

@@ -14,11 +14,11 @@ export default function HomePage() {
     <>
       <Hero />
       <ProductShowcase />
+      <TrustSignals />
       <BrandPositioning />
       <HiddenCollectionTeaser />
       <ServicesOverview />
       <BoutiquePreview />
-      <TrustSignals />
       <FinalCTA />
     </>
   )

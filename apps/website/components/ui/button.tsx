@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 const buttonVariants = {
   variant: {
     primary:
-      'bg-accent-green text-white border border-transparent hover:bg-transparent hover:text-accent-gold hover:border-accent-gold focus-visible:ring-accent-green',
+      'btn-primary bg-foreground text-background border border-transparent hover:bg-accent-gold hover:text-foreground focus-visible:ring-accent-gold',
     secondary:
       'bg-foreground text-background border border-foreground hover:bg-transparent hover:text-foreground focus-visible:ring-foreground',
     outline:

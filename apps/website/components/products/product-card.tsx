@@ -21,7 +21,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col overflow-hidden border border-border bg-background transition-colors hover:border-accent-green/30',
+        'group relative flex flex-col overflow-hidden border border-border bg-background transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-gold/5 hover:border-accent-gold/30',
         className
       )}
     >
@@ -45,7 +45,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         <p className="text-sm font-serif italic tracking-widest text-accent-gold">
           {product.brand}
         </p>
-        <h3 className="mt-2 font-sans text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-accent-green">
+        <h3 className="mt-2 font-sans text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-accent-gold">
           {product.name}
         </h3>
         <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
@@ -57,7 +57,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </span>
           <Link
             href="/kontakt"
-            className="group/link flex items-center text-[10px] font-serif uppercase tracking-widest text-accent-green transition-colors hover:text-accent-gold"
+            className="group/link flex items-center text-[10px] font-serif uppercase tracking-widest text-accent-gold transition-colors hover:text-accent-gold"
           >
             Zapytaj
           </Link>
@@ -65,7 +65,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Animated Vogue Accent Line on Hover */}
-      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-accent-green to-accent-gold transition-all duration-700 ease-out group-hover:w-full" />
+      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-accent-gold to-accent-gold/60 transition-all duration-700 ease-out group-hover:w-full" />
     </article>
   )
 }

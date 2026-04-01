@@ -47,7 +47,7 @@ export function ServicesOverview() {
         <FadeIn>
           <div className="mb-16">
             <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
-              IV &nbsp;——&nbsp; Usługi
+              V &nbsp;——&nbsp; Usługi
             </p>
             <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
               Ekspercka obsługa<br />

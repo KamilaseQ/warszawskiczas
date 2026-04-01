@@ -21,7 +21,7 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded border border-accent-green/20 bg-accent-green/5 p-8 text-center">
+      <div className="rounded border border-accent-gold/20 bg-accent-gold/5 p-8 text-center">
         <h3 className="font-serif text-xl font-semibold text-foreground">
           Dziękujemy za wiadomość
         </h3>
@@ -54,7 +54,7 @@ export function ContactForm() {
         label="Telefon"
         name="phone"
         type="tel"
-        placeholder="+48 123 456 789"
+        placeholder="+48 604 501 000"
       />
       <FormField
         label="Temat"

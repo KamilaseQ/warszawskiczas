@@ -16,7 +16,7 @@ export function HiddenCollectionTeaser() {
             <div>
               {/* 4.1 Badge bez obramowania — tylko uppercase gold text */}
               <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-6">
-                III &nbsp;——&nbsp; Ukryta Kolekcja
+                IV &nbsp;——&nbsp; Ukryta Kolekcja
               </p>
 
               <Heading as="h2" size="lg" className="text-white">
@@ -71,10 +71,10 @@ export function HiddenCollectionTeaser() {
                     <circle cx="100" cy="100" r="4" fill="white" />
                     {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => {
                       const rad = (deg * Math.PI) / 180
-                      const x1 = 100 + 76 * Math.sin(rad)
-                      const y1 = 100 - 76 * Math.cos(rad)
-                      const x2 = 100 + (deg % 90 === 0 ? 62 : 70) * Math.sin(rad)
-                      const y2 = 100 - (deg % 90 === 0 ? 62 : 70) * Math.cos(rad)
+                      const x1 = Math.round((100 + 76 * Math.sin(rad)) * 100) / 100
+                      const y1 = Math.round((100 - 76 * Math.cos(rad)) * 100) / 100
+                      const x2 = Math.round((100 + (deg % 90 === 0 ? 62 : 70) * Math.sin(rad)) * 100) / 100
+                      const y2 = Math.round((100 - (deg % 90 === 0 ? 62 : 70) * Math.cos(rad)) * 100) / 100
                       return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} strokeWidth={deg % 90 === 0 ? "1.5" : "0.8"} />
                     })}
                     <line x1="100" y1="100" x2="100" y2="36" strokeWidth="1.5" strokeLinecap="round" />

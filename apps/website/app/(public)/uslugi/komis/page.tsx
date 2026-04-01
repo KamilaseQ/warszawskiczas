@@ -103,8 +103,8 @@ export default function KomisPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {benefits.map((benefit, index) => (
               <div key={index} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-green/10">
-                  <benefit.icon className="h-6 w-6 text-accent-green" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-gold/10">
+                  <benefit.icon className="h-6 w-6 text-accent-gold" />
                 </div>
                 <h3 className="mt-6 font-serif text-lg font-semibold">
                   {benefit.title}
@@ -133,7 +133,7 @@ export default function KomisPage() {
               <ul className="mt-8 space-y-4">
                 {whyConsignment.map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-green" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-gold" />
                     <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
@@ -179,7 +179,7 @@ export default function KomisPage() {
           <div className="mx-auto mt-12 grid max-w-4xl gap-8 md:grid-cols-5">
             {process.map((item, index) => (
               <div key={index} className="text-center">
-                <span className="font-serif text-3xl font-bold text-accent-green/30">
+                <span className="font-serif text-3xl font-bold text-accent-gold/30">
                   {item.step}
                 </span>
                 <h3 className="mt-4 text-sm font-semibold">{item.title}</h3>

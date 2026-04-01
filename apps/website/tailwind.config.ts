@@ -16,7 +16,7 @@ const config: Config = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          green: 'hsl(var(--accent-green))',
+          green: 'hsl(var(--accent-gold))',
           gold: 'hsl(var(--accent-gold))',
         },
         border: 'hsl(var(--border))',

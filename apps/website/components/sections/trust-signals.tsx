@@ -75,7 +75,7 @@ export function TrustSignals() {
         <FadeIn>
           <div className="mb-12">
             <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
-              VI &nbsp;——&nbsp; Zaufanie
+              II &nbsp;——&nbsp; Zaufanie
             </p>
           </div>
         </FadeIn>

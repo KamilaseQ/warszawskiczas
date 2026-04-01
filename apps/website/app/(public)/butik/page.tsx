@@ -116,7 +116,7 @@ export default function ButikPage() {
                   'Kawa lub herbata w spokojnej atmosferze',
                 ].map((item, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent-green" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
                     <span className="text-muted-foreground">{item}</span>
                   </li>
                 ))}
@@ -147,8 +147,8 @@ export default function ButikPage() {
           </Heading>
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-green/10">
-                <MapPin className="h-5 w-5 text-accent-green" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-gold/10">
+                <MapPin className="h-5 w-5 text-accent-gold" />
               </div>
               <h3 className="mt-4 font-semibold">Adres</h3>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -157,8 +157,8 @@ export default function ButikPage() {
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-green/10">
-                <Clock className="h-5 w-5 text-accent-green" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-gold/10">
+                <Clock className="h-5 w-5 text-accent-gold" />
               </div>
               <h3 className="mt-4 font-semibold">Godziny otwarcia</h3>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -167,8 +167,8 @@ export default function ButikPage() {
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-green/10">
-                <Car className="h-5 w-5 text-accent-green" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-gold/10">
+                <Car className="h-5 w-5 text-accent-gold" />
               </div>
               <h3 className="mt-4 font-semibold">Parking</h3>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -177,8 +177,8 @@ export default function ButikPage() {
               </p>
             </div>
             <div className="flex flex-col items-center text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-green/10">
-                <Train className="h-5 w-5 text-accent-green" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-gold/10">
+                <Train className="h-5 w-5 text-accent-gold" />
               </div>
               <h3 className="mt-4 font-semibold">Komunikacja</h3>
               <p className="mt-2 text-sm text-muted-foreground">

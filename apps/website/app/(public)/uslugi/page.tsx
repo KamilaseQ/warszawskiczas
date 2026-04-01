@@ -82,10 +82,10 @@ export default function UslugiPage() {
                 key={index}
                 variant="outlined"
                 padding="lg"
-                className="flex flex-col bg-background transition-colors hover:border-accent-green/30"
+                className="flex flex-col bg-background transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-gold/5 hover:border-accent-gold/30"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded bg-accent-green/10">
-                  <service.icon className="h-7 w-7 text-accent-green" />
+                <div className="flex h-14 w-14 items-center justify-center rounded bg-accent-gold/10">
+                  <service.icon className="h-7 w-7 text-accent-gold" />
                 </div>
                 <h2 className="mt-6 font-serif text-2xl font-semibold">
                   {service.title}
@@ -99,14 +99,14 @@ export default function UslugiPage() {
                       key={i}
                       className="flex items-center gap-2 text-sm text-muted-foreground"
                     >
-                      <span className="h-1 w-1 rounded-full bg-accent-green" />
+                      <span className="h-1 w-1 rounded-full bg-accent-gold" />
                       {feature}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={service.href}
-                  className="mt-8 inline-flex items-center text-sm font-medium text-accent-green transition-colors hover:text-accent-green/80"
+                  className="mt-8 inline-flex items-center text-sm font-medium text-accent-gold transition-colors hover:text-accent-gold/80"
                 >
                   Dowiedz się więcej
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -128,8 +128,8 @@ export default function UslugiPage() {
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {expertise.map((item, index) => (
               <div key={index} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-green/10">
-                  <item.icon className="h-6 w-6 text-accent-green" />
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent-gold/10">
+                  <item.icon className="h-6 w-6 text-accent-gold" />
                 </div>
                 <h3 className="mt-6 font-serif text-xl font-semibold">
                   {item.title}
