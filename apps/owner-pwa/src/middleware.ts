@@ -8,7 +8,7 @@ if (!process.env.AUTH_SECRET) {
 
 const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/register", "/api/auth/register"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/register", "/api/auth/register", "/api/auth/me/health"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
