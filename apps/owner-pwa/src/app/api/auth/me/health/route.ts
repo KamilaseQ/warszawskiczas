@@ -23,7 +23,7 @@ export async function GET() {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       port: Number(process.env.DB_PORT || 3306),
-      connectTimeout: 3000,
+      connectTimeout: 1500, // VERY short to avoid 503 Proxy timeout
     });
     diagnostics.rawTests.default = "success";
     await rawConn.end();
@@ -39,7 +39,7 @@ export async function GET() {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       port: Number(process.env.DB_PORT || 3306),
-      connectTimeout: 3000,
+      connectTimeout: 1500, // VERY short to avoid 503 Proxy timeout
     });
     diagnostics.rawTests.ipv4 = "success";
     await rawConn2.end();
@@ -47,16 +47,8 @@ export async function GET() {
     diagnostics.rawTests.ipv4 = { error: String(e) };
   }
 
-  // Test 3: Prisma check
-  try {
-    const userCount = await prisma.user.count();
-    diagnostics.prisma = { connected: true, userCount };
-  } catch (error) {
-    diagnostics.prisma = {
-      connected: false,
-      error: error instanceof Error ? error.message : String(error),
-    };
-  }
+  // Test 3: Prisma check (SKIPPED to avoid 10-second pool timeout causing 503)
+  diagnostics.prisma = { skipped: "True due to 503 risk" };
 
   return NextResponse.json(diagnostics, { status: 200 });
 }
