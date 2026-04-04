@@ -1,0 +1,55 @@
+﻿node.exe : Loaded Prisma 
+config from prisma.config
+.ts.
+At line:1 char:1
++ & "C:\Users\212ka\AppDa
+ta\Local\fnm_multishells\
+26744_1775260992491/n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (Loaded Prisma c...i   
+ sma.config.ts.:Strin    
+g) [], RemoteExcepti    o
+n
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+
+Prisma schema loaded from
+ prisma\schema.prisma.
+Error: Prisma schema vali
+dation - (get-config wasm
+)
+Error code: P1012
+error: The datasource pro
+perty `url` is no longer 
+supported in schema files
+. Move connection URLs fo
+r Migrate to `prisma.conf
+ig.ts` and pass either `a
+dapter` for a direct data
+base connection or `accel
+erateUrl` for Accelerate 
+to the `PrismaClient` con
+structor. See https://pri
+s.ly/d/config-datasource 
+and https://pris.ly/d/pri
+sma7-client-config
+  -->  prisma\schema.pris
+ma:7
+   | 
+ 6 |   provider = "sqlite
+"
+ 7 |   url      = env("DA
+TABASE_URL")
+   | 
+
+Validation Error Count: 1
+[Context: getConfig]
+
+Prisma CLI Version : 7.6.
+0
