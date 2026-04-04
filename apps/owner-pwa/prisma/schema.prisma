@@ -1,26 +1,27 @@
 generator client {
-  provider = "prisma-client-js"
+ provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+ provider = "mysql"
+ url = env("DATABASE_URL")
 }
 
 model Scenario {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  status      String   @default("PENDING") // PENDING | ACCEPTED | REJECTED | RECORDED
-  feedback    String?  // Optional feedback when rejected
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+ id String @id @default(uuid())
+ title String
+ description String
+ status String @default("PENDING")
+ feedback String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String   // hashed
-  role      String   // admin | owner
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+ id String @id @default(uuid())
+ username String @unique
+ password String
+ role String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
 }
