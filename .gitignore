@@ -13,3 +13,5 @@ dev.log
 
 .pnpm-store
 .pnpm-debug.log*
+
+*.mp4
