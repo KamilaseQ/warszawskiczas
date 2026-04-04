@@ -11,11 +11,12 @@ export interface SessionPayload {
   exp: number;
 }
 
-if (!process.env.AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required");
+// Lazy secret — never throw at module level
+function getSecret(): Uint8Array {
+  const raw = process.env.AUTH_SECRET;
+  if (!raw) throw new Error("AUTH_SECRET is not set");
+  return new TextEncoder().encode(raw);
 }
-
-const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
 
 const EXPIRATION = "24h";
 
@@ -26,7 +27,7 @@ export async function createSession(
   const token = await new SignJWT({ username, role })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(EXPIRATION)
-    .sign(SECRET);
+    .sign(getSecret());
 
   const cookieStore = await cookies();
   cookieStore.set("session", token, {
@@ -46,7 +47,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, getSecret());
     const user = await prisma.user.findUnique({
       where: { username: payload.username as string },
       select: { role: true }
@@ -135,7 +136,6 @@ export async function validateCredentials(
     return { valid: false, role: null };
   } catch (error) {
     console.error("❌ DB/Auth error:", error);
-    // Propagate as dbError so caller can distinguish from wrong credentials
     return { valid: false, role: null, dbError: true };
   }
 }

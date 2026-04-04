@@ -2,12 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-if (!process.env.AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required");
-}
-
-const SECRET = new TextEncoder().encode(process.env.AUTH_SECRET);
-
 const PUBLIC_PATHS = ["/login", "/api/auth/login", "/register", "/api/auth/register", "/api/auth/me/health"];
 
 export async function middleware(request: NextRequest) {
@@ -36,7 +30,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  // Lazy check — don't crash the whole app if AUTH_SECRET is missing
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    console.error("AUTH_SECRET is not set — cannot verify session");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
   try {
+    const SECRET = new TextEncoder().encode(secret);
     const { payload } = await jwtVerify(token, SECRET);
 
     // Role-based route protection

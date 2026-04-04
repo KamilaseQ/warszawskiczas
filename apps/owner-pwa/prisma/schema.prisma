@@ -9,9 +9,9 @@ datasource db {
 model Scenario {
  id String @id @default(uuid())
  title String
- description String
+ description String @db.Text
  status String @default("PENDING")
- feedback String?
+ feedback String? @db.Text
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
 }
