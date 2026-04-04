@@ -2,19 +2,12 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 function createAdapter() {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("DATABASE_URL is not set");
-  }
-
-  // Parse mysql://user:password@host:port/database
-  const parsed = new URL(url);
   return new PrismaMariaDb({
-    host: parsed.hostname,
-    port: parseInt(parsed.port || "3306"),
-    user: decodeURIComponent(parsed.username),
-    password: decodeURIComponent(parsed.password),
-    database: parsed.pathname.slice(1), // remove leading /
+    host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT || "3306"),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     connectionLimit: 10,
   });
 }
