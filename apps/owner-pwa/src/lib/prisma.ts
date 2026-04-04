@@ -15,6 +15,7 @@ function createAdapter() {
     user: decodeURIComponent(parsed.username),
     password: decodeURIComponent(parsed.password),
     database: parsed.pathname.slice(1), // remove leading /
+    connectionLimit: 10,
   });
 }
 
