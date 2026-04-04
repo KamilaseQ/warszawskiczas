@@ -64,11 +64,67 @@ export async function destroySession(): Promise<void> {
   cookieStore.delete("session");
 }
 
+/**
+ * Auto-seed: creates admin & owner users from env vars if no users exist in the database.
+ * Runs only once — subsequent calls are no-ops (guarded by a flag + DB check).
+ */
+let seedChecked = false;
+
+async function ensureAdminExists(): Promise<void> {
+  if (seedChecked) return;
+  seedChecked = true;
+
+  try {
+    const userCount = await prisma.user.count();
+    if (userCount > 0) return; // users already exist, nothing to do
+
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminUsername || !adminPassword) {
+      console.warn("⚠️  No users in DB and ADMIN_USERNAME/ADMIN_PASSWORD env vars are missing — cannot auto-seed.");
+      return;
+    }
+
+    const hashedAdmin = await bcrypt.hash(adminPassword, 12);
+    await prisma.user.create({
+      data: {
+        username: adminUsername,
+        password: hashedAdmin,
+        role: "admin",
+      },
+    });
+    console.log(`✅ Auto-seeded admin user: "${adminUsername}"`);
+
+    // Also seed owner if env vars are provided
+    const ownerUsername = process.env.OWNER_USERNAME;
+    const ownerPassword = process.env.OWNER_PASSWORD;
+    if (ownerUsername && ownerPassword) {
+      const hashedOwner = await bcrypt.hash(ownerPassword, 12);
+      await prisma.user.create({
+        data: {
+          username: ownerUsername,
+          password: hashedOwner,
+          role: "owner",
+        },
+      });
+      console.log(`✅ Auto-seeded owner user: "${ownerUsername}"`);
+    }
+  } catch (error) {
+    console.error("Auto-seed error:", error);
+    // Reset flag so it can retry on next request
+    seedChecked = false;
+  }
+}
+
 export async function validateCredentials(
   username: string,
   password: string
 ): Promise<{ valid: boolean; role: UserRole | null }> {
   try {
+    // Ensure admin user exists on first login attempt
+    await ensureAdminExists();
+
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return { valid: false, role: null };
 
