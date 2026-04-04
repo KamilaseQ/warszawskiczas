@@ -140,7 +140,7 @@ export default function LoginPage() {
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="spinner" style={{ borderTopColor: "#0a0a0a", borderColor: "rgba(0,0,0,0.2)" }} />
+                <span className="spinner" style={{ borderTopColor: "#ffffff", borderColor: "rgba(255,255,255,0.3)" }} />
                 Logowanie...
               </span>
             ) : (

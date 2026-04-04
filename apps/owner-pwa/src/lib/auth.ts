@@ -70,7 +70,7 @@ export async function destroySession(): Promise<void> {
  */
 let seedChecked = false;
 
-async function ensureAdminExists(): Promise<void> {
+export async function ensureAdminExists(): Promise<void> {
   if (seedChecked) return;
   seedChecked = true;
 
@@ -111,20 +111,20 @@ async function ensureAdminExists(): Promise<void> {
       console.log(`✅ Auto-seeded owner user: "${ownerUsername}"`);
     }
   } catch (error) {
-    console.error("Auto-seed error:", error);
-    // Reset flag so it can retry on next request
+    console.error("❌ Auto-seed error:", error);
     seedChecked = false;
+    // Don't throw — seed failure shouldn't block login for existing users
   }
 }
 
 export async function validateCredentials(
   username: string,
   password: string
-): Promise<{ valid: boolean; role: UserRole | null }> {
-  try {
-    // Ensure admin user exists on first login attempt
-    await ensureAdminExists();
+): Promise<{ valid: boolean; role: UserRole | null; dbError?: boolean }> {
+  // Ensure admin user exists on first login attempt
+  await ensureAdminExists();
 
+  try {
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return { valid: false, role: null };
 
@@ -132,8 +132,10 @@ export async function validateCredentials(
     if (valid) {
       return { valid: true, role: user.role as UserRole };
     }
+    return { valid: false, role: null };
   } catch (error) {
-    console.error("Auth error:", error);
+    console.error("❌ DB/Auth error:", error);
+    // Propagate as dbError so caller can distinguish from wrong credentials
+    return { valid: false, role: null, dbError: true };
   }
-  return { valid: false, role: null };
 }

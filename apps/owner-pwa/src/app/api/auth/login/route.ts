@@ -30,14 +30,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { valid, role } = await validateCredentials(username, password);
+    const result = await validateCredentials(username, password);
 
-    if (!valid || !role) {
+    if (result.dbError) {
+      return NextResponse.json(
+        { error: "Błąd połączenia z bazą danych. Sprawdź konfigurację serwera." },
+        { status: 500 }
+      );
+    }
+
+    if (!result.valid || !result.role) {
       return NextResponse.json(
         { error: "Nieprawidłowy login lub hasło" },
         { status: 401 }
       );
     }
+
+    const { role } = result;
 
     // Block pending users from logging in
     if (role === "pending") {
