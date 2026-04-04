@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   title: "Warszawski Czas — Panel",
   description: "Panel zarządzania scenariuszami video dla marki Warszawski Czas",
   manifest: "/manifest.json",
+  robots: {
+    index: false,
+    follow: false,
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
