@@ -10,6 +10,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -23,13 +24,18 @@ export default function RegisterPage() {
       return;
     }
 
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+      setError("Hasło musi mieć min. 8 znaków, wielką literę i cyfrę");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, inviteCode }),
       });
 
       const data = await res.json();
@@ -101,11 +107,31 @@ export default function RegisterPage() {
             Zarejestruj się
           </h1>
           <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-            Utworzone konta oczekują na panel.
+            Wymagany kod zaproszenia od administratora.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="inviteCode"
+              className="block text-xs font-medium mb-2 uppercase tracking-wider"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Kod zaproszenia
+            </label>
+            <input
+              id="inviteCode"
+              type="text"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value)}
+              className="input"
+              placeholder="Wpisz kod zaproszenia"
+              autoComplete="off"
+              required
+            />
+          </div>
+
           <div>
             <label
               htmlFor="username"
@@ -120,7 +146,7 @@ export default function RegisterPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="input"
-              placeholder="Wpisz login"
+              placeholder="Wpisz login (min. 3 znaki)"
               autoComplete="username"
               required
             />
@@ -140,7 +166,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="input"
-              placeholder="Wpisz hasło"
+              placeholder="Min. 8 znaków, wielka litera, cyfra"
               autoComplete="new-password"
               required
             />

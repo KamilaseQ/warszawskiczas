@@ -9,8 +9,8 @@ async function main() {
   await prisma.user.deleteMany();
 
   // Seed default users
-  const adminPass = await bcrypt.hash(process.env.ADMIN_PASSWORD || "admin123", 10);
-  const ownerPass = await bcrypt.hash(process.env.OWNER_PASSWORD || "owner123", 10);
+  const adminPass = await bcrypt.hash(process.env.ADMIN_PASSWORD || "admin123", 12);
+  const ownerPass = await bcrypt.hash(process.env.OWNER_PASSWORD || "owner123", 12);
 
   await prisma.user.createMany({
     data: [
