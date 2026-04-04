@@ -3,7 +3,7 @@
  * Limits to MAX_ATTEMPTS per WINDOW_MS per IP address.
  */
 
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = 25;
 const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 interface RateLimitEntry {
