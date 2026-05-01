@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Warszawski Czas — Panel",
-  description: "Panel zarządzania scenariuszami video dla marki Warszawski Czas",
+  title: "Owner PWA - Warszawski Czas",
+  description: "Aplikacja do recenzji scenariuszy i organizacji nagrań Warszawski Czas",
   manifest: "/manifest.json",
   robots: {
     index: false,
@@ -18,20 +18,19 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
-    title: "WC Panel",
+    statusBarStyle: "default",
+    title: "Owner PWA",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#09090b",
+  themeColor: "#00694c",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import PwaRegister from "@/components/pwa-register";
 
 export default function RootLayout({
   children,
@@ -45,8 +44,9 @@ export default function RootLayout({
         <link rel="preload" href="/logo.png" as="image" />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <PwaRegister />
         </ThemeProvider>
       </body>
     </html>

@@ -39,26 +39,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!result.valid || !result.role) {
+    if (!result.valid || !result.user) {
       return NextResponse.json(
         { error: "Nieprawidłowy login lub hasło" },
         { status: 401 }
       );
     }
 
-    const { role } = result;
-
-    // Block pending users from logging in
-    if (role === "pending") {
+    if (result.user.accountStatus !== "active") {
       return NextResponse.json(
-        { error: "Twoje konto oczekuje na weryfikację przez administratora." },
+        { error: "Twoje konto nie jest jeszcze aktywne." },
         { status: 403 }
       );
     }
 
-    await createSession(username, role);
+    await createSession(
+      result.user.id,
+      result.user.username,
+      result.user.role,
+      result.user.accountStatus
+    );
 
-    return NextResponse.json({ success: true, role });
+    return NextResponse.json({ success: true, role: result.user.role });
   } catch {
     return NextResponse.json(
       { error: "Błąd serwera" },

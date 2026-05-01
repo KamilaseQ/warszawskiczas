@@ -1,248 +1,228 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, ArrowLeft } from 'lucide-react'
-import { Container, Section, Heading } from '@/components/ui'
-import { featuredProducts } from '@/data/mock-products'
-import useEmblaCarousel from 'embla-carousel-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { Container, Section, ImagePlaceholder, KenBurns, Magnetic } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { featuredProduct, otherFeaturedProducts } from '@/data/mock-products'
 import { cn } from '@/lib/utils'
 
-const AUTO_INTERVAL = 4500
-
 export function ProductShowcase() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'center',
-    loop: true,
-    skipSnaps: false,
-    duration: 65,
-  })
+  const [flipped, setFlipped] = useState(false)
+  const scrollerRef = useRef<HTMLDivElement>(null)
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
-  const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const [isPaused, setIsPaused] = useState(false)
-
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    setSelectedIndex(emblaApi.selectedScrollSnap())
-  }, [emblaApi])
-
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
-
-  useEffect(() => {
-    if (!emblaApi) return
-    setScrollSnaps(emblaApi.scrollSnapList())
-    emblaApi.on('select', onSelect)
-    onSelect()
-  }, [emblaApi, onSelect])
-
-  useEffect(() => {
-    if (!emblaApi || isPaused) return
-    autoplayRef.current = setInterval(() => emblaApi.scrollNext(), AUTO_INTERVAL)
-    return () => { if (autoplayRef.current) clearInterval(autoplayRef.current) }
-  }, [emblaApi, isPaused])
-
-  const formatPrice = (price?: number) =>
-    price
-      ? new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', minimumFractionDigits: 0 }).format(price)
-      : 'Cena na zapytanie'
+  const scrollBy = (dir: 'left' | 'right') => {
+    const el = scrollerRef.current
+    if (!el) return
+    const delta = el.clientWidth * 0.8 * (dir === 'left' ? -1 : 1)
+    el.scrollBy({ left: delta, behavior: 'smooth' })
+  }
 
   return (
-    <Section id="product-showcase" spacing="lg" className="overflow-hidden">
+    <Section id="product-showcase" spacing="lg" className="relative overflow-hidden">
+      {/* Dekoracyjna cyfra "01" za tekstem (depth Vogue) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-6 top-1/2 hidden -translate-y-1/2 select-none font-serif text-[28rem] font-medium leading-none text-accent-gold/[0.035] lg:block"
+      >
+        01
+      </div>
+
       <Container>
-        {/* Editorial Header */}
-        <FadeIn className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
-          <div>
-            <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
-              I &nbsp;——&nbsp; Kolekcja
-            </p>
-            <Heading as="h2" size="lg" className="font-serif font-medium tracking-tight">
-              Wyselekcjonowane<br />
-              <span className="font-serif italic font-normal">dzieła sztuki</span>
-            </Heading>
+        {/* Eyebrow editorial header */}
+        <FadeIn>
+          <div className="mb-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+                I &nbsp;——&nbsp; Zegarek Tygodnia
+              </p>
+              <p className="mt-2 font-serif italic text-sm text-muted-foreground">
+                No. 01 · Kwiecień 2026
+              </p>
+            </div>
+            <Link
+              href="/produkty"
+              prefetch
+              className="group inline-flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-[0.35em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              Pełna kolekcja
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            href="/produkty"
-            className="group mb-1 inline-flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-[0.35em] text-muted-foreground hover:text-foreground transition-colors duration-300"
-          >
-            Pełna kolekcja
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-          </Link>
         </FadeIn>
+
+        {/* Główny układ editorial — 2 kolumny asymetryczne */}
+        <div className="relative grid items-stretch gap-8 lg:grid-cols-12 lg:gap-16">
+          {/* LEWA — obraz bohater */}
+          <FadeIn direction="right" className="lg:col-span-7">
+            <div
+              className="relative group cursor-pointer"
+              onMouseEnter={() => setFlipped(true)}
+              onMouseLeave={() => setFlipped(false)}
+            >
+              {/* Etykieta "Zegarek Tygodnia" — złota wstążka */}
+              <div className="absolute left-0 top-0 z-20 flex items-center gap-2 bg-accent-gold px-4 py-2">
+                <span className="h-1 w-1 bg-[#0a0a0a]" />
+                <span className="font-serif text-[10px] font-medium uppercase tracking-[0.35em] text-[#0a0a0a]">
+                  Zegarek Tygodnia
+                </span>
+              </div>
+
+              <KenBurns intensity={1.12} className="relative aspect-[3/4] w-full">
+                <ImagePlaceholder
+                  className={cn(
+                    'absolute inset-0 transition-opacity duration-700',
+                    flipped ? 'opacity-0' : 'opacity-100'
+                  )}
+                  variant="light"
+                  label="Zdjęcie wkrótce — tarcza"
+                />
+                <ImagePlaceholder
+                  className={cn(
+                    'absolute inset-0 transition-opacity duration-700',
+                    flipped ? 'opacity-100' : 'opacity-0'
+                  )}
+                  variant="dark"
+                  label="Zdjęcie wkrótce — dekiel"
+                />
+
+                {/* Delikatny złoty raster w rogu */}
+                <div className="pointer-events-none absolute inset-4 border border-accent-gold/10" />
+              </KenBurns>
+
+              {/* Podpis edytorialny pod obrazem */}
+              <div className="mt-4 flex items-center justify-between">
+                <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
+                  {featuredProduct.brand} · {featuredProduct.reference}
+                </span>
+                <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
+                  Najedź, aby odwrócić
+                </span>
+              </div>
+            </div>
+          </FadeIn>
+
+          {/* PRAWA — tekst editorialny */}
+          <FadeIn direction="left" delay={0.15} className="lg:col-span-5">
+            <div className="flex h-full flex-col justify-center">
+              <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+                Zegarek Tygodnia
+              </p>
+
+              <p className="mt-3 font-serif italic text-sm text-muted-foreground">
+                No. 01 · Kwiecień 2026
+              </p>
+
+              <h2 className="mt-6 font-serif text-5xl font-medium tracking-tight text-foreground sm:text-6xl lg:text-[4rem] leading-[1]">
+                {featuredProduct.brand}
+              </h2>
+              <h3 className="mt-2 font-serif italic text-3xl font-normal text-foreground/80 sm:text-4xl">
+                {featuredProduct.name}
+              </h3>
+
+              <p className="mt-6 font-sans text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground">
+                Ref. {featuredProduct.reference} &nbsp;·&nbsp; {featuredProduct.year}
+              </p>
+
+              {/* Złoty separator */}
+              <div className="mt-8 h-px w-16 bg-accent-gold/60" />
+
+              <p className="mt-8 font-sans text-base leading-relaxed text-muted-foreground text-pretty">
+                {featuredProduct.editorial ??
+                  '[OPIS MODELU DO UZUPEŁNIENIA — charakter, historia referencji, dlaczego wart uwagi.]'}
+              </p>
+
+              {/* CTA editorial — magnetic hover */}
+              <Magnetic className="mt-10 block w-full" strength={8}>
+                <Link
+                  href="/kontakt"
+                  prefetch
+                  className="btn-sharp w-full text-center"
+                  style={{ display: 'block' }}
+                >
+                  Zapytaj o dostępność
+                </Link>
+              </Magnetic>
+              <p className="mt-3 text-center font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
+                Bezpłatna wycena i konsultacja
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+
+        {/* Mini-showcase — inne modele */}
+        <div className="mt-28 lg:mt-36">
+          <FadeIn>
+            <div className="mb-8 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+                  Odkryj więcej
+                </p>
+                <h3 className="mt-3 font-serif text-2xl font-medium tracking-tight text-foreground sm:text-3xl">
+                  Inne modele w butiku
+                </h3>
+              </div>
+              <div className="hidden items-center gap-2 sm:flex">
+                <button
+                  type="button"
+                  onClick={() => scrollBy('left')}
+                  aria-label="Poprzedni"
+                  className="flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollBy('right')}
+                  aria-label="Następny"
+                  className="flex h-10 w-10 items-center justify-center border border-border text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
       </Container>
 
-      {/* Embla Carousel */}
-      <FadeIn delay={0.15} direction="up">
-        <div className="relative mx-auto max-w-[1400px] overflow-hidden">
-          <div ref={emblaRef}>
-            <div className="flex touch-pan-y">
-              {featuredProducts.map((product, index) => {
-                const isActive = index === selectedIndex
-
-                return (
-                  <div
-                    key={product.id}
-                    className="relative min-w-0 flex-[0_0_75%] sm:flex-[0_0_45%] lg:flex-[0_0_33.333%]"
-                    style={{ paddingLeft: 'clamp(0.5rem, 1.2vw, 1.25rem)', paddingRight: 'clamp(0.5rem, 1.2vw, 1.25rem)' }}
-                  >
-                    <div
-                      className={cn(
-                        'h-full transition-all duration-1000 ease-out',
-                        isActive ? 'showcase-card--active' : 'showcase-card--side'
-                      )}
-                    >
-                      <article
-                        className="group relative flex flex-col h-full cursor-pointer"
-                        onClick={() => !isActive && emblaApi?.scrollTo(index)}
-                        onMouseEnter={() => isActive && setIsPaused(true)}
-                        onMouseLeave={() => isActive && setIsPaused(false)}
-                      >
-                        {/* Index + brand strip */}
-                        <div className={cn(
-                          'flex items-center gap-3 mb-3 whitespace-nowrap transition-opacity duration-700',
-                          isActive ? 'opacity-100' : 'opacity-40'
-                        )}>
-                          <span className="text-[9px] font-sans font-bold tracking-[0.5em] text-muted-foreground/50 tabular-nums">
-                            {String(index + 1).padStart(2, '0')}
-                          </span>
-                          <div className="h-px w-6 bg-border flex-shrink-0" />
-                          <span className="text-[9px] font-sans font-bold tracking-[0.35em] text-accent-gold uppercase">
-                            {product.brand}
-                          </span>
-                        </div>
-
-                        {/* Image area */}
-                        {/* 13.2 Mniejsza wysokość karty na mobile */}
-                        <div className="relative overflow-hidden bg-muted aspect-[4/5] sm:aspect-[3/4]">
-                          <div className={cn(
-                            'absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.02]',
-                            isActive ? 'scale-[1.04] animate-[showcase-float_6s_ease-in-out_infinite]' : 'scale-100'
-                          )}>
-                            <div className="absolute inset-0 bg-gradient-to-br from-[hsl(40,15%,92%)] via-[hsl(40,10%,88%)] to-[hsl(40,8%,82%)]" />
-
-                            {/* Watch dial SVG */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <svg
-                                viewBox="0 0 80 80"
-                                className={cn(
-                                  'transition-all duration-700 ease-out',
-                                  isActive ? 'h-24 w-24 opacity-[0.14]' : 'h-14 w-14 opacity-[0.07]'
-                                )}
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="0.8"
-                              >
-                                <circle cx="40" cy="40" r="36" />
-                                <circle cx="40" cy="40" r="30" />
-                                <line x1="40" y1="12" x2="40" y2="18" strokeWidth="1.2" />
-                                <line x1="40" y1="62" x2="40" y2="68" strokeWidth="1.2" />
-                                <line x1="12" y1="40" x2="18" y2="40" strokeWidth="1.2" />
-                                <line x1="62" y1="40" x2="68" y2="40" strokeWidth="1.2" />
-                                <line x1="40" y1="40" x2="40" y2="24" strokeWidth="1.5" strokeLinecap="round" />
-                                <line x1="40" y1="40" x2="54" y2="34" strokeWidth="1" strokeLinecap="round" />
-                                <circle cx="40" cy="40" r="1.5" fill="currentColor" />
-                              </svg>
-                            </div>
-
-                            {/* 2.1 USUNIĘTE labele animate-pulse — BRAK */}
-
-                            <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/[0.03] transition-colors duration-500" />
-                          </div>
-                        </div>
-
-                        {/* Text content */}
-                        <div className={cn(
-                          'pt-5 transition-all duration-700',
-                          isActive ? 'opacity-100' : 'opacity-30'
-                        )}>
-                          <h3 className={cn(
-                            'font-serif font-medium tracking-tight text-foreground transition-all duration-500',
-                            isActive ? 'text-xl' : 'text-base'
-                          )}>
-                            {product.name}
-                          </h3>
-                          {isActive && (
-                            <>
-                              <p className="mt-2 text-[13px] font-sans text-muted-foreground leading-relaxed line-clamp-2 showcase-fade-in">
-                                {product.description}
-                              </p>
-                              <div className="mt-4 flex items-center justify-between showcase-fade-in" style={{ animationDelay: '80ms' }}>
-                                <span className={cn(
-                                  'text-[11px] font-sans font-semibold tracking-[0.12em] uppercase',
-                                  product.price ? 'text-foreground' : 'text-muted-foreground'
-                                )}>
-                                  {formatPrice(product.price)}
-                                </span>
-                                {/* 2.4 ZAPYTAJ — pełna widoczność */}
-                                <Link
-                                  href="/kontakt"
-                                  className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/80 hover:text-accent-gold transition-colors duration-300 border-b border-foreground/30 hover:border-accent-gold pb-px"
-                                >
-                                  Zapytaj
-                                </Link>
-                              </div>
-                            </>
-                          )}
-                        </div>
-
-                        {isActive && (
-                          <div className="mt-3 h-px w-0 bg-accent-gold transition-all duration-1000 ease-out group-hover:w-full" />
-                        )}
-                      </article>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-12 px-4 sm:px-8 lg:px-12">
-            {/* 2.3 Progress dots — wyraźny progres */}
-            <div className="flex items-center gap-2">
-              {scrollSnaps.map((_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    'relative h-0.5 overflow-hidden transition-all duration-500',
-                    i === selectedIndex ? 'w-10 bg-border' : 'w-4 bg-border/40'
-                  )}
-                  aria-hidden="true"
-                >
-                  {i === selectedIndex && (
-                    <div
-                      className="absolute inset-0 bg-accent-gold"
-                      style={{
-                        transformOrigin: 'left',
-                        animation: isPaused ? 'none' : `showcase-progress ${AUTO_INTERVAL}ms linear both`,
-                      }}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* 2.2 Strzałki — hover gold */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={scrollPrev}
-                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-accent-gold hover:text-accent-gold transition-all duration-300"
-                aria-label="Poprzedni"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button
-                onClick={scrollNext}
-                className="flex h-10 w-10 items-center justify-center border border-border text-foreground hover:border-accent-gold hover:text-accent-gold transition-all duration-300"
-                aria-label="Następny"
-              >
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+      {/* Pasek kart — full-bleed, przewijalny swipe */}
+      <FadeIn delay={0.1}>
+        <div
+          ref={scrollerRef}
+          className="no-scrollbar mt-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 lg:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
+        >
+          {otherFeaturedProducts.map((p, i) => (
+            <Link
+              key={p.id}
+              href={`/produkty/${p.slug}`}
+              prefetch={false}
+              className="group relative block w-[78vw] flex-shrink-0 snap-start sm:w-[44vw] lg:w-[22vw]"
+            >
+              <div className="relative aspect-[3/4] overflow-hidden transition-all duration-500 group-hover:-translate-y-1">
+                <ImagePlaceholder
+                  className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
+                  variant="light"
+                />
+                <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/40" />
+              </div>
+              <div className="mt-4">
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.35em] text-accent-gold">
+                  {p.brand}
+                </p>
+                <h4 className="mt-1 font-serif text-lg font-medium text-foreground">
+                  {p.name}
+                </h4>
+                <p className="mt-1 font-sans text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                  Ref. {p.reference} · {p.year}
+                </p>
+                <span className="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold">
+                  Zapytaj <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+              <span className="sr-only">pozycja {i + 1}</span>
+            </Link>
+          ))}
         </div>
       </FadeIn>
     </Section>

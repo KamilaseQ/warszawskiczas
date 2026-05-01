@@ -9,6 +9,16 @@ export const metadata: Metadata = {
     'Skup zegarków premium w Warszawie. Uczciwa wycena, natychmiastowa płatność, dyskrecja. Rolex, Omega, Patek Philippe i inne marki.',
 }
 
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Skup zegarków premium',
+  provider: { '@type': 'LocalBusiness', name: 'Warszawski Czas' },
+  areaServed: { '@type': 'City', name: 'Warszawa' },
+  description:
+    'Skup zegarków premium. Uczciwa wycena, natychmiastowa płatność, dyskrecja. Rolex, Omega, Patek Philippe i inne marki.',
+}
+
 const benefits = [
   {
     icon: Banknote,
@@ -59,6 +69,10 @@ const whatWeBuy = [
 export default function SkupPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       {/* Header */}
       <Section spacing="md">
         <Container>

@@ -1,51 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-
-const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+import { normalizeAccountStatus, normalizeRole } from "@/domain/permissions";
+import { PASSWORD_RULE_TEXT, validatePassword, validateUsername } from "@/domain/password";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function POST(request: NextRequest) {
   try {
     const { username, password, inviteCode } = await request.json();
 
-    // Validate invite code
-    const requiredCode = process.env.INVITE_CODE;
-    if (!requiredCode) {
+    const invitation = await prisma.invitation.findUnique({
+      where: { code: String(inviteCode || "").trim() },
+    });
+
+    if (
+      !invitation ||
+      invitation.usedAt ||
+      (invitation.expiresAt && invitation.expiresAt < new Date())
+    ) {
       return NextResponse.json(
-        { error: "Rejestracja jest tymczasowo wyłączona." },
+        { error: "Zaproszenie jest nieprawidlowe albo wygaslo." },
         { status: 403 }
       );
     }
 
-    if (!inviteCode || inviteCode !== requiredCode) {
+    if (!username || !validateUsername(username)) {
       return NextResponse.json(
-        { error: "Nieprawidłowy kod zaproszenia." },
-        { status: 403 }
-      );
-    }
-
-    // Validate username
-    if (!username || username.length < 3 || username.length > 30) {
-      return NextResponse.json(
-        { error: "Nazwa użytkownika musi mieć od 3 do 30 znaków." },
+        { error: "Nazwa uzytkownika musi miec od 3 do 30 znakow i moze zawierac litery, cyfry oraz podkreslenie." },
         { status: 400 }
       );
     }
 
-    // Only allow alphanumeric + underscore
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      return NextResponse.json(
-        { error: "Nazwa użytkownika może zawierać tylko litery, cyfry i podkreślenie." },
-        { status: 400 }
-      );
-    }
-
-    // Validate password strength
-    if (!password || !PASSWORD_REGEX.test(password)) {
-      return NextResponse.json(
-        { error: "Hasło musi mieć min. 8 znaków, zawierać wielką literę i cyfrę." },
-        { status: 400 }
-      );
+    if (!password || !validatePassword(password)) {
+      return NextResponse.json({ error: PASSWORD_RULE_TEXT }, { status: 400 });
     }
 
     const existingUser = await prisma.user.findUnique({ where: { username } });
@@ -58,12 +45,33 @@ export async function POST(request: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-        role: "pending",
-      },
+    const role = normalizeRole(invitation.role);
+    const accountStatus = normalizeAccountStatus(role, invitation.accountStatus);
+
+    const user = await prisma.$transaction(async (tx) => {
+      const created = await tx.user.create({
+        data: {
+          username,
+          password: hashedPassword,
+          role,
+          accountStatus,
+        },
+      });
+
+      await tx.invitation.update({
+        where: { id: invitation.id },
+        data: { usedAt: new Date(), usedById: created.id },
+      });
+
+      return created;
+    });
+
+    await writeAuditLog({
+      actor: null,
+      action: "user.registered_from_invitation",
+      targetType: "user",
+      targetId: user.id,
+      details: { username: user.username, role, accountStatus },
     });
 
     return NextResponse.json({ success: true, username: user.username });

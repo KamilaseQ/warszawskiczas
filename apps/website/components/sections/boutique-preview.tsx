@@ -1,87 +1,106 @@
 import Link from 'next/link'
-import { MapPin, Clock, Phone } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 export function BoutiquePreview() {
   return (
-    // 6.1 Połączona sekcja Boutique + Mokotowska 71
     <Section variant="muted" spacing="lg">
       <Container>
-        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
+        <FadeIn>
+          <div className="mb-12 flex items-center gap-4">
+            <div className="h-px w-12 bg-accent-gold/60" />
+            <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+              VI &nbsp;——&nbsp; Butik
+            </p>
+          </div>
+        </FadeIn>
 
-          {/* Lewa — treść */}
-          <FadeIn direction="right">
-            <div>
-              <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-6">
-                VI &nbsp;——&nbsp; Butik
-              </p>
-              <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground text-balance">
-                Odwiedź nas<br />
-                <span className="italic font-normal">na Mokotowskiej 71</span>
-              </h2>
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-                Zapraszamy do naszej przestrzeni w sercu Warszawy, gdzie w spokojnej
-                atmosferze możesz poznać naszą kolekcję i porozmawiać z ekspertami.
-              </p>
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* LEWA — editorial contact info */}
+          <FadeIn direction="right" className="lg:col-span-4">
+            <div className="space-y-10">
+              <div>
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
+                  Adres
+                </p>
+                <h2 className="mt-3 font-serif text-3xl font-medium tracking-tight text-foreground leading-tight lg:text-4xl">
+                  Mokotowska 71
+                </h2>
+                <p className="mt-2 font-serif italic text-lg text-muted-foreground">
+                  Warszawa, 00-530
+                </p>
+              </div>
 
-              {/* Dane kontaktowe */}
-              <div className="mt-10 space-y-6">
-                <div className="flex items-start gap-4">
-                  <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-gold" />
-                  <div>
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-muted-foreground/60 mb-1">Adres</p>
-                    <p className="text-sm text-foreground font-medium">ul. Mokotowska 71, 00-530 Warszawa</p>
+              <div className="h-px w-12 bg-accent-gold/60" />
+
+              <div>
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
+                  Godziny otwarcia
+                </p>
+                <div className="mt-4 space-y-2 font-sans text-sm text-foreground">
+                  <div className="flex justify-between gap-6">
+                    <span>Poniedziałek – Piątek</span>
+                    <span className="tabular-nums">10:00 – 18:00</span>
                   </div>
-                </div>
-
-                {/* 6.5 Godziny na osobnych liniach */}
-                <div className="flex items-start gap-4">
-                  <Clock className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-gold" />
-                  <div>
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-muted-foreground/60 mb-1">Godziny otwarcia</p>
-                    <div className="text-sm text-foreground space-y-0.5">
-                      <p>Pon – Pt: 10:00 – 18:00</p>
-                      <p>Sob: 10:00 – 15:00</p>
-                      <p className="text-muted-foreground">Nd: Zamknięte</p>
-                    </div>
+                  <div className="flex justify-between gap-6">
+                    <span>Sobota</span>
+                    <span className="tabular-nums">10:00 – 15:00</span>
                   </div>
-                </div>
-
-                {/* 6.3 Prawdziwy numer */}
-                <div className="flex items-center gap-4">
-                  <Phone className="h-4 w-4 flex-shrink-0 text-accent-gold" />
-                  <div>
-                    <p className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-muted-foreground/60 mb-1">Telefon</p>
-                    <a
-                      href="tel:+48604501000"
-                      className="text-sm text-foreground font-medium hover:text-accent-gold transition-colors duration-300"
-                    >
-                      +48 604 501 000
-                    </a>
+                  <div className="flex justify-between gap-6 text-muted-foreground">
+                    <span>Niedziela</span>
+                    <span>Zamknięte</span>
                   </div>
                 </div>
               </div>
 
-              {/* 6.4 Button zunifikowany */}
-              <Link href="/butik" className="btn-sharp mt-10 inline-block">
-                Więcej o butiku
-              </Link>
+              <div className="h-px w-12 bg-accent-gold/60" />
+
+              <div>
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
+                  Telefon
+                </p>
+                <a
+                  href="tel:+48604501000"
+                  className="mt-3 block font-serif text-2xl font-medium text-accent-gold transition-colors duration-300 hover:text-accent-gold/80"
+                >
+                  +48 604 501 000
+                </a>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Link
+                  href="/kontakt"
+                  prefetch
+                  className="btn-sharp inline-block w-full text-center"
+                >
+                  Umów wizytę w butiku
+                </Link>
+
+                <a
+                  href="https://maps.app.goo.gl/v3iC97EKPkc3BtkU8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center justify-center gap-2 text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/60 transition-colors duration-300 hover:text-accent-gold"
+                >
+                  Otwórz w mapach
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </div>
             </div>
           </FadeIn>
 
-          {/* Prawa — mapa lub placeholder + ramka gold */}
-          <FadeIn delay={0.15} direction="left">
+          {/* PRAWA — mapa Google z offset border */}
+          <FadeIn direction="left" delay={0.15} className="lg:col-span-8">
             <div className="relative">
-              {/* 6.6 Google Maps embed — dark/sepia theme */}
-              <div className="relative aspect-[4/3] overflow-hidden bg-[#1a1a18]">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#0f0f0e] lg:aspect-[16/11]">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2444.3!2d21.017!3d52.222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc7b27a7a8c3%3A0x0!2sMokotowska+71%2C+Warszawa!5e0!3m2!1spl!2spl!4v1"
                   width="100%"
                   height="100%"
                   style={{
                     border: 0,
-                    filter: 'grayscale(1) contrast(1.1) brightness(0.7) sepia(0.3)',
+                    filter: 'grayscale(0.85) contrast(1.05) brightness(0.75) sepia(0.25)',
                     position: 'absolute',
                     inset: 0,
                   }}
@@ -90,12 +109,25 @@ export function BoutiquePreview() {
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Warszawski Czas — Mokotowska 71, Warszawa"
                 />
-                {/* Gradient overlay dla premium look */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/30 to-transparent pointer-events-none" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#0a0a0a]/30 via-transparent to-[#c9a962]/[0.04]" />
+
+                {/* Gold pin dot overlay */}
+                <div className="pointer-events-none absolute left-1/2 top-1/2 flex h-2 w-2 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+                  <span className="absolute h-2 w-2 bg-accent-gold" />
+                  <span className="absolute h-5 w-5 animate-ping bg-accent-gold/40" />
+                </div>
               </div>
 
-              {/* 6.2 Ramka gold zamiast green */}
-              <div className="absolute -bottom-4 -right-4 h-full w-full border border-accent-gold/30 pointer-events-none lg:-bottom-5 lg:-right-5" />
+              {/* Offset gold border */}
+              <div className="pointer-events-none absolute -bottom-5 -right-5 h-full w-full border border-accent-gold/30" />
+
+              {/* Caption editorial */}
+              <div className="mt-4 flex items-center gap-3">
+                <div className="h-px w-8 bg-accent-gold/60" />
+                <span className="font-serif italic text-sm text-muted-foreground">
+                  W sercu Śródmieścia, między Placem Trzech Krzyży a Placem Zbawiciela.
+                </span>
+              </div>
             </div>
           </FadeIn>
         </div>

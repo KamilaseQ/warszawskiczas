@@ -10,6 +10,16 @@ export const metadata: Metadata = {
     'Profesjonalny serwis zegarmistrzowski w Warszawie. Przeglądy, naprawy, regulacje, renowacje zegarków mechanicznych wszystkich marek.',
 }
 
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Naprawa i serwis zegarków',
+  provider: { '@type': 'LocalBusiness', name: 'Warszawski Czas' },
+  areaServed: { '@type': 'City', name: 'Warszawa' },
+  description:
+    'Profesjonalny serwis zegarmistrzowski. Przeglądy, naprawy, regulacje, renowacje zegarków mechanicznych wszystkich marek.',
+}
+
 const services = [
   {
     title: 'Przegląd okresowy',
@@ -79,6 +89,10 @@ const process = [
 export default function NaprawaISerwisPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       {/* Header */}
       <Section spacing="md">
         <Container>

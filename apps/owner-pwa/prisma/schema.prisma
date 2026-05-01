@@ -10,17 +10,125 @@ model Scenario {
  id String @id @default(uuid())
  title String
  description String @db.Text
- status String @default("PENDING")
+ ownerNote String? @db.Text
  feedback String? @db.Text
+ attachmentsNote String? @db.Text
+ status String @default("draft")
+ priority String @default("normal")
+ version Int @default(1)
+ dueAt DateTime?
+ recordingDate DateTime?
+ authorId String?
+ reviewerId String?
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+
+ author User? @relation("AuthoredScenarios", fields: [authorId], references: [id], onDelete: SetNull)
+ reviewer User? @relation("ReviewedScenarios", fields: [reviewerId], references: [id], onDelete: SetNull)
+ comments ScenarioComment[]
+ activities ScenarioActivity[]
+ notifications Notification[]
+
+ @@index([status])
+ @@index([updatedAt])
+ @@index([dueAt])
 }
 
 model User {
  id String @id @default(uuid())
  username String @unique
  password String
- role String
+ role String @default("viewer")
+ accountStatus String @default("active")
  createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
+
+ authoredScenarios Scenario[] @relation("AuthoredScenarios")
+ reviewedScenarios Scenario[] @relation("ReviewedScenarios")
+ scenarioComments ScenarioComment[] @relation("ScenarioComments")
+ scenarioActivities ScenarioActivity[] @relation("ScenarioActivities")
+ notifications Notification[]
+ createdInvitations Invitation[] @relation("CreatedInvitations")
+ usedInvitations Invitation[] @relation("UsedInvitations")
+}
+
+model ScenarioComment {
+ id String @id @default(uuid())
+ scenarioId String
+ authorId String?
+ authorName String
+ type String @default("comment")
+ body String @db.Text
+ createdAt DateTime @default(now())
+
+ scenario Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+ author User? @relation("ScenarioComments", fields: [authorId], references: [id], onDelete: SetNull)
+
+ @@index([scenarioId, createdAt])
+}
+
+model ScenarioActivity {
+ id String @id @default(uuid())
+ scenarioId String
+ actorId String?
+ actorName String
+ action String
+ fromStatus String?
+ toStatus String?
+ note String? @db.Text
+ createdAt DateTime @default(now())
+
+ scenario Scenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+ actor User? @relation("ScenarioActivities", fields: [actorId], references: [id], onDelete: SetNull)
+
+ @@index([scenarioId, createdAt])
+}
+
+model Notification {
+ id String @id @default(uuid())
+ userId String
+ scenarioId String?
+ type String
+ title String
+ body String @db.Text
+ readAt DateTime?
+ createdAt DateTime @default(now())
+
+ user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ scenario Scenario? @relation(fields: [scenarioId], references: [id], onDelete: SetNull)
+
+ @@index([userId, readAt])
+ @@index([scenarioId])
+}
+
+model Invitation {
+ id String @id @default(uuid())
+ code String @unique
+ role String @default("viewer")
+ accountStatus String @default("active")
+ createdById String?
+ usedById String?
+ expiresAt DateTime?
+ usedAt DateTime?
+ createdAt DateTime @default(now())
+
+ createdBy User? @relation("CreatedInvitations", fields: [createdById], references: [id], onDelete: SetNull)
+ usedBy User? @relation("UsedInvitations", fields: [usedById], references: [id], onDelete: SetNull)
+
+ @@index([usedAt])
+ @@index([expiresAt])
+}
+
+model AuditLog {
+ id String @id @default(uuid())
+ actorId String?
+ actorName String
+ action String
+ targetType String
+ targetId String?
+ details String? @db.Text
+ createdAt DateTime @default(now())
+
+ @@index([targetType, targetId])
+ @@index([createdAt])
 }

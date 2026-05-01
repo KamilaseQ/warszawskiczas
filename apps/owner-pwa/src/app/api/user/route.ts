@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSession, createSession } from "@/lib/auth";
+import { createSession } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { validatePassword, validateUsername, PASSWORD_RULE_TEXT } from "@/domain/password";
+import { requireActiveSession } from "@/lib/api-guard";
 
 export async function PUT(request: NextRequest) {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const guard = await requireActiveSession(request);
+  if (!guard.ok) return guard.response;
+  const session = guard.session;
 
   try {
     const { username, password } = await request.json();
 
-    if (!username) {
-      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+    if (!username || !validateUsername(username)) {
+      return NextResponse.json(
+        { error: "Login musi miec od 3 do 30 znakow i moze zawierac litery, cyfry oraz podkreslenie." },
+        { status: 400 }
+      );
     }
 
     // Since we're using session username to identify the user
@@ -28,7 +32,10 @@ export async function PUT(request: NextRequest) {
     const dataToUpdate: { username: string; password?: string } = { username };
 
     if (password) {
-      dataToUpdate.password = await bcrypt.hash(password, 10);
+      if (!validatePassword(password)) {
+        return NextResponse.json({ error: PASSWORD_RULE_TEXT }, { status: 400 });
+      }
+      dataToUpdate.password = await bcrypt.hash(password, 12);
     }
 
     // Check if new username is taken by someone else
@@ -46,7 +53,7 @@ export async function PUT(request: NextRequest) {
 
     if (username !== user.username) {
       // Re-issue session with new username so they stay logged in
-      await createSession(username, session.role);
+      await createSession(session.userId, username, session.role, session.accountStatus);
     }
 
     return NextResponse.json({ success: true });

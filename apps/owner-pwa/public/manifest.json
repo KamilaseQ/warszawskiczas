@@ -1,12 +1,27 @@
 {
-  "name": "Warszawski Czas - Panel",
-  "short_name": "WC Panel",
-  "description": "Panel zarządzania scenariuszami video \u2014 Warszawski Czas",
+  "name": "Owner PWA - Warszawski Czas",
+  "short_name": "Owner PWA",
+  "description": "Scenariusze, recenzje właściciela i organizacja nagrań.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#09090b",
-  "theme_color": "#c8a45e",
+  "background_color": "#f7f7f4",
+  "theme_color": "#00694c",
   "orientation": "portrait-primary",
+  "shortcuts": [
+    {
+      "name": "Dzisiaj",
+      "short_name": "Dzisiaj",
+      "url": "/",
+      "description": "Bieżąca praca i decyzje"
+    },
+    {
+      "name": "Scenariusze",
+      "short_name": "Scenariusze",
+      "url": "/scenarios",
+      "description": "Lista scenariuszy według statusu"
+    }
+  ],
   "icons": [
     {
       "src": "/icon_logo.png",

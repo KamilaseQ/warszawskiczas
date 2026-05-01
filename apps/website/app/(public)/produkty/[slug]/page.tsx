@@ -1,0 +1,322 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { Container, Section, Heading, Text, Button, FaqAccordion, type FaqItem } from '@/components/ui'
+import { ProductCard } from '@/components/products'
+import { ProductGallery } from '@/components/products/product-gallery'
+import { mockProducts } from '@/data/mock-products'
+import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
+
+interface PageProps {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+  return mockProducts.map((p) => ({ slug: p.slug }))
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const product = mockProducts.find((p) => p.slug === slug)
+  if (!product) return { title: 'Produkt nie znaleziony' }
+  return {
+    title: `${product.brand} ${product.name}`,
+    description: product.description,
+  }
+}
+
+const certificationFaq: FaqItem[] = [
+  {
+    q: 'Co zawiera certyfikat autentyczności?',
+    a: 'Pełny opis egzemplarza, numer referencyjny, rok produkcji, opis stanu mechanizmu i koperty, datę i podpis zegarmistrza odpowiedzialnego za weryfikację. Dokument trafia do nabywcy w wersji papierowej oraz cyfrowej.',
+  },
+  {
+    q: 'Jak weryfikujecie autentyczność?',
+    a: 'Każdy zegarek przechodzi wieloetapową kontrolę: weryfikacja oznaczeń mechanizmu, pomiary chronometryczne, ocena pochodzenia (papiery, pudełko, historia serwisowa) oraz porównanie z bazą referencji.',
+  },
+  {
+    q: 'Czy oferujecie gwarancję?',
+    a: 'Tak — 12 miesięcy gwarancji butiku na pracę mechanizmu. Niezależnie od pozostałej gwarancji producenta, jeśli istnieje.',
+  },
+]
+
+function formatPrice(value?: number, onRequest?: boolean) {
+  if (value) {
+    return new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
+      minimumFractionDigits: 0,
+    }).format(value)
+  }
+  if (onRequest) return 'Cena na zapytanie'
+  return null
+}
+
+export default async function ProductPage({ params }: PageProps) {
+  const { slug } = await params
+  const product = mockProducts.find((p) => p.slug === slug)
+  if (!product) notFound()
+
+  const price = formatPrice(product.price, product.priceOnRequest)
+  const related = mockProducts
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .slice(0, 3)
+
+  const inquiryHref = `/kontakt?temat=${encodeURIComponent(`Zapytanie o ${product.brand} ${product.name}`)}`
+
+  const statusTone =
+    product.status === 'Sprzedany'
+      ? 'text-muted-foreground/70 line-through'
+      : product.status === 'Zarezerwowany'
+        ? 'text-muted-foreground'
+        : 'text-accent-gold'
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${product.brand} ${product.name}`,
+    brand: { '@type': 'Brand', name: product.brand },
+    description: product.description,
+    sku: product.reference,
+    productionDate: product.year ? String(product.year) : undefined,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'PLN',
+      price: product.price ?? undefined,
+      availability:
+        product.status === 'Sprzedany'
+          ? 'https://schema.org/SoldOut'
+          : product.status === 'Zarezerwowany'
+            ? 'https://schema.org/PreOrder'
+            : 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Warszawski Czas' },
+    },
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* Breadcrumb / nav back */}
+      <Section spacing="sm" className="pt-28 lg:pt-32">
+        <Container>
+          <Link
+            href="/produkty"
+            className="inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.35em] text-muted-foreground hover:text-accent-gold transition-colors"
+          >
+            <span aria-hidden>←</span> Wróć do katalogu
+          </Link>
+        </Container>
+      </Section>
+
+      {/* Editorial layout: gallery + details */}
+      <Section spacing="md">
+        <Container>
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+            {/* Gallery */}
+            <div className="lg:col-span-7">
+              <ProductGallery brand={product.brand} name={product.name} />
+            </div>
+
+            {/* Details */}
+            <div className="lg:col-span-5 lg:py-4 flex flex-col">
+              <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+                {product.brand}
+              </p>
+              <h1 className="mt-4 font-serif text-4xl font-medium leading-[1.05] text-foreground sm:text-5xl">
+                {product.name}
+              </h1>
+
+              {product.reference && (
+                <p className="mt-4 font-sans text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                  Ref. {product.reference}
+                  {product.year ? ` · ${product.year}` : ''}
+                </p>
+              )}
+
+              {/* Status */}
+              {product.status && (
+                <div className="mt-6 inline-flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent-gold" />
+                  <span className={`font-sans text-[10px] font-bold uppercase tracking-[0.35em] ${statusTone}`}>
+                    {product.status}
+                  </span>
+                </div>
+              )}
+
+              {/* Separator */}
+              <div className="my-8 h-px w-12 bg-accent-gold" />
+
+              <Text className="text-base leading-relaxed text-foreground/85">
+                {product.description}
+              </Text>
+
+              {product.editorial && (
+                <p className="mt-6 font-serif italic text-base leading-relaxed text-muted-foreground">
+                  &ldquo;{product.editorial}&rdquo;
+                </p>
+              )}
+
+              {/* Spec list */}
+              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-border py-6">
+                {product.year && (
+                  <div>
+                    <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
+                      Rok
+                    </dt>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.year}</dd>
+                  </div>
+                )}
+                {product.condition && (
+                  <div>
+                    <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
+                      Stan
+                    </dt>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.condition}</dd>
+                  </div>
+                )}
+                {product.type && (
+                  <div>
+                    <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
+                      Charakter
+                    </dt>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.type}</dd>
+                  </div>
+                )}
+                {product.reference && (
+                  <div>
+                    <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
+                      Referencja
+                    </dt>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.reference}</dd>
+                  </div>
+                )}
+              </dl>
+
+              {/* Price + CTA */}
+              <div className="mt-8">
+                {price && (
+                  <p className="font-serif text-3xl font-medium text-foreground">
+                    {price}
+                  </p>
+                )}
+                <div className="mt-6 flex flex-col gap-3">
+                  <Button asChild className="w-full" size="lg">
+                    <Link href={inquiryHref}>Zapytaj o dostępność</Link>
+                  </Button>
+                  <a
+                    href={`tel:${CONTACT_PHONE_RAW}`}
+                    className="inline-flex items-center justify-center gap-2 border border-border px-8 py-3 font-serif text-xs uppercase tracking-[0.2em] text-foreground transition-colors hover:border-accent-gold hover:text-accent-gold"
+                  >
+                    Zadzwoń · {CONTACT_PHONE}
+                  </a>
+                </div>
+                <p className="mt-4 font-sans text-[11px] uppercase tracking-[0.18em] text-muted-foreground/80">
+                  Bezpłatna wycena · Dyskretna konsultacja
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Historia referencji */}
+      {product.story && (
+        <Section variant="muted" spacing="lg">
+          <Container size="narrow">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+              <div className="lg:col-span-4">
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+                  Historia
+                </p>
+                <Heading as="h2" size="md" className="mt-4">
+                  {product.brand} {product.name}
+                </Heading>
+              </div>
+              <div className="lg:col-span-8">
+                <Text className="text-lg leading-relaxed text-foreground/85">
+                  {product.story}
+                </Text>
+              </div>
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Certyfikacja */}
+      <Section spacing="lg">
+        <Container size="narrow">
+          <div className="text-center">
+            <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+              Certyfikacja
+            </p>
+            <Heading as="h2" size="md" className="mt-4">
+              Autentyczność potwierdzona
+            </Heading>
+            <Text muted className="mx-auto mt-4 max-w-xl">
+              Każdy egzemplarz w naszym butiku przechodzi wieloetapową weryfikację
+              przed wpisaniem do katalogu. Klient otrzymuje pełną dokumentację.
+            </Text>
+          </div>
+
+          <div className="mt-12">
+            <FaqAccordion items={certificationFaq} />
+          </div>
+        </Container>
+      </Section>
+
+      {/* Podobne modele */}
+      {related.length > 0 && (
+        <Section variant="muted" spacing="lg">
+          <Container>
+            <div className="mb-10 flex items-end justify-between gap-6">
+              <div>
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+                  Może Cię zainteresować
+                </p>
+                <Heading as="h2" size="md" className="mt-4">
+                  Podobne modele
+                </Heading>
+              </div>
+              <Link
+                href="/produkty"
+                className="hidden sm:inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground hover:text-accent-gold transition-colors"
+              >
+                Cały katalog <span aria-hidden>→</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
+
+      {/* Final CTA */}
+      <Section spacing="lg">
+        <Container size="narrow" className="text-center">
+          <Heading as="h2" size="md">
+            Chcesz zobaczyć ten egzemplarz na żywo?
+          </Heading>
+          <Text muted className="mx-auto mt-4 max-w-xl">
+            Zapraszamy do butiku przy ulicy Mokotowskiej 71 lub na rozmowę online.
+          </Text>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Button asChild>
+              <Link href={inquiryHref}>Umów konsultację</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link href="/butik">Odwiedź butik</Link>
+            </Button>
+          </div>
+        </Container>
+      </Section>
+    </>
+  )
+}

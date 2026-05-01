@@ -1,90 +1,115 @@
 'use client'
 
-import { Container, Section } from '@/components/ui'
+import { Container, Section, ImagePlaceholder, KenBurns } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
-import { MapPin, Award, Clock } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 const values = [
   {
     num: '01',
-    icon: MapPin,
-    title: 'Mokotowska 71',
+    title: 'Weryfikacja i autentyczność',
     description:
-      'W sercu Warszawy, w historycznej kamienicy, tworzymy przestrzeń dla miłośników zegarmistrzostwa.',
+      'Każdy egzemplarz przechodzi wieloetapową kontrolę ekspercką. Certyfikat i pełna dokumentacja.',
   },
   {
     num: '02',
-    icon: Award,
-    title: 'Ekspertyza',
+    title: 'Zegarki z historią',
     description:
-      'Wieloletnie doświadczenie i głęboka wiedza pozwalają nam oferować tylko wyjątkowe egzemplarze.',
+      'Nie handlujemy anonimową masą. Znamy pochodzenie każdego modelu i opowiadamy jego historię.',
   },
   {
     num: '03',
-    icon: Clock,
-    title: 'Tradycja',
+    title: 'Relacja, nie transakcja',
     description:
-      'Łączymy szacunek dla zegarmistrzowskiej tradycji z wymaganiami współczesnego kolekcjonera.',
+      'Po zakupie jesteśmy dostępni — serwis, doradztwo, ewentualna odsprzedaż po latach.',
   },
 ]
 
 export function BrandPositioning() {
   return (
-    <Section variant="muted" spacing="lg">
+    <Section variant="muted" spacing="lg" className="relative overflow-hidden">
       <Container>
-        {/* 3.5 Split layout: lewa = editorial quote, prawa = 3 wartości */}
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-start">
+        <FadeIn>
+          <div className="mb-12 flex items-center gap-4">
+            <div className="h-px w-12 bg-accent-gold/60" />
+            <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+              III &nbsp;——&nbsp; Filozofia butiku
+            </p>
+          </div>
+        </FadeIn>
 
-          {/* Lewa strona — editorial quote / tekst marki */}
-          <FadeIn direction="right">
-            <div className="lg:sticky lg:top-32">
-              <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-6">
-                III &nbsp;——&nbsp; O nas
-              </p>
-              <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground text-balance leading-snug">
-                Więcej niż kolekcja zegarków.<br />
-                <span className="italic font-normal">Miejsce z historią.</span>
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* LEWA — duży cytat editorialny */}
+          <FadeIn direction="right" className="lg:col-span-7">
+            <div className="relative">
+              {/* Duża dekoracyjna cyfra w tle */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-10 -left-4 select-none font-serif italic text-[14rem] font-medium leading-none text-accent-gold/[0.05] lg:text-[18rem]"
+              >
+                "
+              </span>
+
+              <h2 className="relative font-serif text-4xl font-medium tracking-tight text-foreground text-balance leading-[1.1] sm:text-5xl lg:text-6xl">
+                Zegarek to nie przedmiot.<br />
+                To <span className="font-serif italic font-normal text-accent-gold">wybór</span>,
+                który mówi, kim <span className="font-serif italic font-normal">jesteś</span>.
               </h2>
-              <p className="mt-8 text-base leading-relaxed text-muted-foreground">
-                Warszawski Czas to butik, gdzie mechaniczna precyzja spotyka się
-                z kulturą i historią stolicy. Każdy zegarek w naszej kolekcji
-                przeszedł przez ręce ekspertów — nie sprzedajemy przypadkowych
-                egzemplarzy.
+
+              <p className="mt-10 max-w-lg font-sans text-base leading-relaxed text-muted-foreground text-pretty">
+                Warszawski Czas to butik, w którym mechaniczna precyzja spotyka się
+                z kulturą i historią. Każdy zegarek to rozmowa — o stylu, o czasie,
+                o człowieku, który go wybiera.
               </p>
-              {/* 3.6 Złoty separator */}
-              <div className="mt-10 h-px w-16 bg-accent-gold/60" />
+
+              {/* Placeholder zdjęcia makro tarczy — wystaje poza kontener */}
+              <div className="relative mt-12 hidden lg:block">
+                <KenBurns
+                  intensity={1.18}
+                  drift
+                  className="aspect-[16/10] w-[90%] translate-x-8"
+                >
+                  <ImagePlaceholder
+                    className="h-full w-full"
+                    variant="light"
+                    label="Zdjęcie: makro tarczy / dłonie zegarmistrza"
+                  />
+                </KenBurns>
+                {/* Offset border dekoracyjna */}
+                <div className="pointer-events-none absolute -bottom-4 left-8 h-full w-[90%] border border-accent-gold/20" />
+              </div>
             </div>
           </FadeIn>
 
-          {/* Prawa strona — 3 wartości z numerami */}
-          {/* 13.4 Creative mobile layout — alternating offset cards with gold accents */}
-          <div className="flex flex-col gap-10">
-            {values.map((value, index) => (
-              <FadeIn key={index} delay={index * 0.1} direction="up">
-                {/* 3.1+3.4 Duże numery ozdobne gold zamiast zielonych kółek */}
-                <div className={cn(
-                  'flex gap-6 items-start group',
-                  // 13.4 Mobile offset — alternating indent for visual interest
-                  index === 1 ? 'sm:pl-0 pl-6' : '',
-                  index === 2 ? 'sm:pl-0 pl-2' : ''
-                )}>
-                  <div className="flex-shrink-0 font-serif text-4xl font-medium text-accent-gold/30 leading-none select-none w-12 text-right">
-                    {value.num}
-                  </div>
-                  <div className="flex-1 border-t border-border/50 pt-5 relative">
-                    {/* Gold accent dot on mobile */}
-                    <div className="absolute -top-[3px] left-0 h-[5px] w-[5px] bg-accent-gold/60 sm:hidden" />
-                    <h3 className="font-serif text-xl font-medium text-foreground mb-3">
-                      {value.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {value.description}
-                    </p>
+          {/* PRAWA — 3 punkty z numerami */}
+          <div className="flex flex-col gap-10 lg:col-span-5 lg:pt-12">
+            {values.map((v, index) => (
+              <FadeIn key={v.num} direction="left" delay={index * 0.1}>
+                <div className="group relative border-t border-border pt-6">
+                  <div className="flex items-baseline gap-6">
+                    <span className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold/70">
+                      {v.num}
+                    </span>
+                    <div className="flex-1">
+                      <h3 className="font-serif text-xl font-medium text-foreground transition-colors duration-300 group-hover:text-accent-gold">
+                        {v.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
+                        {v.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </FadeIn>
             ))}
+
+            <FadeIn delay={0.35}>
+              <div className="mt-4 flex items-center gap-3">
+                <div className="h-px w-16 bg-accent-gold/60" />
+                <span className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
+                  Mokotowska 71 · Warszawa
+                </span>
+              </div>
+            </FadeIn>
           </div>
         </div>
       </Container>

@@ -1,71 +1,228 @@
+'use client'
+
 import Link from 'next/link'
-import { Watch } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { ImagePlaceholder } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import { Badge } from '@/components/ui'
 import type { Product } from '@/data/mock-products'
 
 interface ProductCardProps {
   product: Product
   className?: string
+  /** aspect ratio klasy obrazu — dla bento */
+  aspect?: 'portrait' | 'square' | 'tall' | 'wide'
+  /** układ karty: default = standard pionowy, feature = horyzontalny breakout */
+  layout?: 'default' | 'feature'
+  priority?: boolean
 }
 
-export function ProductCard({ product, className }: ProductCardProps) {
+const aspectMap = {
+  portrait: 'aspect-[3/4]',
+  square: 'aspect-square',
+  tall: 'aspect-[3/5]',
+  wide: 'aspect-[4/3] sm:aspect-[16/10]',
+}
+
+export function ProductCard({ product, className, aspect = 'portrait', layout = 'default' }: ProductCardProps) {
+  const reducedMotion = useReducedMotion()
   const formattedPrice = product.price
     ? new Intl.NumberFormat('pl-PL', {
       style: 'currency',
       currency: 'PLN',
       minimumFractionDigits: 0,
     }).format(product.price)
-    : null
+    : product.priceOnRequest
+      ? 'Cena na zapytanie'
+      : null
+
+  const statusColor =
+    product.status === 'Sprzedany'
+      ? 'text-muted-foreground/60 line-through'
+      : product.status === 'Zarezerwowany'
+        ? 'text-muted-foreground/80'
+        : 'text-accent-gold'
+
+  // Feature layout: szeroka karta z obrazem po lewej, treścią po prawej.
+  if (layout === 'feature') {
+    return (
+      <Link
+        href={`/produkty/${product.slug}`}
+        prefetch={false}
+        className={cn('group relative grid grid-cols-5 gap-4 sm:gap-6', className)}
+      >
+        <div className={cn('relative col-span-3 overflow-hidden', 'aspect-[4/3] sm:aspect-[5/4]')}>
+          <ImagePlaceholder
+            className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
+            variant="light"
+          />
+          <Badges product={product} statusColor={statusColor} />
+          <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/40" />
+        </div>
+
+        <div className="col-span-2 flex flex-col justify-center">
+          <p className="font-sans text-[9px] font-bold uppercase tracking-[0.35em] text-accent-gold sm:text-[10px]">
+            {product.brand}
+          </p>
+          <h3 className="mt-1 font-serif text-base font-medium leading-tight text-foreground transition-colors duration-300 group-hover:text-accent-gold sm:text-2xl">
+            {product.name}
+          </h3>
+          {product.reference && (
+            <p className="mt-1 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px]">
+              Ref. {product.reference}
+              {product.year ? ` · ${product.year}` : ''}
+            </p>
+          )}
+          <div className="mt-3 h-px w-8 bg-accent-gold/40" />
+          <span
+            className={cn(
+              'mt-3 font-sans text-[10px] font-semibold uppercase tracking-[0.15em] sm:text-[11px]',
+              formattedPrice ? 'text-foreground' : 'text-muted-foreground'
+            )}
+          >
+            {formattedPrice}
+          </span>
+          <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold sm:text-[10px]">
+            Zobacz <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </span>
+        </div>
+      </Link>
+    )
+  }
 
   return (
-    <article
+    <Link
+      href={`/produkty/${product.slug}`}
+      prefetch={false}
       className={cn(
-        'group relative flex flex-col overflow-hidden border border-border bg-background transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent-gold/5 hover:border-accent-gold/30',
+        'group relative block transition-transform duration-500 ease-out will-change-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
         className
       )}
     >
-      {/* Badges */}
-      <div className="absolute left-4 top-4 z-10 flex flex-col gap-2">
-        {product.isNew && <Badge>Nowość</Badge>}
-        {product.isExclusive && <Badge variant="premium">Na zapytanie</Badge>}
+      <div className={cn('relative overflow-hidden', aspectMap[aspect])}>
+        {/* Wewnętrzny "dolly" — zdjęcie startuje lekko zoomed-in i się ustawia,
+            a na hover jeszcze raz delikatnie się przybliża. */}
+        <motion.div
+          className="absolute inset-0"
+          variants={{
+            hidden: { scale: 1.08 },
+            visible: { scale: 1, transition: { duration: 1.1, ease: [0.21, 0.47, 0.32, 0.98] } },
+          }}
+        >
+          <ImagePlaceholder
+            className="absolute inset-0 transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+            variant="light"
+          />
+        </motion.div>
+
+        <Badges product={product} statusColor={statusColor} />
+
+        {/* Akcent w prawym dolnym narożniku — kreślony złotem na hover */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-2 right-2 z-10 h-3 w-3"
+        >
+          <span className="absolute bottom-0 right-0 h-px w-0 bg-accent-gold transition-[width] duration-500 ease-out group-hover:w-full" />
+          <span className="absolute bottom-0 right-0 h-0 w-px bg-accent-gold transition-[height] delay-100 duration-500 ease-out group-hover:h-full" />
+        </span>
+
+        {/* Złota linia pod zdjęciem — rysuje się od lewej na hover */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 block h-px origin-left scale-x-0 bg-accent-gold transition-transform duration-[700ms] ease-out group-hover:scale-x-100"
+        />
+
+        <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/30" />
+
+        {/* Kurtyna wejścia — odsłania TYLKO obszar zdjęcia, nigdy nie zasłania
+            tekstów pod kafelkiem. Płynie ku górze z cienką złotą krawędzią. */}
+        {!reducedMotion && (
+          <motion.div
+            aria-hidden="true"
+            variants={{
+              hidden: { y: '0%' },
+              visible: {
+                y: '-101%',
+                transition: { duration: 0.95, ease: [0.65, 0, 0.35, 1], delay: 0.1 },
+              },
+            }}
+            className="pointer-events-none absolute inset-0 z-30 origin-top bg-muted"
+          >
+            <span className="absolute inset-x-0 bottom-0 block h-px bg-accent-gold" />
+          </motion.div>
+        )}
       </div>
 
-      {/* Image Placeholder */}
-      <div className="relative aspect-square overflow-hidden bg-muted">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Watch className="h-16 w-16 text-border" strokeWidth={1} />
-        </div>
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-foreground/0 transition-colors group-hover:bg-foreground/5" />
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-5">
-        <p className="text-sm font-serif italic tracking-widest text-accent-gold">
+      <motion.div
+        className="mt-3 sm:mt-4"
+        variants={{
+          hidden: { opacity: 0, y: 8 },
+          visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.45 },
+          },
+        }}
+      >
+        <p className="font-sans text-[9px] font-bold uppercase tracking-[0.35em] text-accent-gold sm:text-[10px]">
           {product.brand}
         </p>
-        <h3 className="mt-2 font-sans text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-accent-gold">
+        <h3 className="mt-1 font-serif text-base font-medium leading-tight text-foreground transition-colors duration-300 group-hover:text-accent-gold sm:text-xl">
           {product.name}
         </h3>
-        <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-2">
-          {product.description}
-        </p>
-        <div className="mt-6 flex items-center justify-between">
-          <span className="text-sm font-semibold tracking-wider text-foreground">
-            {formattedPrice || 'Cena na zapytanie'}
-          </span>
-          <Link
-            href="/kontakt"
-            className="group/link flex items-center text-[10px] font-serif uppercase tracking-widest text-accent-gold transition-colors hover:text-accent-gold"
+        {product.reference && (
+          <p className="mt-1 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px]">
+            Ref. {product.reference}
+            {product.year ? ` · ${product.year}` : ''}
+          </p>
+        )}
+        <div className="mt-2 flex items-center justify-between gap-2 sm:mt-3 sm:gap-4">
+          <span
+            className={cn(
+              'font-sans text-[10px] font-semibold uppercase tracking-[0.15em] sm:text-[11px]',
+              formattedPrice ? 'text-foreground' : 'text-muted-foreground'
+            )}
           >
-            Zapytaj
-          </Link>
+            {formattedPrice}
+          </span>
+          <span className="hidden items-center gap-1 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold sm:inline-flex">
+            Zobacz
+            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </span>
         </div>
-      </div>
+      </motion.div>
+    </Link>
+  )
+}
 
-      {/* Animated Vogue Accent Line on Hover */}
-      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-accent-gold to-accent-gold/60 transition-all duration-700 ease-out group-hover:w-full" />
-    </article>
+function Badges({ product, statusColor }: { product: Product; statusColor: string }) {
+  return (
+    <>
+      {product.status && (
+        <div className="absolute right-0 top-0 bg-[#0a0a0a] px-2 py-1 sm:px-3 sm:py-1.5">
+          <span
+            className={cn(
+              'font-sans text-[8px] font-bold uppercase tracking-[0.3em] sm:text-[9px]',
+              statusColor
+            )}
+          >
+            {product.status}
+          </span>
+        </div>
+      )}
+      {(product.isNew || product.isExclusive) && (
+        <div className="absolute left-0 top-0 flex flex-col gap-0">
+          {product.isNew && (
+            <span className="bg-accent-gold px-2 py-1 font-sans text-[8px] font-bold uppercase tracking-[0.3em] text-[#0a0a0a] sm:px-3 sm:py-1.5 sm:text-[9px]">
+              Nowość
+            </span>
+          )}
+          {product.isExclusive && (
+            <span className="bg-[#0a0a0a] px-2 py-1 font-sans text-[8px] font-bold uppercase tracking-[0.3em] text-accent-gold sm:px-3 sm:py-1.5 sm:text-[9px]">
+              Na zapytanie
+            </span>
+          )}
+        </div>
+      )}
+    </>
   )
 }

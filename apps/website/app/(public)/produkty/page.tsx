@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Container, Section, Heading, Text, Button } from '@/components/ui'
-import { ProductGrid } from '@/components/products'
+import { ProductCatalog } from '@/components/products'
 import { mockProducts } from '@/data/mock-products'
 
 export const metadata: Metadata = {
@@ -13,42 +13,54 @@ export const metadata: Metadata = {
 export default function ProduktyPage() {
   return (
     <>
-      {/* Header */}
-      <Section spacing="md">
+      {/* Slim editorial banner — pasek u góry, nie blokuje viewportu */}
+      <Section variant="muted" spacing="sm" className="border-b border-border">
         <Container>
-          <div className="max-w-2xl">
-            <Heading as="h1" size="xl">
-              Nasza kolekcja
-            </Heading>
-            <Text variant="lead" muted className="mt-6">
-              Każdy zegarek w naszym butiku został starannie wyselekcjonowany. 
-              Weryfikujemy autentyczność, stan techniczny i historię każdego 
-              egzemplarza, aby oferować tylko wyjątkowe pozycje.
-            </Text>
+          <div className="grid items-end gap-6 lg:grid-cols-12 lg:gap-12">
+            <div className="lg:col-span-7">
+              <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+                Katalog · Selekcja butiku
+              </p>
+              <h1 className="mt-3 font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl leading-[1.05]">
+                Kolekcja <span className="italic text-foreground/80">starannie</span> dobrana
+              </h1>
+            </div>
+
+            <div className="lg:col-span-5 lg:border-l lg:border-border lg:pl-8">
+              <p className="font-serif italic text-sm text-muted-foreground sm:text-base text-pretty">
+                &ldquo;Najpiękniejsze zegarki nie są najgłośniejsze — są te, które dyskretnie towarzyszą nam przez dekady.&rdquo;
+              </p>
+              <p className="mt-2 font-sans text-[9px] uppercase tracking-[0.3em] text-muted-foreground/60">
+                — Warszawski Czas
+              </p>
+            </div>
           </div>
         </Container>
       </Section>
 
-      {/* Products */}
-      <Section variant="muted" spacing="lg">
+      {/* Catalog — bezpośrednio pod banerem, bez dużego oddechu */}
+      <Section variant="muted" spacing="sm">
         <Container>
-          <ProductGrid products={mockProducts} columns={3} />
+          <ProductCatalog products={mockProducts} />
         </Container>
       </Section>
 
       {/* CTA */}
       <Section spacing="lg">
         <Container size="narrow" className="text-center">
-          <Heading as="h2" size="md">
-            Nie znalazłeś tego, czego szukasz?
+          <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+            Nie znalazłeś?
+          </p>
+          <Heading as="h2" size="md" className="mt-4">
+            Część kolekcji nie jest publiczna
           </Heading>
           <Text muted className="mx-auto mt-4 max-w-xl">
-            Część naszej kolekcji nie jest prezentowana publicznie. 
-            Skontaktuj się z nami — być może mamy to, czego szukasz.
+            Zegarki z prywatnych kolekcji, modele &ldquo;na zapytanie&rdquo; i pozycje
+            zarezerwowane dla stałych klientów — dostępne po krótkiej rozmowie.
           </Text>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild>
-              <Link href="/kolekcja-na-zapytanie">Kolekcja na zapytanie</Link>
+              <Link href="/kolekcja-na-zapytanie">Kolekcja Prywatna</Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/kontakt">Skontaktuj się</Link>

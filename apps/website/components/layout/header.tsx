@@ -51,25 +51,25 @@ export function Header() {
           <Navigation className="hidden lg:flex" isTransparent={!isSolid} />
 
           {/* Desktop CTA & Phone */}
-          <div className="hidden lg:flex items-center gap-6">
-            <a href="tel:+48604501000" className={cn("group flex items-center gap-2 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors duration-500 ease-in-out", isSolid ? "text-muted-foreground hover:text-accent-gold" : "text-white/70 hover:text-white")}>
+          <div className="hidden lg:flex items-center gap-5">
+            <a href="tel:+48604501000" className={cn("group hidden xl:flex items-center gap-2 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors duration-500 ease-in-out", isSolid ? "text-muted-foreground hover:text-accent-gold" : "text-white/70 hover:text-white")}>
               <Phone className="h-3.5 w-3.5 text-accent-gold transition-colors duration-500 ease-in-out" />
               +48 604 501 000
             </a>
             <Link
-              href="/butik"
+              href="/kontakt"
               className={cn(
-                "inline-block border text-[10px] font-bold uppercase tracking-[0.3em] px-5 py-2.5 transition-all duration-500 ease-in-out",
+                "inline-block text-[10px] font-bold uppercase tracking-[0.3em] px-5 py-2.5 transition-all duration-500 ease-in-out",
                 !isSolid
-                  ? "border-white/40 text-white hover:border-accent-gold hover:text-accent-gold"
-                  : "border-foreground/25 text-foreground hover:border-accent-gold hover:text-accent-gold"
+                  ? "bg-accent-gold text-[#0a0a0a] hover:bg-white"
+                  : "bg-foreground text-background hover:bg-accent-gold hover:text-foreground"
               )}
             >
-              Odwiedź butik
+              Umów konsultację
             </Link>
           </div>
 
-          {/* Mobile Menu Button — 9.6 Animowany hamburger→X */}
+          {/* Mobile Menu Button — animowany hamburger→X */}
           <button
             type="button"
             className="inline-flex flex-col items-center justify-center gap-1.5 p-2 lg:hidden relative z-[60] w-8 h-8"
@@ -80,31 +80,21 @@ export function Header() {
             }}
             aria-label="Otwórz menu"
           >
-            {/* Linia górna — różna długość (editorial), morph do X */}
             <span
               className={cn(
-                'block h-px origin-center transition-all duration-300 ease-in-out',
-                mobileMenuOpen
-                  ? 'w-5 translate-y-[5px] rotate-45 bg-foreground'
-                  : 'w-5 bg-current',
+                'block h-px w-5 origin-center transition-all duration-300 ease-in-out',
                 isSolid ? 'bg-foreground' : 'bg-white'
               )}
             />
-            {/* Linia środkowa — krótsza */}
             <span
               className={cn(
-                'block h-px transition-all duration-300 ease-in-out',
-                mobileMenuOpen ? 'w-0 opacity-0' : 'w-3.5 opacity-100',
+                'block h-px w-3.5 transition-all duration-300 ease-in-out',
                 isSolid ? 'bg-foreground' : 'bg-white'
               )}
             />
-            {/* Linia dolna */}
             <span
               className={cn(
-                'block h-px origin-center transition-all duration-300 ease-in-out',
-                mobileMenuOpen
-                  ? 'w-5 -translate-y-[5px] -rotate-45 bg-foreground'
-                  : 'w-5 bg-current',
+                'block h-px w-5 origin-center transition-all duration-300 ease-in-out',
                 isSolid ? 'bg-foreground' : 'bg-white'
               )}
             />

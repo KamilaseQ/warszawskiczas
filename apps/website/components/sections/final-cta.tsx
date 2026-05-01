@@ -44,15 +44,16 @@ export function FinalCTA() {
         <FadeIn delay={0.15} direction="up">
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {/* PRIMARY */}
-            <Link href="/kontakt" className="btn-premium-white">
-              Skontaktuj się
+            <Link href="/kontakt" prefetch className="btn-premium-white">
+              Umów wizytę w butiku
             </Link>
             {/* SECONDARY — tertiary style */}
             <Link
-              href="/butik"
+              href="/produkty"
+              prefetch
               className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 hover:text-accent-gold transition-colors duration-300 group py-4"
             >
-              Odwiedź butik
+              Zobacz kolekcję
               <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </Link>
           </div>

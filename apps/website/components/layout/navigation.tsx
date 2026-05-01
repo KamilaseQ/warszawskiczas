@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/produkty', label: 'Produkty' },
-  { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
+  { href: '/produkty', label: 'Produkty', prefetch: true },
+  { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja', prefetch: true },
   {
     href: '/uslugi',
     label: 'Usługi',
@@ -17,7 +17,7 @@ const navItems = [
     ],
   },
   { href: '/butik', label: 'Butik' },
-  { href: '/kontakt', label: 'Kontakt' },
+  { href: '/kontakt', label: 'Kontakt', prefetch: true },
 ]
 
 interface NavigationProps {
@@ -75,6 +75,7 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
           <Link
             key={item.href}
             href={item.href}
+            prefetch={item.prefetch ?? undefined}
             className={cn(
               'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
               isActive ? 'active' : '',

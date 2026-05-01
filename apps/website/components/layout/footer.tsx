@@ -63,9 +63,13 @@ export function Footer() {
             <p className="mt-3 font-serif text-lg tracking-wide text-accent-gold">
               Mokotowska 71
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-white/50">
-              Butik zegarków premium w sercu Warszawy. Eksperci zegarmistrzowscy 
-              z pasją do mechanicznej precyzji.
+            <p className="mt-5 font-serif italic text-base leading-snug text-white/80">
+              Zegarki z historią.<br />
+              Eksperci z pasją.
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-white/45">
+              Butik zegarków premium w sercu Warszawy.
+              Mechaniczna precyzja, wiedza i dyskrecja od 2009 roku.
             </p>
 
             {/* 10.6 Social Media Icons — Instagram, TikTok, Facebook */}
@@ -201,11 +205,26 @@ export function Footer() {
           </div>
         </div>
 
-        {/* 10.4 Copyright — zmieniony */}
-        <div className="mt-12 border-t border-white/10 pt-8">
-          <p className="text-center text-sm text-white/30">
-            &copy; {new Date().getFullYear()} Warszawski Czas — Mokotowska 71, Warszawa
+        {/* 10.4 Copyright + linki prawne */}
+        <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-center text-xs uppercase tracking-[0.25em] text-white/30 sm:text-left">
+            &copy; {new Date().getFullYear()} Warszawski Czas
           </p>
+          <nav className="flex items-center gap-6">
+            <Link
+              href="/polityka-prywatnosci"
+              className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-accent-gold"
+            >
+              Polityka prywatności
+            </Link>
+            <span className="h-1 w-1 rounded-full bg-white/20" aria-hidden />
+            <Link
+              href="/regulamin"
+              className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-accent-gold"
+            >
+              Regulamin
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

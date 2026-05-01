@@ -2,12 +2,18 @@ import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-
-export type UserRole = "admin" | "owner" | "editor" | "viewer" | "pending";
+import {
+  normalizeAccountStatus,
+  normalizeRole,
+  type AccountStatus,
+  type UserRole,
+} from "@/domain/permissions";
 
 export interface SessionPayload {
+  userId: string;
   username: string;
   role: UserRole;
+  accountStatus: AccountStatus;
   exp: number;
 }
 
@@ -21,10 +27,12 @@ function getSecret(): Uint8Array {
 const EXPIRATION = "24h";
 
 export async function createSession(
+  userId: string,
   username: string,
-  role: UserRole
+  role: UserRole,
+  accountStatus: AccountStatus
 ): Promise<string> {
-  const token = await new SignJWT({ username, role })
+  const token = await new SignJWT({ userId, username, role, accountStatus })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(EXPIRATION)
     .sign(getSecret());
@@ -50,11 +58,17 @@ export async function getSession(): Promise<SessionPayload | null> {
     const { payload } = await jwtVerify(token, getSecret());
     const user = await prisma.user.findUnique({
       where: { username: payload.username as string },
-      select: { role: true }
+      select: { id: true, username: true, role: true, accountStatus: true },
     });
     if (!user) return null;
-    
-    return { ...payload, role: user.role } as unknown as SessionPayload;
+
+    return {
+      userId: user.id,
+      username: user.username,
+      role: normalizeRole(user.role),
+      accountStatus: normalizeAccountStatus(user.role, user.accountStatus),
+      exp: payload.exp ?? 0,
+    } as SessionPayload;
   } catch {
     return null;
   }
@@ -92,10 +106,11 @@ export async function ensureAdminExists(): Promise<void> {
       data: {
         username: adminUsername,
         password: hashedAdmin,
-        role: "admin",
+        role: "owner",
+        accountStatus: "active",
       },
     });
-    console.log(`✅ Auto-seeded admin user: "${adminUsername}"`);
+    console.log(`Auto-seeded owner user: "${adminUsername}"`);
 
     // Also seed owner if env vars are provided
     const ownerUsername = process.env.OWNER_USERNAME;
@@ -107,12 +122,13 @@ export async function ensureAdminExists(): Promise<void> {
           username: ownerUsername,
           password: hashedOwner,
           role: "owner",
+          accountStatus: "active",
         },
       });
-      console.log(`✅ Auto-seeded owner user: "${ownerUsername}"`);
+      console.log(`Auto-seeded owner user: "${ownerUsername}"`);
     }
   } catch (error) {
-    console.error("❌ Auto-seed error:", error);
+    console.error("Auto-seed error:", error);
     seedChecked = false;
     // Don't throw — seed failure shouldn't block login for existing users
   }
@@ -121,21 +137,40 @@ export async function ensureAdminExists(): Promise<void> {
 export async function validateCredentials(
   username: string,
   password: string
-): Promise<{ valid: boolean; role: UserRole | null; dbError?: boolean }> {
+): Promise<{
+  valid: boolean;
+  user:
+    | {
+        id: string;
+        username: string;
+        role: UserRole;
+        accountStatus: AccountStatus;
+      }
+    | null;
+  dbError?: boolean;
+}> {
   // Ensure admin user exists on first login attempt
   await ensureAdminExists();
 
   try {
     const user = await prisma.user.findUnique({ where: { username } });
-    if (!user) return { valid: false, role: null };
+    if (!user) return { valid: false, user: null };
 
     const valid = await bcrypt.compare(password, user.password);
     if (valid) {
-      return { valid: true, role: user.role as UserRole };
+      return {
+        valid: true,
+        user: {
+          id: user.id,
+          username: user.username,
+          role: normalizeRole(user.role),
+          accountStatus: normalizeAccountStatus(user.role, user.accountStatus),
+        },
+      };
     }
-    return { valid: false, role: null };
+    return { valid: false, user: null };
   } catch (error) {
-    console.error("❌ DB/Auth error:", error);
-    return { valid: false, role: null, dbError: true };
+    console.error("DB/Auth error:", error);
+    return { valid: false, user: null, dbError: true };
   }
 }

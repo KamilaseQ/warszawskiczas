@@ -9,6 +9,16 @@ export const metadata: Metadata = {
     'Profesjonalna sprzedaż komisowa zegarków premium. Dotrzemy do właściwych kolekcjonerów i uzyskamy najlepszą cenę za Twój zegarek.',
 }
 
+const serviceJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Komis zegarków',
+  provider: { '@type': 'LocalBusiness', name: 'Warszawski Czas' },
+  areaServed: { '@type': 'City', name: 'Warszawa' },
+  description:
+    'Profesjonalna sprzedaż komisowa zegarków premium. Dotrzemy do właściwych kolekcjonerów i uzyskamy najlepszą cenę.',
+}
+
 const benefits = [
   {
     icon: Users,
@@ -81,6 +91,10 @@ const whyConsignment = [
 export default function KomisPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       {/* Header */}
       <Section spacing="md">
         <Container>

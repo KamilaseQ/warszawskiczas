@@ -1,46 +1,18 @@
 'use client'
 
-import { Container, Section } from '@/components/ui'
-import { Shield, Eye, Handshake, Award } from 'lucide-react'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { Shield, Lock, Star, Users, Handshake, ArrowRight } from 'lucide-react'
+import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
-const signals = [
-  {
-    icon: Shield,
-    value: 15,
-    suffix: '+',
-    label: 'Lat doświadczenia',
-  },
-  {
-    icon: Eye,
-    value: 100,
-    suffix: '%',
-    label: 'Weryfikacja autentyczności',
-  },
-  {
-    icon: Handshake,
-    value: 500,
-    suffix: '+',
-    label: 'Zadowolonych klientów',
-  },
-  {
-    icon: Award,
-    value: 0,
-    suffix: '',
-    label: 'Certyfikowani eksperci',
-    display: 'Cert.',
-  },
-]
-
 // 15.3 Animowany licznik przy scroll
-function AnimatedNumber({ value, suffix, display }: { value: number; suffix: string; display?: string }) {
+function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
   const [count, setCount] = useState(0)
   const [started, setStarted] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    if (display) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started) {
@@ -61,75 +33,247 @@ function AnimatedNumber({ value, suffix, display }: { value: number; suffix: str
     )
     if (ref.current) observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [value, started, display])
+  }, [value, started])
 
-  if (display) return <span ref={ref}>{display}</span>
-  return <span ref={ref}>{count}{suffix}</span>
+  return (
+    <span ref={ref} className="tabular-nums">
+      {count}
+      {suffix}
+    </span>
+  )
 }
 
 export function TrustSignals() {
   return (
-    <Section spacing="lg">
-      <Container>
-        {/* 7.3 Lepiej oddychający układ + editorial label */}
+    <Section spacing="lg" className="relative">
+      {/* Grain texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px',
+        }}
+      />
+
+      <Container className="relative">
         <FadeIn>
           <div className="mb-12">
             <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
               II &nbsp;——&nbsp; Zaufanie
             </p>
+            <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl text-balance max-w-2xl">
+              Budujemy relacje,<br />
+              <span className="italic font-normal">nie transakcje.</span>
+            </h2>
           </div>
         </FadeIn>
 
-        <div className="grid grid-cols-2 gap-px bg-border/30 lg:grid-cols-4">
-          {signals.map((signal, index) => (
-            <FadeIn key={index} delay={index * 0.08}>
-              {/* 7.3 Inny układ bez rozrzuconych kart — siatka z liniami */}
-              <div className="trust-card group text-center bg-background py-12 px-6">
-                {/* Ikona gold */}
-                <signal.icon className="mx-auto h-6 w-6 text-accent-gold/60 mb-6" />
+        {/* RZĄD 1 — Opinia celebrytki (full-width) */}
+        <FadeIn delay={0.05}>
+          <div className="trust-card relative bg-background px-8 py-12 lg:px-16 lg:py-16">
+            {/* Złote obramowanie lewej krawędzi */}
+            <div className="absolute left-0 top-0 h-full w-[3px] bg-accent-gold" />
 
-                {/* 7.5 Liczby — większy kontrast typograficzny */}
-                <p className="font-serif text-4xl lg:text-5xl font-medium text-foreground tabular-nums">
-                  <AnimatedNumber
-                    value={signal.value}
-                    suffix={signal.suffix}
-                    display={signal.display}
-                  />
-                </p>
-                <p className="mt-3 text-[11px] font-sans uppercase tracking-[0.25em] text-muted-foreground">
-                  {signal.label}
-                </p>
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+              {/* Avatar / inicjały */}
+              <div className="flex items-center gap-5 lg:col-span-3">
+                <div className="relative flex h-20 w-20 items-center justify-center bg-accent-gold/15 border border-accent-gold/30">
+                  <span className="font-serif italic text-2xl text-accent-gold">AC</span>
+                </div>
+                <div className="lg:hidden">
+                  <p className="font-serif text-base font-medium text-foreground">
+                    [Imię Nazwisko]
+                  </p>
+                  <p className="mt-1 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                    Aktorka · Ambasadorka marki
+                  </p>
+                </div>
               </div>
-            </FadeIn>
-          ))}
+
+              {/* Cytat */}
+              <div className="lg:col-span-9">
+                {/* Gwiazdki */}
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-3.5 w-3.5 fill-accent-gold text-accent-gold" />
+                  ))}
+                </div>
+
+                {/* Cudzysłów + cytat */}
+                <div className="relative">
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-10 -left-2 select-none font-serif text-7xl leading-none text-accent-gold/30"
+                  >
+                    "
+                  </span>
+                  <blockquote className="font-serif text-xl italic font-normal text-foreground leading-relaxed lg:text-2xl text-pretty">
+                    [TREŚĆ OPINII DO WKLEJENIA] — cytat polskiej celebrytki o butiku,
+                    doświadczeniu zakupu zegarka i zaufaniu do zespołu Warszawskiego Czasu.
+                  </blockquote>
+                </div>
+
+                <div className="mt-6 hidden lg:flex items-center gap-3">
+                  <div className="h-px w-12 bg-accent-gold/60" />
+                  <p className="font-serif text-base font-medium text-foreground">
+                    [Imię Nazwisko]
+                  </p>
+                  <span className="text-muted-foreground/40">·</span>
+                  <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                    Aktorka · Ambasadorka marki
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* RZĄD 2 — 3 kafelki */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-3 lg:gap-8">
+          <FadeIn delay={0.05}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-10">
+              <div className="flex h-10 w-10 items-center justify-center bg-accent-gold/10">
+                <Shield className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-medium text-foreground">
+                Gwarancja autentyczności
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
+                Każdy zegarek przechodzi wieloetapową weryfikację. Certyfikat w komplecie,
+                pełna dokumentacja oryginalności.
+              </p>
+              <Link
+                href="/uslugi"
+                className="mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold"
+              >
+                Jak weryfikujemy
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-10">
+              <div className="flex h-10 w-10 items-center justify-center bg-accent-gold/10">
+                <Lock className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-medium text-foreground">
+                Pełna dyskrecja
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
+                Kupno, sprzedaż i wycena w zaufanym środowisku. Twoje dane nigdy nie
+                trafiają do osób trzecich.
+              </p>
+              <div className="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/60">
+                <span className="h-1 w-1 bg-accent-gold/60" />
+                Bez pośredników
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.15}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-10 flex flex-col">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground">
+                  Ocena w Google
+                </p>
+                <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#c9a962" d="M21.35 11.1h-9.17v2.97h5.26c-.23 1.48-1.66 4.34-5.26 4.34-3.17 0-5.76-2.62-5.76-5.85s2.59-5.85 5.76-5.85c1.81 0 3.01.77 3.7 1.43l2.52-2.42C16.91 4.14 14.8 3.25 12.18 3.25c-4.96 0-9 4.04-9 9s4.04 9 9 9c5.2 0 8.65-3.65 8.65-8.79 0-.59-.06-1.04-.14-1.36z" />
+                </svg>
+              </div>
+
+              <div className="mt-6 flex items-baseline gap-3">
+                <span className="font-serif text-6xl font-medium text-accent-gold leading-none">
+                  5.0
+                </span>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-3.5 w-3.5 fill-accent-gold text-accent-gold" />
+                    ))}
+                  </div>
+                  <span className="mt-1 text-[10px] font-sans uppercase tracking-[0.2em] text-muted-foreground">
+                    na podstawie opinii
+                  </span>
+                </div>
+              </div>
+
+              <a
+                href="https://maps.app.goo.gl/v3iC97EKPkc3BtkU8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto pt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 hover:text-accent-gold"
+              >
+                Zobacz opinie
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </FadeIn>
         </div>
 
-        {/* 7.4 Element procesu zakupu — zintegrowany */}
-        <FadeIn delay={0.2}>
-          <div className="mt-20 grid gap-10 lg:grid-cols-3 lg:gap-16">
-            <div className="lg:col-span-1">
-              <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
-                Nasz proces
-              </p>
-              <h3 className="font-serif text-2xl font-medium text-foreground text-balance">
-                Transparentność na każdym etapie
-              </h3>
-            </div>
-            <div className="lg:col-span-2 grid gap-8 sm:grid-cols-3">
-              {[
-                { step: '01', title: 'Konsultacja', desc: 'Bezpłatna wycena i doradztwo — online lub w butiku.' },
-                { step: '02', title: 'Weryfikacja', desc: 'Każdy zegarek przechodzi przez naszych ekspertów przed sprzedażą.' },
-                { step: '03', title: 'Transakcja', desc: 'Bezpieczna, prosta, na Twoich warunkach. Natychmiastowa płatność.' },
-              ].map((item) => (
-                <div key={item.step} className="border-t border-border/50 pt-6">
-                  <p className="font-serif text-2xl font-medium text-accent-gold/30 mb-3">{item.step}</p>
-                  <p className="font-serif text-base font-medium text-foreground mb-2">{item.title}</p>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+        {/* RZĄD 3 — 2 kafelki */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-2 lg:gap-8">
+          <FadeIn delay={0.05}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-12">
+              <div className="flex items-start gap-6">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-accent-gold/10">
+                  <Handshake className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
                 </div>
-              ))}
+                <div>
+                  <h3 className="font-serif text-2xl font-medium text-foreground">
+                    Ekspert przy każdej decyzji
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground text-pretty">
+                    Nie zostawiamy Cię samego z wyborem. Pomagamy dopasować zegarek do
+                    stylu, budżetu i historii — a jeśli nie mamy tego, czego szukasz,
+                    pomożemy znaleźć.
+                  </p>
+                  <Link
+                    href="/kontakt"
+                    prefetch
+                    className="mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/80 transition-colors duration-300 hover:text-accent-gold"
+                  >
+                    Umów konsultację
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-12">
+              <div className="flex items-start gap-6">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-accent-gold/10">
+                  <Users className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-serif text-2xl font-medium text-foreground">
+                    Zaufali nam kolekcjonerzy
+                  </h3>
+                  <div className="mt-6 grid grid-cols-2 gap-6">
+                    <div>
+                      <p className="font-serif text-4xl font-medium text-foreground sm:text-5xl">
+                        <AnimatedCounter value={400} suffix="+" />
+                      </p>
+                      <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                        Zrealizowanych<br />transakcji
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-serif text-4xl font-medium text-accent-gold/80 sm:text-5xl">
+                        od <AnimatedCounter value={2009} />
+                      </p>
+                      <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                        Ponad dekada<br />doświadczenia
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
       </Container>
     </Section>
   )
