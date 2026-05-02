@@ -3,56 +3,124 @@ import { FadeIn } from '@/components/ui/fade-in'
 
 const steps = [
   {
-    num: '01',
+    numeral: 'I',
+    meta: 'Dzień 1',
     title: 'Kontakt i rejestracja',
-    body: 'Wypełniasz formularz na dole strony. Specjalista kontaktuje się z Tobą w ciągu 24 godzin.',
+    body:
+      'Wypełniasz formularz na dole strony. Specjalista kontaktuje się w ciągu 24 godzin.',
   },
   {
-    num: '02',
+    numeral: 'II',
+    meta: '60–90 minut',
     title: 'Indywidualna konsultacja',
-    body: 'Omawiamy Twoje preferencje, historię kolekcji, budżet i oczekiwania wobec zegarka.',
+    body:
+      'Omawiamy Twoje preferencje, historię kolekcji, budżet i oczekiwania wobec zegarka.',
   },
   {
-    num: '03',
+    numeral: 'III',
+    meta: 'Spotkanie w butiku',
     title: 'Dostęp i transakcja',
-    body: 'Otrzymujesz kod dostępu, wybierasz model, finalizujemy dyskretnie i bezpiecznie.',
+    body:
+      'Otrzymujesz kod dostępu, wybierasz model, finalizujemy dyskretnie i bezpiecznie.',
   },
 ]
 
 export function PrivateCollectionProcess() {
   return (
-    <Section spacing="lg" className="bg-background">
+    <Section spacing="xl" className="relative overflow-hidden bg-[#fbf6ec]">
+      {/* Parchment grain */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '220px 220px',
+        }}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_120%,rgba(122,76,38,0.08)_0%,transparent_55%)]" />
+
       <Container>
+        {/* Centered header — krótki, instruction-like */}
         <FadeIn>
-          <div className="mb-12 flex items-center gap-4">
-            <div className="h-px w-12 bg-accent-gold/60" />
-            <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
-              Jak działamy
+          <div className="text-center">
+            <p className="inline-flex items-center justify-center gap-3 text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
+              <span className="h-px w-8 bg-accent-gold/60" />
+              Jak uzyskać dostęp
+              <span className="h-px w-8 bg-accent-gold/60" />
             </p>
+            <h2 className="mx-auto mt-8 max-w-3xl font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem] text-balance leading-[1.05]">
+              Trzy kroki<br />
+              <span className="italic font-normal">do własnego zegarka.</span>
+            </h2>
           </div>
-          <h2 className="font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl text-balance max-w-2xl">
-            Trzy kroki<br />
-            <span className="italic font-normal">do własnego zegarka.</span>
-          </h2>
         </FadeIn>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-3 lg:gap-12">
-          {steps.map((s, i) => (
-            <FadeIn key={s.num} delay={i * 0.12}>
-              <div className="relative pt-8 border-t border-accent-gold/30">
-                <span className="font-serif text-6xl font-medium text-accent-gold/40 leading-none">
-                  {s.num}
-                </span>
-                <h3 className="mt-6 font-serif text-xl font-medium text-foreground">
-                  {s.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">
-                  {s.body}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
+        {/* Horizontal chronograph timeline */}
+        <div className="relative mt-20 lg:mt-28">
+          {/* Horizontal connector — desktop only */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-[2.75rem] hidden h-px bg-gradient-to-r from-accent-gold/0 via-accent-gold/45 to-accent-gold/0 lg:block"
+          />
+          {/* Vertical connector — mobile only */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-[2.75rem] top-12 bottom-12 w-px bg-gradient-to-b from-accent-gold/40 via-accent-gold/30 to-accent-gold/0 lg:hidden"
+          />
+
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
+            {steps.map((s, i) => (
+              <FadeIn key={s.numeral} delay={i * 0.15}>
+                <article className="relative flex flex-col items-start gap-5 lg:items-center lg:text-center">
+                  {/* Subdial — gold circle, like a chronograph minute counter */}
+                  <div className="relative flex-shrink-0">
+                    {/* Outer ring */}
+                    <div
+                      className="relative flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full border border-accent-gold/45 bg-[#fbf6ec]"
+                      style={{
+                        boxShadow:
+                          '0 0 0 1px rgba(201,169,98,0.12), 0 8px 24px -10px rgba(122,76,38,0.35), inset 0 0 0 1px rgba(255,255,255,0.4)',
+                      }}
+                    >
+                      {/* Inner ring */}
+                      <div className="absolute inset-2 rounded-full border border-accent-gold/25" />
+                      {/* Tick marks at 12/3/6/9 — chronograph dial detail */}
+                      <span aria-hidden className="absolute left-1/2 top-1 h-1.5 w-px -translate-x-1/2 bg-accent-gold/55" />
+                      <span aria-hidden className="absolute left-1/2 bottom-1 h-1.5 w-px -translate-x-1/2 bg-accent-gold/35" />
+                      <span aria-hidden className="absolute top-1/2 left-1 h-px w-1.5 -translate-y-1/2 bg-accent-gold/35" />
+                      <span aria-hidden className="absolute top-1/2 right-1 h-px w-1.5 -translate-y-1/2 bg-accent-gold/35" />
+                      {/* Roman numeral */}
+                      <span className="font-serif text-3xl font-medium italic text-foreground">
+                        {s.numeral}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Meta — time stamp / chronograph context */}
+                  <p className="font-sans text-[10px] font-bold uppercase tracking-[0.45em] text-accent-gold">
+                    {s.meta}
+                  </p>
+
+                  {/* Title */}
+                  <h3 className="font-serif text-xl font-medium text-foreground sm:text-[1.375rem] lg:max-w-[16rem]">
+                    {s.title}
+                  </h3>
+
+                  {/* Body */}
+                  <p className="max-w-md font-sans text-sm leading-relaxed text-muted-foreground text-pretty lg:max-w-[18rem]">
+                    {s.body}
+                  </p>
+                </article>
+              </FadeIn>
+            ))}
+          </div>
         </div>
+
+        {/* Outro meta */}
+        <FadeIn delay={0.3}>
+          <p className="mx-auto mt-20 max-w-2xl text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/45">
+            Cały proces: 24h–7 dni &nbsp;·&nbsp; Dyskrecja zachowana zawsze
+          </p>
+        </FadeIn>
       </Container>
     </Section>
   )

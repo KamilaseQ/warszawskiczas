@@ -1,11 +1,28 @@
 'use client'
 
 import Link from 'next/link'
-import { Lock } from 'lucide-react'
-import { Container, Section, ImagePlaceholder } from '@/components/ui'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Lock, X } from 'lucide-react'
+import { Container, Section, ImagePlaceholder, KenBurns } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 export function HiddenCollectionTeaser() {
+  const [zoom, setZoom] = useState(false)
+
+  useEffect(() => {
+    if (!zoom) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setZoom(false)
+    }
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [zoom])
+
   return (
     <Section spacing="lg" className="relative overflow-hidden bg-[#0b1410] text-white">
       {/* Grain texture */}
@@ -56,109 +73,152 @@ export function HiddenCollectionTeaser() {
             </div>
           </FadeIn>
 
-          {/* PRAWA — 3 zamazane karty w nieregularnym układzie */}
+          {/* PRAWA — jedno editorialne zdjęcie z Ken Burns + click-to-zoom */}
           <FadeIn direction="left" delay={0.15}>
-            <div className="relative h-[520px] w-full">
-              {/* Karta 1 — największa, lewa góra */}
-              <div
-                className="absolute left-0 top-8 w-[55%] origin-top-left animate-[wc-blur-pulse_6s_ease-in-out_infinite]"
-                style={{ transform: 'rotate(-2deg)' }}
+            <div className="relative">
+              {/* Główny obraz — przycisk otwierający lightbox */}
+              <button
+                type="button"
+                onClick={() => setZoom(true)}
+                aria-label="Powiększ zdjęcie z kolekcji prywatnej"
+                className="group relative block w-full cursor-zoom-in overflow-hidden focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent-gold/60"
               >
-                <div className="relative aspect-[3/4]">
-                  <ImagePlaceholder
+                <div className="relative aspect-[4/5]">
+                  {/* Ken Burns wraps the image — slow scroll-zoom */}
+                  <KenBurns
+                    intensity={1.18}
+                    drift
                     className="absolute inset-0"
-                    variant="dark"
-                    label=""
-                    showDial={false}
-                  />
-                  <div className="absolute inset-0 backdrop-blur-xl bg-black/30" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-14 w-14 items-center justify-center border border-accent-gold/50 bg-black/40">
-                      <Lock className="h-5 w-5 text-accent-gold/80" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-white/30">
-                      No. 001
+                  >
+                    <ImagePlaceholder
+                      className="absolute inset-0 transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                      variant="dark"
+                      label=""
+                      showDial={true}
+                    />
+                  </KenBurns>
+
+                  {/* Editorial overlay — vignette + warm tone */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/60 via-black/15 to-accent-gold/[0.05]" />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_30%_25%,transparent_0%,rgba(0,0,0,0.45)_100%)] mix-blend-multiply" />
+
+                  {/* Hover gold border */}
+                  <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/50" />
+
+                  {/* Gold corner crop marks (top-left, bottom-right) */}
+                  <span aria-hidden className="pointer-events-none absolute left-3 top-3 h-4 w-4">
+                    <span className="absolute left-0 top-0 h-px w-4 bg-accent-gold/70" />
+                    <span className="absolute left-0 top-0 h-4 w-px bg-accent-gold/70" />
+                  </span>
+                  <span aria-hidden className="pointer-events-none absolute right-3 bottom-3 h-4 w-4">
+                    <span className="absolute right-0 bottom-0 h-px w-4 bg-accent-gold/70" />
+                    <span className="absolute right-0 bottom-0 h-4 w-px bg-accent-gold/70" />
+                  </span>
+
+                  {/* Top-left meta — "Kolekcja Prywatna" */}
+                  <div className="absolute left-6 top-6 flex items-center gap-2.5">
+                    <Lock className="h-3 w-3 text-accent-gold" />
+                    <span className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-accent-gold/85">
+                      Kolekcja Prywatna
                     </span>
-                    <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-accent-gold/50">
-                      Zastrzeżone
+                  </div>
+
+                  {/* Bottom-left — No. 001 + powiększ hint */}
+                  <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
+                    <div>
+                      <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-white/45">
+                        No. 001
+                      </p>
+                      <p className="mt-1.5 font-serif italic text-sm text-white/70">
+                        Egzemplarz dostępny po weryfikacji
+                      </p>
+                    </div>
+                    <span className="pointer-events-none inline-flex items-center gap-2 bg-[#0a0a0a]/70 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.3em] text-white/85 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
+                      Powiększ
+                      <span aria-hidden>+</span>
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
 
-              {/* Karta 2 — środkowa, prawa góra */}
-              <div
-                className="absolute right-0 top-0 w-[45%] animate-[wc-blur-pulse_6s_ease-in-out_infinite]"
-                style={{ transform: 'rotate(3deg)', animationDelay: '1.5s' }}
-              >
-                <div className="relative aspect-[3/4]">
-                  <ImagePlaceholder
-                    className="absolute inset-0"
-                    variant="dark"
-                    label=""
-                    showDial={false}
-                  />
-                  <div className="absolute inset-0 backdrop-blur-xl bg-black/35" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-12 w-12 items-center justify-center border border-accent-gold/40 bg-black/40">
-                      <Lock className="h-4 w-4 text-accent-gold/80" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-white/30">
-                      No. 002
-                    </span>
-                  </div>
-                </div>
-              </div>
+              {/* Offset gold border — dekoracyjne, jak w boutique-preview */}
+              <div className="pointer-events-none absolute -bottom-5 -right-5 h-full w-full border border-accent-gold/25" />
 
-              {/* Karta 3 — dolna prawa */}
+              {/* Animated gold pin — bottom left of image */}
               <div
-                className="absolute bottom-0 right-[10%] w-[48%] animate-[wc-blur-pulse_6s_ease-in-out_infinite]"
-                style={{ transform: 'rotate(-1deg)', animationDelay: '3s' }}
+                aria-hidden
+                className="pointer-events-none absolute -left-2 bottom-10 flex h-2 w-2 items-center justify-center"
               >
-                <div className="relative aspect-[3/4]">
-                  <ImagePlaceholder
-                    className="absolute inset-0"
-                    variant="dark"
-                    label=""
-                    showDial={false}
-                  />
-                  <div className="absolute inset-0 backdrop-blur-xl bg-black/35" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex h-12 w-12 items-center justify-center border border-accent-gold/40 bg-black/40">
-                      <Lock className="h-4 w-4 text-accent-gold/80" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-white/30">
-                      No. 003
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Ozdobne gold dot pattern */}
-              <div
-                aria-hidden="true"
-                className="absolute bottom-16 left-[40%] flex h-2 w-2 items-center justify-center"
-              >
-                <span className="absolute h-2 w-2 bg-accent-gold/60" />
+                <span className="absolute h-2 w-2 bg-accent-gold/80" />
                 <span className="absolute h-4 w-4 animate-ping bg-accent-gold/30" />
+              </div>
+
+              {/* Caption editorial */}
+              <div className="mt-6 flex items-center gap-3">
+                <div className="h-px w-8 bg-accent-gold/60" />
+                <span className="font-serif italic text-sm text-white/55">
+                  Pojedyncza sztuka — szczegóły wyłącznie po weryfikacji.
+                </span>
               </div>
             </div>
           </FadeIn>
         </div>
       </Container>
 
-      <style jsx>{`
-        @keyframes wc-blur-pulse {
-          0%, 100% { opacity: 0.85; transform-origin: center; }
-          50% { opacity: 1; }
-        }
-      `}</style>
+      {/* Lightbox — pełnoekranowy podgląd zdjęcia */}
+      <AnimatePresence>
+        {zoom && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-[300] flex items-center justify-center bg-[#0a0a0a]/95 p-6"
+            onClick={() => setZoom(false)}
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                setZoom(false)
+              }}
+              className="absolute right-6 top-6 inline-flex h-12 w-12 items-center justify-center border border-white/20 text-white/80 transition-colors hover:border-accent-gold hover:text-accent-gold"
+              aria-label="Zamknij"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <motion.div
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.96 }}
+              transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+              className="relative w-full max-w-3xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="relative aspect-[4/5] w-full">
+                <ImagePlaceholder
+                  className="absolute inset-0"
+                  variant="dark"
+                  label="Kolekcja Prywatna · No. 001"
+                />
+                {/* Same overlays for visual consistency */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-accent-gold/[0.04]" />
+                <span aria-hidden className="pointer-events-none absolute left-3 top-3 h-4 w-4">
+                  <span className="absolute left-0 top-0 h-px w-4 bg-accent-gold/70" />
+                  <span className="absolute left-0 top-0 h-4 w-px bg-accent-gold/70" />
+                </span>
+                <span aria-hidden className="pointer-events-none absolute right-3 bottom-3 h-4 w-4">
+                  <span className="absolute right-0 bottom-0 h-px w-4 bg-accent-gold/70" />
+                  <span className="absolute right-0 bottom-0 h-4 w-px bg-accent-gold/70" />
+                </span>
+              </div>
+              <p className="mt-4 text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/55">
+                ESC &nbsp;·&nbsp; aby zamknąć
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Section>
   )
 }

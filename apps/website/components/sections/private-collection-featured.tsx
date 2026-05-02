@@ -165,30 +165,9 @@ export function PrivateCollectionFeatured() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_15%_85%,rgba(122,76,38,0.12)_0%,transparent_50%)]" />
 
       <Container size="wide" className="relative">
-        {/* HASŁO — dominujące, panel jednoznacznie pod nim */}
-        <FadeIn>
-          <div className="mx-auto max-w-4xl text-center">
-            <p className="flex items-center justify-center gap-3 text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-[#8a6a2c]">
-              <span className="h-px w-8 bg-[#8a6a2c]/60" />
-              {unlocked ? 'Trzy egzemplarze' : 'Zaprezentowane po weryfikacji'}
-              <span className="h-px w-8 bg-[#8a6a2c]/60" />
-            </p>
-            <h2 className="mt-10 font-serif text-5xl font-medium leading-[1.02] tracking-tight text-[#1f1813] sm:text-6xl lg:text-[5rem] text-balance">
-              Wybrane z kolekcji,<br />
-              <span className="italic font-normal text-[#5a3a1f]">które rzadko opuszczają sejf.</span>
-            </h2>
-            <p className="mx-auto mt-10 max-w-xl font-sans text-base leading-relaxed text-[#3d2f24]/75 text-pretty lg:text-lg">
-              {unlocked
-                ? 'Każdy egzemplarz przeszedł pełną weryfikację. Pełna dokumentacja, znana prowencja, dyskretny transfer.'
-                : 'Trzy egzemplarze. Pełna dokumentacja każdego, znana prowencja, dyskretny transfer. Zaprezentowane wyłącznie po wpisaniu kodu dostępu.'}
-            </p>
-            <div className="mx-auto mt-10 h-px w-16 bg-[#8a6a2c]/60" />
-          </div>
-        </FadeIn>
-
-        {/* PANEL KARUZELI — pod hasłem, oddzielony powietrzem */}
+        {/* PANEL KARUZELI — od razu, bez intro */}
         <FadeIn delay={0.15}>
-          <div className="relative mt-24 lg:mt-36">
+          <div className="relative">
             {/* Dekoracyjna ramka offset */}
             <div className="pointer-events-none absolute -bottom-5 -right-5 hidden h-full w-full border border-[#8a6a2c]/30 lg:block" />
             <div className="pointer-events-none absolute -top-5 -left-5 hidden h-full w-full border border-[#8a6a2c]/15 lg:block" />
@@ -375,16 +354,6 @@ export function PrivateCollectionFeatured() {
           </div>
         </FadeIn>
 
-        {/* Stopka panelu — kontekst pełnej kolekcji */}
-        <FadeIn delay={0.25}>
-          <p className="mx-auto mt-16 max-w-2xl text-center font-serif italic text-base text-[#3d2f24]/65 lg:text-lg">
-            Kolekcja prywatna to{' '}
-            <span className="text-[#5a3a1f] not-italic font-medium">
-              kuracja, nie katalog
-            </span>{' '}
-            — trzy egzemplarze na ten miesiąc, każdy wybrany osobno.
-          </p>
-        </FadeIn>
       </Container>
     </Section>
   )

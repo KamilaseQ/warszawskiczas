@@ -68,7 +68,7 @@ export function TrustSignals() {
           </div>
         </FadeIn>
 
-        {/* RZĄD 1 — Opinia celebrytki (full-width) */}
+        {/* RZĄD 1 — Opinia klientki (full-width) */}
         <FadeIn delay={0.05}>
           <div className="trust-card relative bg-background px-8 py-12 lg:px-16 lg:py-16">
             {/* Złote obramowanie lewej krawędzi */}
@@ -78,14 +78,14 @@ export function TrustSignals() {
               {/* Avatar / inicjały */}
               <div className="flex items-center gap-5 lg:col-span-3">
                 <div className="relative flex h-20 w-20 items-center justify-center bg-accent-gold/15 border border-accent-gold/30">
-                  <span className="font-serif italic text-2xl text-accent-gold">AC</span>
+                  <span className="font-serif italic text-2xl text-accent-gold">IB</span>
                 </div>
                 <div className="lg:hidden">
                   <p className="font-serif text-base font-medium text-foreground">
-                    [Imię Nazwisko]
+                    Izabella Budryn
                   </p>
                   <p className="mt-1 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
-                    Aktorka · Ambasadorka marki
+                    Projektantka biżuterii
                   </p>
                 </div>
               </div>
@@ -108,19 +108,23 @@ export function TrustSignals() {
                     "
                   </span>
                   <blockquote className="font-serif text-xl italic font-normal text-foreground leading-relaxed lg:text-2xl text-pretty">
-                    [TREŚĆ OPINII DO WKLEJENIA] — cytat polskiej celebrytki o butiku,
-                    doświadczeniu zakupu zegarka i zaufaniu do zespołu Warszawskiego Czasu.
+                    Korzystam z usług Jarosława od wielu lat i zawsze mogę liczyć na pełen
+                    profesjonalizm oraz realną pomoc. Ogromna wiedza, rzetelne podejście i
+                    uczciwe doradztwo — zarówno przy serwisie, jak i bardziej wymagających
+                    tematach związanych z zegarkami. Dodatkowym atutem jest świetna lokalizacja
+                    w samym centrum Warszawy, przy Mokotowskiej, co jest bardzo wygodne.
+                    Zdecydowanie polecam.
                   </blockquote>
                 </div>
 
                 <div className="mt-6 hidden lg:flex items-center gap-3">
                   <div className="h-px w-12 bg-accent-gold/60" />
                   <p className="font-serif text-base font-medium text-foreground">
-                    [Imię Nazwisko]
+                    Izabella Budryn
                   </p>
                   <span className="text-muted-foreground/40">·</span>
                   <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
-                    Aktorka · Ambasadorka marki
+                    Projektantka biżuterii
                   </p>
                 </div>
               </div>

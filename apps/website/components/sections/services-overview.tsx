@@ -1,11 +1,13 @@
 import Link from 'next/link'
-import { Wrench, ArrowDownToLine, Repeat, ArrowRight, Gem } from 'lucide-react'
+import { Wrench, ArrowDownToLine, Repeat, ArrowUpRight } from 'lucide-react'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 const services = [
   {
     num: '01',
+    eyebrow: 'Atelier zegarmistrzowski',
+    duration: '3 – 6 tygodni',
     icon: Wrench,
     title: 'Naprawa i serwis',
     description:
@@ -14,87 +16,173 @@ const services = [
   },
   {
     num: '02',
+    eyebrow: 'Wycena i transakcja',
+    duration: 'Od ręki',
     icon: ArrowDownToLine,
     title: 'Skup zegarków',
     description:
-      'Uczciwa wycena i natychmiastowa płatność. Skupujemy zegarki premium, vintage oraz biżuterię.',
+      'Uczciwa wycena i natychmiastowa płatność. Skupujemy zegarki premium wszystkich marek, także vintage.',
     href: '/uslugi/skup',
   },
   {
     num: '03',
+    eyebrow: 'Sprzedaż dyskretna',
+    duration: '30 – 90 dni',
     icon: Repeat,
     title: 'Komis',
     description:
       'Profesjonalna sprzedaż w komisie. Dotrzemy do właściwych kolekcjonerów i uzyskamy najlepszą cenę za Twój zegarek.',
     href: '/uslugi/komis',
   },
-  {
-    num: '04',
-    // 5.7 Biżuteria jako naturalna usługa
-    icon: Gem,
-    title: 'Biżuteria',
-    description:
-      'Wyselekcjonowana biżuteria z historią. Pierścionki, naszyjniki i bransolety od uznanych marek — skup, komis i sprzedaż.',
-    href: '/uslugi',
-  },
 ]
 
 export function ServicesOverview() {
   return (
-    <Section spacing="lg">
-      <Container>
-        {/* 5.2 Editorial header spójny z resztą strony */}
+    <Section spacing="xl" className="relative overflow-hidden">
+      {/* Subtle warmth from the right */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_15%,rgba(201,169,98,0.06)_0%,transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_15%_90%,rgba(122,76,38,0.04)_0%,transparent_55%)]" />
+
+      {/* Vertical decorative typography — left edge */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 [writing-mode:vertical-rl] [transform:rotate(180deg)] xl:block"
+      >
+        <span className="font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold/35">
+          Atelier &nbsp;·&nbsp; od 2009
+        </span>
+      </div>
+
+      <Container className="relative">
+        {/* Editorial header — asymmetric two-column */}
         <FadeIn>
-          <div className="mb-16">
-            <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-4">
-              V &nbsp;——&nbsp; Usługi
-            </p>
-            <h2 className="font-serif text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
-              Ekspercka obsługa<br />
-              <span className="italic font-normal">na każdym etapie</span>
-            </h2>
+          <div className="mb-20 grid gap-10 lg:mb-24 lg:grid-cols-12 lg:items-end lg:gap-16">
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4">
+                <div className="h-px w-12 bg-accent-gold/60" />
+                <p className="font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold">
+                  V &nbsp;——&nbsp; Usługi atelier
+                </p>
+              </div>
+              <h2 className="mt-8 font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem] text-balance leading-[1.05]">
+                Ekspercka obsługa<br />
+                <span className="italic font-normal">na każdym etapie.</span>
+              </h2>
+            </div>
+            <div className="lg:col-span-5 lg:pb-3">
+              <p className="max-w-md text-base leading-relaxed text-muted-foreground text-pretty">
+                Od pierwszej weryfikacji do późniejszego serwisu — wszystkie etapy życia
+                zegarka pod jednym dachem warszawskiego butiku.
+              </p>
+            </div>
           </div>
         </FadeIn>
 
-        {/* 5.6 Editorial horizontal layout z numerami */}
-        <div className="divide-y divide-border/50">
-          {services.map((service, index) => (
-            <FadeIn key={index} delay={index * 0.08}>
-              <Link
-                href={service.href}
-                className="group flex items-start gap-8 py-10 transition-all duration-300 hover:pl-2"
-              >
-                {/* Numer ozdobny */}
-                <div className="flex-shrink-0 font-serif text-3xl font-medium text-accent-gold/25 leading-none w-10 text-right select-none mt-1">
-                  {service.num}
-                </div>
+        {/* Atelier dispatches — 3 horizontal editorial entries */}
+        <div className="relative">
+          {/* Top hairline */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent"
+          />
 
-                {/* Ikona — gold (5.1) */}
-                <div className="flex-shrink-0 mt-1">
-                  <service.icon className="h-5 w-5 text-accent-gold/70 transition-colors duration-300 group-hover:text-accent-gold" />
-                </div>
+          {services.map((service, index) => {
+            const Icon = service.icon
+            return (
+              <FadeIn key={service.num} delay={index * 0.08}>
+                <Link
+                  href={service.href}
+                  className="group relative block border-b border-accent-gold/15"
+                >
+                  {/* Hover wash — slides in from left */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-gradient-to-r from-accent-gold/[0.07] via-accent-gold/[0.02] to-transparent transition-transform duration-700 ease-out group-hover:scale-x-100"
+                  />
 
-                {/* Treść */}
-                <div className="flex-1">
-                  <h3 className="font-serif text-xl font-medium text-foreground mb-2 group-hover:text-accent-gold transition-colors duration-300">
-                    {service.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground max-w-lg">
-                    {service.description}
-                  </p>
-                </div>
+                  {/* Hover hairline — bottom, gold, animates left → right */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 bottom-0 block h-px origin-left scale-x-0 bg-accent-gold transition-transform duration-[800ms] ease-out group-hover:scale-x-100"
+                  />
 
-                {/* Strzałka — 5.4 gold kolor */}
-                <div className="flex-shrink-0 mt-1 hidden sm:block">
-                  <ArrowRight className="h-4 w-4 text-accent-gold/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-gold" />
-                </div>
-              </Link>
-            </FadeIn>
-          ))}
+                  {/* Decorative chronograph subdial — far right, fades in on hover */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute right-4 top-1/2 hidden h-28 w-28 -translate-y-1/2 opacity-0 transition-opacity duration-700 group-hover:opacity-100 xl:block xl:right-12"
+                  >
+                    <div className="absolute inset-0 rounded-full border border-accent-gold/25" />
+                    <div className="absolute inset-3 rounded-full border border-accent-gold/15" />
+                    <span className="absolute left-1/2 top-1 h-2 w-px -translate-x-1/2 bg-accent-gold/55" />
+                    <span className="absolute left-1/2 bottom-1 h-2 w-px -translate-x-1/2 bg-accent-gold/35" />
+                    <span className="absolute top-1/2 left-1 h-px w-2 -translate-y-1/2 bg-accent-gold/35" />
+                    <span className="absolute top-1/2 right-1 h-px w-2 -translate-y-1/2 bg-accent-gold/35" />
+                    <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-gold/40" />
+                  </div>
+
+                  <div className="relative grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-5 px-2 py-12 transition-[padding] duration-500 ease-out group-hover:pl-4 sm:gap-x-8 lg:grid-cols-[auto_1fr_auto] lg:gap-x-12 lg:px-4 lg:py-14">
+                    {/* LEFT — large italic numeral + gold hairline */}
+                    <div className="flex items-baseline gap-5 sm:gap-6">
+                      <span className="font-serif italic text-5xl font-normal leading-none text-accent-gold/45 transition-colors duration-500 group-hover:text-accent-gold/85 sm:text-6xl lg:text-7xl">
+                        {service.num}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="hidden h-14 w-px self-center bg-accent-gold/30 transition-[height,background-color] duration-500 group-hover:h-20 group-hover:bg-accent-gold/55 sm:block"
+                      />
+                    </div>
+
+                    {/* CENTER — content */}
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-3 font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
+                        <Icon className="h-3 w-3" strokeWidth={1.75} />
+                        {service.eyebrow}
+                      </p>
+                      <h3 className="mt-3 font-serif text-2xl font-medium text-foreground transition-colors duration-300 group-hover:text-accent-gold lg:text-[1.75rem]">
+                        {service.title}
+                      </h3>
+                      <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground text-pretty lg:text-[15px]">
+                        {service.description}
+                      </p>
+                      {/* Mobile-only meta row */}
+                      <div className="mt-5 flex items-center justify-between gap-4 lg:hidden">
+                        <span className="font-sans text-[10px] font-bold uppercase tracking-[0.35em] text-foreground/50">
+                          <span className="text-accent-gold/80">·</span>&nbsp;{service.duration}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold">
+                          Dowiedz się więcej
+                          <ArrowUpRight className="h-3 w-3" />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* RIGHT — meta + arrow medallion (desktop) */}
+                    <div className="relative z-10 hidden flex-col items-end gap-5 self-center lg:flex">
+                      <div className="text-right">
+                        <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-foreground/45">
+                          Czas realizacji
+                        </p>
+                        <p className="mt-2 font-serif italic text-base text-foreground/80">
+                          {service.duration}
+                        </p>
+                      </div>
+                      <span className="inline-flex h-11 w-11 items-center justify-center border border-accent-gold/30 transition-all duration-300 group-hover:border-accent-gold group-hover:bg-accent-gold/10">
+                        <ArrowUpRight className="h-4 w-4 text-accent-gold transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </FadeIn>
+            )
+          })}
         </div>
 
-        {/* 5.5 Oddech przed następną sekcją */}
-        <div className="mt-16 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
+        {/* Outro */}
+        <FadeIn delay={0.3}>
+          <p className="mt-16 text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/45">
+            Mokotowska 71 &nbsp;·&nbsp; Atelier zegarmistrzowski od 2009
+          </p>
+        </FadeIn>
       </Container>
     </Section>
   )

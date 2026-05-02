@@ -13,9 +13,17 @@ interface FaqAccordionProps {
   items: FaqItem[]
   variant?: 'light' | 'dark'
   defaultOpen?: number | null
+  numbering?: 'none' | 'roman'
 }
 
-export function FaqAccordion({ items, variant = 'light', defaultOpen = null }: FaqAccordionProps) {
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+
+export function FaqAccordion({
+  items,
+  variant = 'light',
+  defaultOpen = null,
+  numbering = 'none',
+}: FaqAccordionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(defaultOpen)
   const isDark = variant === 'dark'
 
@@ -34,8 +42,19 @@ export function FaqAccordion({ items, variant = 'light', defaultOpen = null }: F
                 isDark ? 'text-white hover:text-accent-gold' : 'text-foreground hover:text-accent-gold'
               )}
             >
-              <span className="font-serif text-lg font-medium leading-snug sm:text-xl">
-                {item.q}
+              <span className="flex items-baseline gap-4 sm:gap-6">
+                {numbering === 'roman' && (
+                  <span
+                    aria-hidden
+                    className="hidden flex-shrink-0 font-serif italic font-normal text-accent-gold/60 sm:inline-block sm:text-base"
+                    style={{ minWidth: '2ch', letterSpacing: '0.05em' }}
+                  >
+                    {ROMAN[i] ?? i + 1}
+                  </span>
+                )}
+                <span className="font-serif text-lg font-medium leading-snug sm:text-xl">
+                  {item.q}
+                </span>
               </span>
               <span
                 className={cn(

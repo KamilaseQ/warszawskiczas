@@ -7,14 +7,24 @@ export function LoadingScreen() {
   const [fading, setFading] = useState(false)
 
   useEffect(() => {
+    const markFinished = () => {
+      ;(window as unknown as { __wcLoadingFinished?: boolean }).__wcLoadingFinished = true
+      window.dispatchEvent(new Event('wc-loading-finish'))
+    }
+
     if (sessionStorage.getItem('wc-loaded') === '1') {
       setVisible(false)
+      markFinished()
       return
     }
 
+    let finished = false
     const finish = () => {
+      if (finished) return
+      finished = true
       setFading(true)
       sessionStorage.setItem('wc-loaded', '1')
+      markFinished()
       window.setTimeout(() => setVisible(false), 800)
     }
 

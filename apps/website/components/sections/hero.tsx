@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export function Hero() {
   const contentRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -16,6 +17,26 @@ export function Hero() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
+
+  useEffect(() => {
+    if (isMobile) return
+
+    const startVideo = () => {
+      const v = videoRef.current
+      if (!v) return
+      const p = v.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
+    }
+
+    const flag = (window as unknown as { __wcLoadingFinished?: boolean }).__wcLoadingFinished
+    if (flag) {
+      startVideo()
+      return
+    }
+
+    window.addEventListener('wc-loading-finish', startVideo, { once: true })
+    return () => window.removeEventListener('wc-loading-finish', startVideo)
+  }, [isMobile])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,11 +63,11 @@ export function Hero() {
       <div className="absolute inset-0 z-0 bg-black">
         {!isMobile ? (
           <video
-            autoPlay
+            ref={videoRef}
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster="/hero-poster.jpg"
             className="h-full w-full object-cover"
             style={{ filter: 'saturate(1.15) contrast(1.1) brightness(0.88) sepia(0.12) hue-rotate(-8deg)' }}

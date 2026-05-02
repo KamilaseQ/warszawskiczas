@@ -201,7 +201,7 @@ export default function KontaktPage() {
             <div className="relative">
               <div className="relative aspect-[21/9] overflow-hidden bg-[#0f0f0e]">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2444.3!2d21.017!3d52.222!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc7b27a7a8c3%3A0x0!2sMokotowska+71%2C+Warszawa!5e0!3m2!1spl!2spl!4v1"
+                  src="https://maps.google.com/maps?cid=11669713150774348709&hl=pl&z=17&t=&output=embed"
                   width="100%"
                   height="100%"
                   style={{
