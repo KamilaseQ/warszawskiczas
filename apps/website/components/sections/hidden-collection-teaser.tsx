@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, X } from 'lucide-react'
@@ -86,7 +87,7 @@ export function HiddenCollectionTeaser() {
                 <div className="relative aspect-[4/5]">
                   {/* Ken Burns wraps the image — slow scroll-zoom */}
                   <KenBurns
-                    intensity={1.18}
+                    intensity={1.24}
                     drift
                     className="absolute inset-0"
                   >
@@ -95,6 +96,14 @@ export function HiddenCollectionTeaser() {
                       variant="dark"
                       label=""
                       showDial={true}
+                    />
+                    <Image
+                      src="/Franck Muller Vegas4.jpg"
+                      alt="Franck Muller Vegas"
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                      style={{ objectPosition: '50% center' }}
                     />
                   </KenBurns>
 
@@ -200,6 +209,14 @@ export function HiddenCollectionTeaser() {
                   className="absolute inset-0"
                   variant="dark"
                   label="Kolekcja Prywatna · No. 001"
+                />
+                <Image
+                  src="/Franck Muller Vegas4.jpg"
+                  alt="Franck Muller Vegas"
+                  fill
+                  sizes="(min-width: 768px) 768px, 100vw"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: '50% center' }}
                 />
                 {/* Same overlays for visual consistency */}
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-accent-gold/[0.04]" />

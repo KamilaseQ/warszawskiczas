@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Container, Section, ImagePlaceholder, KenBurns } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
@@ -64,7 +65,7 @@ export function BrandPositioning() {
               {/* Placeholder zdjęcia makro tarczy — wystaje poza kontener */}
               <div className="relative mt-12 hidden lg:block">
                 <KenBurns
-                  intensity={1.18}
+                  intensity={1.24}
                   drift
                   className="aspect-[16/10] w-[90%] translate-x-8"
                 >
@@ -72,6 +73,14 @@ export function BrandPositioning() {
                     className="h-full w-full"
                     variant="light"
                     label="Zdjęcie: makro tarczy / dłonie zegarmistrza"
+                  />
+                  <Image
+                    src="/Patek Philippe Nautilus-12.jpg"
+                    alt="Patek Philippe Nautilus"
+                    fill
+                    sizes="(min-width: 1024px) 52vw, 100vw"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ objectPosition: '50% center' }}
                   />
                 </KenBurns>
                 {/* Offset border dekoracyjna */}

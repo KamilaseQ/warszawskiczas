@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Container, Section, ImagePlaceholder, KenBurns, Magnetic } from '@/components/ui'
@@ -69,7 +70,7 @@ export function ProductShowcase() {
                 </span>
               </div>
 
-              <KenBurns intensity={1.12} className="relative aspect-[3/4] w-full">
+              <KenBurns intensity={1.18} className="relative aspect-[3/4] w-full">
                 <ImagePlaceholder
                   className={cn(
                     'absolute inset-0 transition-opacity duration-700',
@@ -89,6 +90,29 @@ export function ProductShowcase() {
 
                 {/* Delikatny złoty raster w rogu */}
                 <div className="pointer-events-none absolute inset-4 border border-accent-gold/10" />
+                <Image
+                  src="/Rolex Wimbledon.jpg"
+                  alt={`${featuredProduct.brand} ${featuredProduct.name}`}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className={cn(
+                    'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
+                    flipped ? 'opacity-0' : 'opacity-100'
+                  )}
+                  style={{ objectPosition: '50% center' }}
+                />
+                <Image
+                  src="/Rolex Wimbledon.jpg"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className={cn(
+                    'absolute inset-0 h-full w-full scale-[1.06] object-cover transition-opacity duration-700',
+                    flipped ? 'opacity-100' : 'opacity-0'
+                  )}
+                  style={{ objectPosition: '50% center' }}
+                />
               </KenBurns>
 
               {/* Podpis edytorialny pod obrazem */}
