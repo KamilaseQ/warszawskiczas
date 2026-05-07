@@ -69,7 +69,7 @@ export function Footer() {
             </p>
             <p className="mt-4 text-sm leading-relaxed text-white/45">
               Butik zegarków premium w sercu Warszawy.
-              Mechaniczna precyzja, wiedza i dyskrecja od 2009 roku.
+              Mechaniczna precyzja, wiedza i dyskrecja od 2019 roku.
             </p>
 
             {/* 10.6 Social Media Icons — Instagram, TikTok, Facebook */}

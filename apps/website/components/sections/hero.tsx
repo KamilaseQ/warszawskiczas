@@ -68,11 +68,9 @@ export function Hero() {
             loop
             playsInline
             preload="auto"
-            poster="/hero-poster.jpg"
             className="h-full w-full object-cover"
             style={{ filter: 'saturate(1.15) contrast(1.1) brightness(0.88) sepia(0.12) hue-rotate(-8deg)' }}
           >
-            <source src="/rolex.webm" type="video/webm" />
             <source src="/rolex.mp4" type="video/mp4" />
           </video>
         ) : (
@@ -112,7 +110,7 @@ export function Hero() {
         style={{ writingMode: 'vertical-rl' }}
       >
         <span className="font-serif italic text-xs tracking-[0.4em] text-white/20">
-          Est. 2009 — No. 01
+          Est. 2019 — No. 01
         </span>
       </div>
 

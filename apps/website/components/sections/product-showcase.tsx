@@ -2,16 +2,15 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Container, Section, ImagePlaceholder, KenBurns, Magnetic } from '@/components/ui'
+import { Container, Section, ImagePlaceholder, KenBurns, Magnetic, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 import { featuredProduct, otherFeaturedProducts } from '@/data/mock-products'
-import { cn } from '@/lib/utils'
 
 export function ProductShowcase() {
-  const [flipped, setFlipped] = useState(false)
   const scrollerRef = useRef<HTMLDivElement>(null)
+  const featuredRef = useRef<HTMLDivElement>(null)
 
   const scrollBy = (dir: 'left' | 'right') => {
     const el = scrollerRef.current
@@ -54,14 +53,10 @@ export function ProductShowcase() {
         </FadeIn>
 
         {/* Główny układ editorial — 2 kolumny asymetryczne */}
-        <div className="relative grid items-stretch gap-8 lg:grid-cols-12 lg:gap-16">
+        <div ref={featuredRef} className="relative grid items-stretch gap-8 lg:grid-cols-12 lg:gap-16">
           {/* LEWA — obraz bohater */}
           <FadeIn direction="right" className="lg:col-span-7">
-            <div
-              className="relative group cursor-pointer"
-              onMouseEnter={() => setFlipped(true)}
-              onMouseLeave={() => setFlipped(false)}
-            >
+            <div className="relative">
               {/* Etykieta "Zegarek Tygodnia" — złota wstążka */}
               <div className="absolute left-0 top-0 z-20 flex items-center gap-2 bg-accent-gold px-4 py-2">
                 <span className="h-1 w-1 bg-[#0a0a0a]" />
@@ -71,57 +66,29 @@ export function ProductShowcase() {
               </div>
 
               <KenBurns intensity={1.18} className="relative aspect-[3/4] w-full">
-                <ImagePlaceholder
-                  className={cn(
-                    'absolute inset-0 transition-opacity duration-700',
-                    flipped ? 'opacity-0' : 'opacity-100'
-                  )}
-                  variant="light"
-                  label="Zdjęcie wkrótce — tarcza"
-                />
-                <ImagePlaceholder
-                  className={cn(
-                    'absolute inset-0 transition-opacity duration-700',
-                    flipped ? 'opacity-100' : 'opacity-0'
-                  )}
-                  variant="dark"
-                  label="Zdjęcie wkrótce — dekiel"
-                />
-
-                {/* Delikatny złoty raster w rogu */}
+                {featuredProduct.images?.[0] ? (
+                  <Image
+                    src={featuredProduct.images[0]}
+                    alt={`${featuredProduct.brand} ${featuredProduct.name}`}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 58vw, 100vw"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                ) : (
+                  <ImagePlaceholder
+                    className="absolute inset-0"
+                    variant="light"
+                    label="Zdjęcie wkrótce"
+                  />
+                )}
                 <div className="pointer-events-none absolute inset-4 border border-accent-gold/10" />
-                <Image
-                  src="/Rolex Wimbledon.jpg"
-                  alt={`${featuredProduct.brand} ${featuredProduct.name}`}
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 58vw, 100vw"
-                  className={cn(
-                    'absolute inset-0 h-full w-full object-cover transition-opacity duration-700',
-                    flipped ? 'opacity-0' : 'opacity-100'
-                  )}
-                  style={{ objectPosition: '50% center' }}
-                />
-                <Image
-                  src="/Rolex Wimbledon.jpg"
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 58vw, 100vw"
-                  className={cn(
-                    'absolute inset-0 h-full w-full scale-[1.06] object-cover transition-opacity duration-700',
-                    flipped ? 'opacity-100' : 'opacity-0'
-                  )}
-                  style={{ objectPosition: '50% center' }}
-                />
               </KenBurns>
 
               {/* Podpis edytorialny pod obrazem */}
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-4 flex items-center">
                 <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
                   {featuredProduct.brand} · {featuredProduct.reference}
-                </span>
-                <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
-                  Najedź, aby odwrócić
                 </span>
               </div>
             </div>
@@ -129,7 +96,12 @@ export function ProductShowcase() {
 
           {/* PRAWA — tekst editorialny */}
           <FadeIn direction="left" delay={0.15} className="lg:col-span-5">
-            <div className="flex h-full flex-col justify-center">
+            <ScrollDrift
+              targetRef={featuredRef}
+              start={-130}
+              end={125}
+              className="flex h-full flex-col justify-center lg:-mt-10"
+            >
               <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
                 Zegarek Tygodnia
               </p>
@@ -171,7 +143,7 @@ export function ProductShowcase() {
               <p className="mt-3 text-center font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
                 Bezpłatna wycena i konsultacja
               </p>
-            </div>
+            </ScrollDrift>
           </FadeIn>
         </div>
 
@@ -224,10 +196,17 @@ export function ProductShowcase() {
               className="group relative block w-[78vw] flex-shrink-0 snap-start sm:w-[44vw] lg:w-[22vw]"
             >
               <div className="relative aspect-[3/4] overflow-hidden transition-all duration-500 group-hover:-translate-y-1">
-                <ImagePlaceholder
-                  className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
-                  variant="light"
-                />
+                {p.images?.[0] ? (
+                  <Image
+                    src={p.images[0]}
+                    alt={`${p.brand} ${p.name}`}
+                    fill
+                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 44vw, 78vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                ) : (
+                  <ImagePlaceholder className="absolute inset-0" variant="light" />
+                )}
                 <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/40" />
               </div>
               <div className="mt-4">

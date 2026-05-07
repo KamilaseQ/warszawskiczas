@@ -229,7 +229,7 @@ function SuccessState() {
         Kod dostępu zostanie przekazany po krótkiej rozmowie.
       </p>
       <p className="mt-10 font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold/70">
-        Warszawski Czas &nbsp;·&nbsp; od 2009
+        Warszawski Czas &nbsp;·&nbsp; od 2019
       </p>
     </div>
   )

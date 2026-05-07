@@ -106,7 +106,7 @@ export function PrivateCollectionValue() {
                 <div className="mt-10 flex items-center gap-4">
                   <div className="h-px w-10 bg-accent-gold/60" />
                   <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/55">
-                    Warszawski Czas &nbsp;·&nbsp; od 2009
+                    Warszawski Czas &nbsp;·&nbsp; od 2019
                   </p>
                 </div>
               </div>

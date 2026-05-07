@@ -257,8 +257,8 @@ export function TrustSignals() {
                   </h3>
                   <div className="mt-6 grid grid-cols-2 gap-6">
                     <div>
-                      <p className="font-serif text-4xl font-medium text-foreground sm:text-5xl">
-                        <AnimatedCounter value={400} suffix="+" />
+                      <p className="font-serif text-4xl font-medium text-foreground italic sm:text-5xl">
+                        tysiące
                       </p>
                       <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
                         Zrealizowanych<br />transakcji
@@ -266,7 +266,7 @@ export function TrustSignals() {
                     </div>
                     <div>
                       <p className="font-serif text-4xl font-medium text-accent-gold/80 sm:text-5xl">
-                        od <AnimatedCounter value={2009} />
+                        od <AnimatedCounter value={2019} />
                       </p>
                       <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
                         Ponad dekada<br />doświadczenia

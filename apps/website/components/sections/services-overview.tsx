@@ -49,7 +49,7 @@ export function ServicesOverview() {
         className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 [writing-mode:vertical-rl] [transform:rotate(180deg)] xl:block"
       >
         <span className="font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold/35">
-          Atelier &nbsp;·&nbsp; od 2009
+          Atelier &nbsp;·&nbsp; od 2019
         </span>
       </div>
 
@@ -106,20 +106,6 @@ export function ServicesOverview() {
                     className="pointer-events-none absolute inset-x-0 bottom-0 block h-px origin-left scale-x-0 bg-accent-gold transition-transform duration-[800ms] ease-out group-hover:scale-x-100"
                   />
 
-                  {/* Decorative chronograph subdial — far right, fades in on hover */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute right-4 top-1/2 hidden h-28 w-28 -translate-y-1/2 opacity-0 transition-opacity duration-700 group-hover:opacity-100 xl:block xl:right-12"
-                  >
-                    <div className="absolute inset-0 rounded-full border border-accent-gold/25" />
-                    <div className="absolute inset-3 rounded-full border border-accent-gold/15" />
-                    <span className="absolute left-1/2 top-1 h-2 w-px -translate-x-1/2 bg-accent-gold/55" />
-                    <span className="absolute left-1/2 bottom-1 h-2 w-px -translate-x-1/2 bg-accent-gold/35" />
-                    <span className="absolute top-1/2 left-1 h-px w-2 -translate-y-1/2 bg-accent-gold/35" />
-                    <span className="absolute top-1/2 right-1 h-px w-2 -translate-y-1/2 bg-accent-gold/35" />
-                    <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-gold/40" />
-                  </div>
-
                   <div className="relative grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-5 px-2 py-12 transition-[padding] duration-500 ease-out group-hover:pl-4 sm:gap-x-8 lg:grid-cols-[auto_1fr_auto] lg:gap-x-12 lg:px-4 lg:py-14">
                     {/* LEFT — large italic numeral + gold hairline */}
                     <div className="flex items-baseline gap-5 sm:gap-6">
@@ -160,7 +146,7 @@ export function ServicesOverview() {
                     <div className="relative z-10 hidden flex-col items-end gap-5 self-center lg:flex">
                       <div className="text-right">
                         <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-foreground/45">
-                          Czas realizacji
+                          Zakres usługi
                         </p>
                         <p className="mt-2 font-serif italic text-base text-foreground/80">
                           {service.duration}
@@ -180,7 +166,7 @@ export function ServicesOverview() {
         {/* Outro */}
         <FadeIn delay={0.3}>
           <p className="mt-16 text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/45">
-            Mokotowska 71 &nbsp;·&nbsp; Atelier zegarmistrzowski od 2009
+            Mokotowska 71 &nbsp;·&nbsp; Atelier zegarmistrzowski od 2019
           </p>
         </FadeIn>
       </Container>

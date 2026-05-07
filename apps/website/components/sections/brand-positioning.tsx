@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { Container, Section, ImagePlaceholder, KenBurns } from '@/components/ui'
+import { useRef } from 'react'
+import { Container, Section, ImagePlaceholder, KenBurns, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 const values = [
@@ -26,6 +27,8 @@ const values = [
 ]
 
 export function BrandPositioning() {
+  const featureRef = useRef<HTMLDivElement>(null)
+
   return (
     <Section variant="muted" spacing="lg" className="relative overflow-hidden">
       <Container>
@@ -38,7 +41,7 @@ export function BrandPositioning() {
           </div>
         </FadeIn>
 
-        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
+        <div ref={featureRef} className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           {/* LEWA — duży cytat editorialny */}
           <FadeIn direction="right" className="lg:col-span-7">
             <div className="relative">
@@ -90,7 +93,12 @@ export function BrandPositioning() {
           </FadeIn>
 
           {/* PRAWA — 3 punkty z numerami */}
-          <div className="flex flex-col gap-10 lg:col-span-5 lg:pt-12">
+          <ScrollDrift
+            targetRef={featureRef}
+            start={-110}
+            end={150}
+            className="flex flex-col gap-10 lg:col-span-5 lg:pt-16"
+          >
             {values.map((v, index) => (
               <FadeIn key={v.num} direction="left" delay={index * 0.1}>
                 <div className="group relative border-t border-border pt-6">
@@ -119,7 +127,7 @@ export function BrandPositioning() {
                 </span>
               </div>
             </FadeIn>
-          </div>
+          </ScrollDrift>
         </div>
       </Container>
     </Section>

@@ -78,7 +78,7 @@ export default async function ProductPage({ params }: PageProps) {
     brand: { '@type': 'Brand', name: product.brand },
     description: product.description,
     sku: product.reference,
-    productionDate: product.year ? String(product.year) : undefined,
+    productionDate: product.year ? String(product.year).replace(/^#/, '') : undefined,
     offers: {
       '@type': 'Offer',
       priceCurrency: 'PLN',
@@ -118,7 +118,7 @@ export default async function ProductPage({ params }: PageProps) {
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             {/* Gallery */}
             <div className="lg:col-span-7">
-              <ProductGallery brand={product.brand} name={product.name} />
+              <ProductGallery brand={product.brand} name={product.name} images={product.images} />
             </div>
 
             {/* Details */}
@@ -178,12 +178,12 @@ export default async function ProductPage({ params }: PageProps) {
                     <dd className="mt-1 font-serif text-lg text-foreground">{product.condition}</dd>
                   </div>
                 )}
-                {product.type && (
+                {product.material && (
                   <div>
                     <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
-                      Charakter
+                      Materiał
                     </dt>
-                    <dd className="mt-1 font-serif text-lg text-foreground">{product.type}</dd>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.material}</dd>
                   </div>
                 )}
                 {product.reference && (

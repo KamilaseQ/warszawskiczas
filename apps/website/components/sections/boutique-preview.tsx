@@ -110,12 +110,6 @@ export function BoutiquePreview() {
                   title="Warszawski Czas — Mokotowska 71, Warszawa"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#0a0a0a]/30 via-transparent to-[#c9a962]/[0.04]" />
-
-                {/* Gold pin dot overlay */}
-                <div className="pointer-events-none absolute left-1/2 top-1/2 flex h-2 w-2 -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-                  <span className="absolute h-2 w-2 bg-accent-gold" />
-                  <span className="absolute h-5 w-5 animate-ping bg-accent-gold/40" />
-                </div>
               </div>
 
               {/* Offset gold border */}

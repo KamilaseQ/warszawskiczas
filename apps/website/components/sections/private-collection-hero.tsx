@@ -67,7 +67,7 @@ export function PrivateCollectionHero() {
               </span>
             </div>
             <span className="hidden font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/35 sm:inline">
-              Warszawski Czas &nbsp;·&nbsp; od 2009
+              Warszawski Czas &nbsp;·&nbsp; od 2019
             </span>
           </div>
         </FadeIn>

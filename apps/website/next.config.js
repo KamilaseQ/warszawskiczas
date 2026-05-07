@@ -3,10 +3,8 @@ const path = require('path')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    turbopack: {
-      root: path.join(__dirname, '../../'),
-    },
+  turbopack: {
+    root: path.join(__dirname, '../../'),
   },
 }
 

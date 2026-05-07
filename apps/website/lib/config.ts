@@ -28,5 +28,5 @@ export const HOURS = {
 // Hardcoded liczby w licznikach — łatwo podmienić
 export const STATS = {
   transactions: 400,
-  yearsSince: 2009,
+  yearsSince: 2019,
 }

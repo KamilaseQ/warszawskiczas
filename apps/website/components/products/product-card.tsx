@@ -1,10 +1,32 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ImagePlaceholder } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/data/mock-products'
+
+function CardImage({ product }: { product: Product }) {
+  const src = product.images?.[0]
+  if (!src) {
+    return (
+      <ImagePlaceholder
+        className="absolute inset-0 transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+        variant="light"
+      />
+    )
+  }
+  return (
+    <Image
+      src={src}
+      alt={`${product.brand} ${product.name}`}
+      fill
+      sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+      className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+    />
+  )
+}
 
 interface ProductCardProps {
   product: Product
@@ -51,10 +73,20 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
         className={cn('group relative grid grid-cols-5 gap-4 sm:gap-6', className)}
       >
         <div className={cn('relative col-span-3 overflow-hidden', 'aspect-[4/3] sm:aspect-[5/4]')}>
-          <ImagePlaceholder
-            className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
-            variant="light"
-          />
+          {product.images?.[0] ? (
+            <Image
+              src={product.images[0]}
+              alt={`${product.brand} ${product.name}`}
+              fill
+              sizes="(min-width: 1024px) 40vw, 90vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <ImagePlaceholder
+              className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
+              variant="light"
+            />
+          )}
           <Badges product={product} statusColor={statusColor} />
           <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/40" />
         </div>
@@ -108,10 +140,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
             visible: { scale: 1, transition: { duration: 1.1, ease: [0.21, 0.47, 0.32, 0.98] } },
           }}
         >
-          <ImagePlaceholder
-            className="absolute inset-0 transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
-            variant="light"
-          />
+          <CardImage product={product} />
         </motion.div>
 
         <Badges product={product} statusColor={statusColor} />

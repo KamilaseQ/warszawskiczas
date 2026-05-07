@@ -15,31 +15,46 @@ const CATEGORIES = [
   { value: 'zegarki', label: 'Zegarki' },
   { value: 'bizuteria', label: 'Biżuteria' },
 ] as const
-const BRANDS = ['Wszystkie', 'Rolex', 'Patek Philippe', 'Audemars Piguet', 'Omega', 'IWC', 'Cartier', 'Jaeger-LeCoultre', 'Vacheron Constantin', 'Bulgari'] as const
-const TYPES = ['Wszystkie', 'Sportowy', 'Dresowy', 'Vintage', 'Komplikacje'] as const
+
+const STATUSES = ['Wszystkie', 'Dostępny', 'Zarezerwowany', 'Sprzedany'] as const
+
 const SORTS = [
   { value: 'featured', label: 'Polecane' },
-  { value: 'newest', label: 'Najnowsze' },
+  { value: 'newest', label: 'Najnowsze (rok)' },
+  { value: 'oldest', label: 'Najstarsze (rok)' },
   { value: 'price-asc', label: 'Cena rosnąco' },
   { value: 'price-desc', label: 'Cena malejąco' },
+  { value: 'brand-asc', label: 'Marka A–Z' },
 ] as const
 
-const PRICE_MIN = 10000
+const PRICE_MIN = 0
 const PRICE_MAX = 500000
+
+const yearNum = (y: Product['year']) =>
+  typeof y === 'number' ? y : Number(String(y ?? '').replace(/^#/, '')) || 0
 
 export function ProductCatalog({ products }: ProductCatalogProps) {
   const reducedMotion = useReducedMotion()
   const [category, setCategory] = useState<'zegarki' | 'bizuteria'>('zegarki')
   const [brand, setBrand] = useState<string>('Wszystkie')
-  const [type, setType] = useState<string>('Wszystkie')
+  const [status, setStatus] = useState<string>('Wszystkie')
   const [sort, setSort] = useState<string>('featured')
   const [priceMax, setPriceMax] = useState<number>(PRICE_MAX)
+  const [onlyOnRequest, setOnlyOnRequest] = useState<boolean>(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+
+  // Marki z aktualnych danych — skaluje się automatycznie wraz z rozbudową katalogu
+  const brandsForCategory = useMemo(() => {
+    const set = new Set<string>()
+    products.filter((p) => p.category === category).forEach((p) => set.add(p.brand))
+    return ['Wszystkie', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'pl'))]
+  }, [products, category])
 
   const filtered = useMemo(() => {
     let out = products.filter((p) => p.category === category)
     if (brand !== 'Wszystkie') out = out.filter((p) => p.brand === brand)
-    if (category === 'zegarki' && type !== 'Wszystkie') out = out.filter((p) => p.type === type)
+    if (status !== 'Wszystkie') out = out.filter((p) => p.status === status)
+    if (onlyOnRequest) out = out.filter((p) => p.priceOnRequest)
     out = out.filter((p) => (p.price ? p.price <= priceMax : true))
 
     if (sort === 'price-asc') {
@@ -47,23 +62,29 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
     } else if (sort === 'price-desc') {
       out = [...out].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity))
     } else if (sort === 'newest') {
-      out = [...out].sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
+      out = [...out].sort((a, b) => yearNum(b.year) - yearNum(a.year))
+    } else if (sort === 'oldest') {
+      out = [...out].sort((a, b) => yearNum(a.year) - yearNum(b.year))
+    } else if (sort === 'brand-asc') {
+      out = [...out].sort((a, b) => a.brand.localeCompare(b.brand, 'pl'))
     } else if (sort === 'featured') {
       out = [...out].sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false))
     }
 
     return out
-  }, [products, category, brand, type, sort, priceMax])
+  }, [products, category, brand, status, sort, priceMax, onlyOnRequest])
 
   const activeFilterCount =
     (brand !== 'Wszystkie' ? 1 : 0) +
-    (type !== 'Wszystkie' && category === 'zegarki' ? 1 : 0) +
-    (priceMax !== PRICE_MAX ? 1 : 0)
+    (status !== 'Wszystkie' ? 1 : 0) +
+    (priceMax !== PRICE_MAX ? 1 : 0) +
+    (onlyOnRequest ? 1 : 0)
 
   const clearFilters = () => {
     setBrand('Wszystkie')
-    setType('Wszystkie')
+    setStatus('Wszystkie')
     setPriceMax(PRICE_MAX)
+    setOnlyOnRequest(false)
   }
 
   const fmt = (v: number) =>
@@ -92,9 +113,8 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
 
   return (
     <div>
-      {/* TOP BAR — slim, sticky-ready */}
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4 lg:mb-8">
-        {/* Tabs */}
+        {/* Tabs kategorii */}
         <div className="flex gap-6 sm:gap-8">
           {CATEGORIES.map((c) => {
             const isActive = c.value === category
@@ -105,7 +125,6 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                 onClick={() => {
                   setCategory(c.value as 'zegarki' | 'bizuteria')
                   setBrand('Wszystkie')
-                  setType('Wszystkie')
                 }}
                 className={cn(
                   'relative pb-3 font-serif text-xs uppercase tracking-[0.3em] transition-colors duration-300 sm:text-sm',
@@ -177,11 +196,14 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               {brand !== 'Wszystkie' && (
                 <FilterChip label={brand} onClear={() => setBrand('Wszystkie')} />
               )}
-              {type !== 'Wszystkie' && category === 'zegarki' && (
-                <FilterChip label={type} onClear={() => setType('Wszystkie')} />
+              {status !== 'Wszystkie' && (
+                <FilterChip label={status} onClear={() => setStatus('Wszystkie')} />
               )}
               {priceMax !== PRICE_MAX && (
                 <FilterChip label={`do ${fmt(priceMax)}`} onClear={() => setPriceMax(PRICE_MAX)} />
+              )}
+              {onlyOnRequest && (
+                <FilterChip label="Cena na zapytanie" onClear={() => setOnlyOnRequest(false)} />
               )}
               <button
                 type="button"
@@ -195,18 +217,13 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
         )}
       </AnimatePresence>
 
-      {/* Liczba wyników */}
       <p className="mb-6 font-sans text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
         {filtered.length} {filtered.length === 1 ? 'pozycja' : filtered.length < 5 ? 'pozycje' : 'pozycji'}
       </p>
 
-      {/* STANDARD GRID — jednolita siatka 1/2/3/4 kolumn.
-          Każdy kafelek wjeżdża z delikatnym fade + rise, a w środku
-          ProductCard prowadzi swój własny wielowarstwowy reveal:
-          dolly na zdjęciu, złota kurtyna nad nim i opóźnione napisy. */}
       {filtered.length > 0 ? (
         <motion.div
-          key={`${category}-${brand}-${type}-${priceMax}-${sort}`}
+          key={`${category}-${brand}-${status}-${priceMax}-${onlyOnRequest}-${sort}`}
           initial="hidden"
           animate="visible"
           variants={{
@@ -234,15 +251,19 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
       ) : (
         <div className="border border-dashed border-border py-24 text-center">
           <p className="font-serif italic text-lg text-muted-foreground">
-            Brak pozycji spełniających wybrane filtry.
+            {category === 'bizuteria'
+              ? 'Kolekcja biżuterii pojawi się wkrótce.'
+              : 'Brak pozycji spełniających wybrane filtry.'}
           </p>
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold"
-          >
-            Wyczyść filtry
-          </button>
+          {activeFilterCount > 0 && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold"
+            >
+              Wyczyść filtry
+            </button>
+          )}
         </div>
       )}
 
@@ -290,10 +311,10 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
 
               <div className="flex-1 overflow-y-auto px-6 py-6 lg:px-8">
                 <div className="space-y-8">
-                  {/* Marka — chips */}
-                  <FilterSection label="Marka">
+                  {/* Marka — chips, generowane z aktualnych danych */}
+                  <FilterSection label={`Marka · ${brandsForCategory.length - 1}`}>
                     <div className="flex flex-wrap gap-2">
-                      {BRANDS.map((b) => {
+                      {brandsForCategory.map((b) => {
                         const isActive = b === brand
                         return (
                           <button
@@ -314,31 +335,29 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                     </div>
                   </FilterSection>
 
-                  {/* Typ — chips (tylko zegarki) */}
-                  {category === 'zegarki' && (
-                    <FilterSection label="Typ">
-                      <div className="flex flex-wrap gap-2">
-                        {TYPES.map((t) => {
-                          const isActive = t === type
-                          return (
-                            <button
-                              key={t}
-                              type="button"
-                              onClick={() => setType(t)}
-                              className={cn(
-                                'border px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300',
-                                isActive
-                                  ? 'border-accent-gold bg-accent-gold text-[#0a0a0a]'
-                                  : 'border-foreground/15 text-foreground hover:border-accent-gold hover:text-accent-gold'
-                              )}
-                            >
-                              {t}
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </FilterSection>
-                  )}
+                  {/* Status / dostępność */}
+                  <FilterSection label="Dostępność">
+                    <div className="flex flex-wrap gap-2">
+                      {STATUSES.map((s) => {
+                        const isActive = s === status
+                        return (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => setStatus(s)}
+                            className={cn(
+                              'border px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300',
+                              isActive
+                                ? 'border-accent-gold bg-accent-gold text-[#0a0a0a]'
+                                : 'border-foreground/15 text-foreground hover:border-accent-gold hover:text-accent-gold'
+                            )}
+                          >
+                            {s}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </FilterSection>
 
                   {/* Cena */}
                   <FilterSection label={`Cena maks. ${fmt(priceMax)}`}>
@@ -346,7 +365,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                       type="range"
                       min={PRICE_MIN}
                       max={PRICE_MAX}
-                      step={5000}
+                      step={1000}
                       value={priceMax}
                       onChange={(e) => setPriceMax(Number(e.target.value))}
                       className="price-slider"
@@ -356,6 +375,41 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                       <span>{fmt(PRICE_MIN)}</span>
                       <span>{fmt(PRICE_MAX)}+</span>
                     </div>
+                    <p className="mt-2 font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
+                      Pozycje &ldquo;Cena na zapytanie&rdquo; nie są filtrowane wg ceny.
+                    </p>
+                  </FilterSection>
+
+                  {/* Toggle: tylko cena na zapytanie */}
+                  <FilterSection label="Wyróżnienia">
+                    <label className="flex cursor-pointer items-center gap-3 select-none">
+                      <input
+                        type="checkbox"
+                        checked={onlyOnRequest}
+                        onChange={(e) => setOnlyOnRequest(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <span
+                        className={cn(
+                          'relative h-5 w-9 border transition-colors duration-300',
+                          onlyOnRequest
+                            ? 'border-accent-gold bg-accent-gold/20'
+                            : 'border-foreground/25 bg-transparent'
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'absolute top-1/2 h-3 w-3 -translate-y-1/2 transition-all duration-300',
+                            onlyOnRequest
+                              ? 'left-[calc(100%-0.875rem)] bg-accent-gold'
+                              : 'left-1 bg-foreground/40'
+                          )}
+                        />
+                      </span>
+                      <span className="font-sans text-[11px] uppercase tracking-[0.2em] text-foreground">
+                        Tylko cena na zapytanie
+                      </span>
+                    </label>
                   </FilterSection>
                 </div>
               </div>
