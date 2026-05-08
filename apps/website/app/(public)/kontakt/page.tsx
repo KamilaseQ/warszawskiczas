@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight, Phone, Mail } from 'lucide-react'
-import { Container, Section, FaqAccordion, type FaqItem, ImagePlaceholder } from '@/components/ui'
+import { Container, Section, FaqAccordion, type FaqItem, LocationMap } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 import { ContactForm } from '@/components/forms'
 
@@ -52,7 +53,7 @@ export default function KontaktPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       {/* Header editorial */}
-      <Section spacing="lg">
+      <Section spacing="lg" className="pt-28 lg:pt-32">
         <Container>
           <FadeIn>
             <div className="flex items-center gap-4 mb-6">
@@ -101,12 +102,16 @@ export default function KontaktPage() {
             {/* Kanały kontaktu */}
             <FadeIn delay={0.1} className="lg:col-span-5">
               <div className="space-y-10">
-                {/* Placeholder zdjęcia/video wnętrza butiku */}
-                <ImagePlaceholder
-                  className="aspect-[4/3] w-full"
-                  variant="dark"
-                  label="Wnętrze butiku — zdjęcie / video"
-                />
+                {/* Wnętrze butiku */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src="/kontakt.webp"
+                    alt="Butik Warszawski Czas — przestrzeń kontaktu"
+                    fill
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
 
                 <div>
                   <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
@@ -120,7 +125,7 @@ export default function KontaktPage() {
                     <div className="flex items-center gap-4">
                       <Phone className="h-4 w-4 text-accent-gold" strokeWidth={1.5} />
                       <span className="font-serif text-xl font-medium text-foreground transition-colors duration-300 group-hover:text-accent-gold">
-                        +48 604 501 000
+                        +48 604 50 1000
                       </span>
                     </div>
                     <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent-gold" />
@@ -199,25 +204,8 @@ export default function KontaktPage() {
         <Container>
           <FadeIn>
             <div className="relative">
-              <div className="relative aspect-[21/9] overflow-hidden bg-[#0f0f0e]">
-                <iframe
-                  src="https://maps.google.com/maps?cid=11669713150774348709&hl=pl&z=17&t=&output=embed"
-                  width="100%"
-                  height="100%"
-                  style={{
-                    border: 0,
-                    filter: 'grayscale(0.85) contrast(1.05) brightness(0.75) sepia(0.25)',
-                    position: 'absolute',
-                    inset: 0,
-                  }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Warszawski Czas — Mokotowska 71, Warszawa"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#0a0a0a]/30 via-transparent to-[#c9a962]/[0.04]" />
-              </div>
-              <div className="pointer-events-none absolute -bottom-4 -right-4 h-full w-full border border-accent-gold/30" />
+              <LocationMap className="aspect-[4/3] sm:aspect-[21/9]" />
+              <div className="pointer-events-none absolute -bottom-4 -right-4 hidden h-full w-full border border-accent-gold/30 lg:block" />
             </div>
           </FadeIn>
         </Container>

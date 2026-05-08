@@ -54,7 +54,7 @@ export function Header() {
           <div className="hidden lg:flex items-center gap-5">
             <a href="tel:+48604501000" className={cn("group hidden xl:flex items-center gap-2 text-[11px] font-normal tracking-[0.18em] uppercase transition-colors duration-500 ease-in-out", isSolid ? "text-muted-foreground hover:text-accent-gold" : "text-white/70 hover:text-white")}>
               <Phone className="h-3.5 w-3.5 text-accent-gold transition-colors duration-500 ease-in-out" />
-              +48 604 501 000
+              +48 604 50 1000
             </a>
             <Link
               href="/kontakt"

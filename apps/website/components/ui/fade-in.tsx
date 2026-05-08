@@ -14,8 +14,8 @@ export function FadeIn({ children, className, delay = 0, direction = 'up' }: Fad
   const directions = {
     up: { y: 30 },
     down: { y: -30 },
-    left: { x: 30 },
-    right: { x: -30 },
+    left: { y: 30 },
+    right: { y: 30 },
     none: { x: 0, y: 0 }
   }
 

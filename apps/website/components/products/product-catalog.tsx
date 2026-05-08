@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
 import { ProductCard } from './product-card'
 import { cn } from '@/lib/utils'
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 import type { Product } from '@/data/mock-products'
 
 interface ProductCatalogProps {
@@ -90,16 +91,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
   const fmt = (v: number) =>
     new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', minimumFractionDigits: 0 }).format(v)
 
-  // Lock scroll gdy drawer otwarty
-  useEffect(() => {
-    if (drawerOpen) {
-      const original = document.body.style.overflow
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = original
-      }
-    }
-  }, [drawerOpen])
+  useBodyScrollLock(drawerOpen)
 
   // Esc zamyka drawer
   useEffect(() => {
@@ -230,7 +222,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
             hidden: {},
             visible: { transition: { staggerChildren: reducedMotion ? 0 : 0.07, delayChildren: 0.05 } },
           }}
-          className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 sm:gap-y-14 lg:grid-cols-3 lg:gap-y-16 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-14 lg:grid-cols-3 lg:gap-y-16 xl:grid-cols-4"
         >
           {filtered.map((p) => (
             <motion.div

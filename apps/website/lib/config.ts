@@ -4,7 +4,7 @@
 export const ACCESS_CODE = 'WC2024'
 
 // TODO: podmień docelowy numer telefonu
-export const CONTACT_PHONE = '+48 604 501 000'
+export const CONTACT_PHONE = '+48 604 50 1000'
 export const CONTACT_PHONE_RAW = '+48604501000'
 
 // TODO: podmień numer WhatsApp

@@ -1,44 +1,168 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
 interface PageTransitionProps {
   children: React.ReactNode
 }
 
+const CURTAIN_COVER_MS = 460
+const CURTAIN_TOTAL_MS = 920
+const CURTAIN_REVEAL_AFTER_ROUTE_MS = 520
+const CURTAIN_FALLBACK_MS = 3200
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
+
 // "Curtain" — cienka czarna zasłona zjeżdża z góry, kontent fade'uje pod spodem.
 // Spójne z editorialną estetyką — bez efektu "bouncy" SPA.
 export function PageTransition({ children }: PageTransitionProps) {
+  const router = useRouter()
   const pathname = usePathname()
   const reducedMotion = useReducedMotion()
   const [showCurtain, setShowCurtain] = useState(false)
-  const [contentKey, setContentKey] = useState(pathname)
+  // 'animate' — panele wsuwają się z góry/dołu (klasyczna nawigacja przez klik).
+  // 'instant' — panele są już w pełni rozłożone w momencie mounta (back/forward,
+  //             gdzie nie możemy opóźnić przeglądarki — kurtyna musi już zakrywać).
+  const [coverMode, setCoverMode] = useState<'animate' | 'instant'>('animate')
   const previousPathnameRef = useRef(pathname)
-  const swapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const transitionIdRef = useRef(0)
+  const showCurtainRef = useRef(false)
+  const pushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    if (pathname === previousPathnameRef.current) return
-    previousPathnameRef.current = pathname
+  const setCurtain = (visible: boolean) => {
+    showCurtainRef.current = visible
+    setShowCurtain(visible)
+    if (!visible) setCoverMode('animate')
+  }
 
+  const clearTimers = () => {
+    if (pushTimerRef.current) clearTimeout(pushTimerRef.current)
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+    pushTimerRef.current = null
+    hideTimerRef.current = null
+  }
+
+  const scheduleHide = (transitionId: number, delay: number) => {
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+    hideTimerRef.current = setTimeout(() => {
+      if (transitionIdRef.current !== transitionId) return
+      setCurtain(false)
+    }, delay)
+  }
+
+  useEffect(() => {
+    if (reducedMotion) return
+
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+      const target = event.target
+      if (!(target instanceof Element)) return
+
+      const anchor = target.closest('a[href]')
+      if (!(anchor instanceof HTMLAnchorElement)) return
+      if (anchor.target && anchor.target !== '_self') return
+      if (anchor.hasAttribute('download')) return
+
+      const nextUrl = new URL(anchor.href)
+      if (nextUrl.origin !== window.location.origin) return
+      if (!['http:', 'https:'].includes(nextUrl.protocol)) return
+
+      const current = new URL(window.location.href)
+      const samePage =
+        nextUrl.pathname === current.pathname && nextUrl.search === current.search
+      if (samePage) return
+
+      event.preventDefault()
+
+      const href = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
+
+      // If a curtain is already showing or a navigation is mid-flight, push
+      // immediately — never swallow the click silently.
+      if (showCurtainRef.current) {
+        clearTimers()
+        const transitionId = transitionIdRef.current + 1
+        transitionIdRef.current = transitionId
+        router.push(href)
+        scheduleHide(transitionId, CURTAIN_FALLBACK_MS)
+        return
+      }
+
+      clearTimers()
+      const transitionId = transitionIdRef.current + 1
+      transitionIdRef.current = transitionId
+      setCurtain(true)
+
+      pushTimerRef.current = setTimeout(() => {
+        if (transitionIdRef.current !== transitionId) return
+        pushTimerRef.current = null
+        router.push(href)
+      }, CURTAIN_COVER_MS)
+      scheduleHide(transitionId, CURTAIN_FALLBACK_MS)
+    }
+
+    // Browser back/forward — popstate fires *po* tym jak URL już się zmienił, ale
+    // *przed* tym jak Next.js zdąży zaktualizować pathname i wyrenderować nową
+    // stronę. Używamy flushSync, żeby kurtyna zamontowała się już w pełni
+    // pokrywająca (coverMode='instant') zanim React zatwierdzi nową ścieżkę —
+    // dzięki temu nigdy nie widać podmiany strony "przed kurtyną".
+    const onPopState = () => {
+      if (showCurtainRef.current) return
+      const transitionId = transitionIdRef.current + 1
+      transitionIdRef.current = transitionId
+      flushSync(() => {
+        setCoverMode('instant')
+        showCurtainRef.current = true
+        setShowCurtain(true)
+      })
+      // Safety: always release the curtain even if the route never settles.
+      scheduleHide(transitionId, CURTAIN_FALLBACK_MS)
+    }
+
+    document.addEventListener('click', onClick, { capture: true })
+    window.addEventListener('popstate', onPopState)
+    return () => {
+      document.removeEventListener('click', onClick, { capture: true })
+      window.removeEventListener('popstate', onPopState)
+    }
+  }, [router, reducedMotion])
+
+  useIsomorphicLayoutEffect(() => {
     if (reducedMotion) {
-      setContentKey(pathname)
+      transitionIdRef.current += 1
+      previousPathnameRef.current = pathname
+      clearTimers()
+      setCurtain(false)
       return
     }
 
-    if (swapTimerRef.current) clearTimeout(swapTimerRef.current)
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
+    if (pathname === previousPathnameRef.current) return
+    previousPathnameRef.current = pathname
 
-    setShowCurtain(true)
-    swapTimerRef.current = setTimeout(() => setContentKey(pathname), 480)
-    hideTimerRef.current = setTimeout(() => setShowCurtain(false), 1100)
+    const transitionId = transitionIdRef.current + 1
+    transitionIdRef.current = transitionId
+    if (pushTimerRef.current) {
+      clearTimeout(pushTimerRef.current)
+      pushTimerRef.current = null
+    }
+
+    if (showCurtainRef.current) {
+      scheduleHide(transitionId, CURTAIN_REVEAL_AFTER_ROUTE_MS)
+    } else {
+      setCurtain(true)
+      scheduleHide(transitionId, CURTAIN_TOTAL_MS)
+    }
   }, [pathname, reducedMotion])
 
   useEffect(() => {
     return () => {
-      if (swapTimerRef.current) clearTimeout(swapTimerRef.current)
+      if (pushTimerRef.current) clearTimeout(pushTimerRef.current)
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
     }
   }, [])
@@ -51,11 +175,11 @@ export function PageTransition({ children }: PageTransitionProps) {
     <>
       <AnimatePresence mode="wait">
         <motion.div
-          key={contentKey}
+          key={pathname}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.15 }}
+          transition={{ duration: 0.42, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.1 }}
         >
           {children}
         </motion.div>
@@ -63,27 +187,48 @@ export function PageTransition({ children }: PageTransitionProps) {
 
       <AnimatePresence>
         {showCurtain && (
-          <div className="pointer-events-none fixed inset-0 z-[400]">
-            {/* Top panel — slides down to cover top half */}
+          <div
+            role="presentation"
+            aria-hidden="true"
+            data-wc-page-transition="curtain"
+            className="fixed inset-0 z-[400] cursor-progress"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(201,169,98,0.055)_0%,transparent_32%)]" />
+
+            {/* Top panel — slides down to cover top half (or starts already covering on back/forward) */}
             <motion.div
-              initial={{ y: '-100%' }}
+              initial={{ y: coverMode === 'instant' ? '0%' : '-100%' }}
               animate={{ y: '0%' }}
               exit={{ y: '-100%' }}
-              transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+              transition={{ duration: coverMode === 'instant' ? 0 : 0.42, ease: [0.76, 0, 0.24, 1] }}
               className="absolute inset-x-0 top-0 h-1/2 bg-[#0a0a0a]"
-            >
-              <span className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent-gold/70 to-transparent" />
-            </motion.div>
+            />
 
-            {/* Bottom panel — slides up to cover bottom half */}
+            {/* Bottom panel — slides up to cover bottom half (or starts already covering on back/forward) */}
             <motion.div
-              initial={{ y: '100%' }}
+              initial={{ y: coverMode === 'instant' ? '0%' : '100%' }}
               animate={{ y: '0%' }}
               exit={{ y: '100%' }}
-              transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+              transition={{ duration: coverMode === 'instant' ? 0 : 0.42, ease: [0.76, 0, 0.24, 1] }}
               className="absolute inset-x-0 bottom-0 h-1/2 bg-[#0a0a0a]"
+            />
+
+            {/* Split seam — leaves breathing room around the monogram */}
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0.84 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              exit={{ opacity: 0, scaleX: 0.9 }}
+              transition={{ duration: 0.32, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.14 }}
+              className="absolute inset-x-0 top-1/2 z-10 -translate-y-1/2"
             >
-              <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-gold/70 to-transparent" />
+              <span
+                className="absolute left-0 h-px bg-gradient-to-r from-transparent via-accent-gold/45 to-accent-gold/10"
+                style={{ right: 'calc(50% + 8.75rem)' }}
+              />
+              <span
+                className="absolute right-0 h-px bg-gradient-to-l from-transparent via-accent-gold/45 to-accent-gold/10"
+                style={{ left: 'calc(50% + 8.75rem)' }}
+              />
             </motion.div>
 
             {/* Center logo flourish */}
@@ -91,39 +236,38 @@ export function PageTransition({ children }: PageTransitionProps) {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.04 }}
-              transition={{ duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.25 }}
-              className="absolute inset-0 flex items-center justify-center"
+              transition={{ duration: 0.36, ease: [0.21, 0.47, 0.32, 0.98], delay: 0.18 }}
+              className="absolute inset-0 z-20 flex items-center justify-center"
             >
               <div className="relative flex items-center justify-center">
+                <span className="absolute h-[10.5rem] w-[10.5rem] rounded-full bg-[#0a0a0a] shadow-[0_0_54px_rgba(0,0,0,0.95)] sm:h-[12rem] sm:w-[12rem]" />
+
                 {/* Pulsujący zewnętrzny pierścień */}
-                <span className="absolute h-[200px] w-[200px] rounded-full border border-accent-gold/15 animate-[wc-pt-ring_1400ms_ease-out_infinite]" />
+                <span className="absolute h-[184px] w-[184px] rounded-full border border-accent-gold/10 animate-[wc-pt-ring_1100ms_ease-out_infinite]" />
 
                 {/* Bazowy pierścień wokół logo */}
-                <span className="absolute h-[150px] w-[150px] rounded-full border border-accent-gold/25" />
+                <span className="absolute h-[136px] w-[136px] rounded-full border border-accent-gold/24 shadow-[0_0_28px_rgba(201,169,98,0.06)] sm:h-[150px] sm:w-[150px]" />
+                <span className="absolute h-[112px] w-[112px] rounded-full border border-accent-gold/8 sm:h-[124px] sm:w-[124px]" />
 
                 {/* Kometa obiegająca pierścień — conic gradient z głową i ogonem, obracany */}
                 <div
-                  className="absolute h-[150px] w-[150px] rounded-full animate-[wc-pt-orbit_1200ms_cubic-bezier(0.4,0,0.2,1)_forwards]"
+                  className="absolute h-[136px] w-[136px] rounded-full animate-[wc-pt-orbit_900ms_cubic-bezier(0.4,0,0.2,1)_forwards] sm:h-[150px] sm:w-[150px]"
                   style={{
                     background:
-                      'conic-gradient(from 0deg, transparent 0deg, transparent 220deg, rgba(201,169,98,0.0) 240deg, rgba(201,169,98,0.6) 320deg, rgba(255,232,180,1) 358deg, rgba(255,255,255,0.95) 360deg)',
+                      'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(201,169,98,0.0) 292deg, rgba(201,169,98,0.34) 340deg, rgba(247,219,160,0.56) 358deg, rgba(255,240,202,0.5) 360deg)',
                     WebkitMask:
                       'radial-gradient(circle, transparent calc(50% - 2px), black calc(50% - 2px), black 50%, transparent 50%)',
                     mask: 'radial-gradient(circle, transparent calc(50% - 2px), black calc(50% - 2px), black 50%, transparent 50%)',
-                    filter: 'drop-shadow(0 0 6px rgba(201,169,98,0.7))',
+                    filter: 'drop-shadow(0 0 5px rgba(201,169,98,0.46))',
                   }}
                 />
-
-                {/* Hairline cross marks */}
-                <span aria-hidden className="absolute h-px w-12 bg-accent-gold/50 left-[-3.5rem] top-1/2 -translate-y-1/2" />
-                <span aria-hidden className="absolute h-px w-12 bg-accent-gold/50 right-[-3.5rem] top-1/2 -translate-y-1/2" />
 
                 {/* Logo bez shimmera — czyste */}
                 <img
                   src="/logo_blank.png"
                   alt=""
                   aria-hidden="true"
-                  className="relative h-16 w-auto sm:h-20"
+                  className="relative h-14 w-auto drop-shadow-[0_0_16px_rgba(201,169,98,0.16)] sm:h-[4.5rem]"
                 />
               </div>
             </motion.div>

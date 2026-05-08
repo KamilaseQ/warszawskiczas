@@ -92,7 +92,7 @@ export function ImagePlaceholder({
             isDark ? 'text-accent-gold/50' : 'text-accent-gold/60'
           )}
         >
-          WC
+          Warszawski Czas
         </span>
       </div>
     </div>

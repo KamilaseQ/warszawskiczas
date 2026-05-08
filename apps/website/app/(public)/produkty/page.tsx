@@ -13,20 +13,24 @@ export const metadata: Metadata = {
 export default function ProduktyPage() {
   return (
     <>
-      {/* Slim editorial banner — pasek u góry, nie blokuje viewportu */}
-      <Section variant="muted" spacing="sm" className="border-b border-border">
+      {/* Slim editorial banner — odstęp od headera, czytelny H1 */}
+      <Section variant="muted" spacing="sm" className="border-b border-border pt-28 lg:pt-32">
         <Container>
           <div className="grid items-end gap-6 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
               <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
-                Katalog · Selekcja butiku
+                Katalog · {mockProducts.filter((p) => p.category === 'zegarki').length} pozycji
               </p>
               <h1 className="mt-3 font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl leading-[1.05]">
-                Kolekcja <span className="italic text-foreground/80">starannie</span> dobrana
+                Zegarki dostępne <span className="italic text-foreground/80">w butiku</span>
               </h1>
+              <p className="mt-4 max-w-xl font-sans text-sm leading-relaxed text-muted-foreground sm:text-base text-pretty">
+                Każdy egzemplarz zweryfikowany pod kątem autentyczności i stanu.
+                Filtruj po marce, materiale lub przedziale cenowym.
+              </p>
             </div>
 
-            <div className="lg:col-span-5 lg:border-l lg:border-border lg:pl-8">
+            <div className="hidden lg:col-span-5 lg:block lg:border-l lg:border-border lg:pl-8">
               <p className="font-serif italic text-sm text-muted-foreground sm:text-base text-pretty">
                 &ldquo;Najpiękniejsze zegarki nie są najgłośniejsze — są te, które dyskretnie towarzyszą nam przez dekady.&rdquo;
               </p>

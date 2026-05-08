@@ -44,7 +44,7 @@ export function ContactForm({ initialTopic = '', variant = 'light' }: ContactFor
         >
           Odpowiadamy w ciągu 24 godzin w dni robocze. W sprawach pilnych dzwoń na{' '}
           <a href="tel:+48604501000" className="text-accent-gold">
-            +48 604 501 000
+            +48 604 50 1000
           </a>
           .
         </p>
@@ -143,7 +143,7 @@ export function ContactForm({ initialTopic = '', variant = 'light' }: ContactFor
 
       <p className={cn('text-center text-[10px] uppercase tracking-[0.3em]', isDark ? 'text-white/40' : 'text-muted-foreground/60')}>
         Odpowiadamy w ciągu 24 godzin. W sprawach pilnych:{' '}
-        <a href="tel:+48604501000" className="text-accent-gold">+48 604 501 000</a>
+        <a href="tel:+48604501000" className="text-accent-gold">+48 604 50 1000</a>
       </p>
     </form>
   )

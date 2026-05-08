@@ -90,31 +90,42 @@ export function TrustSignals() {
                 </div>
               </div>
 
-              {/* Cytat */}
+              {/* Cytat — designerski układ: duży serifowy cudzysłów-grafika
+                  jako anchor w lewym górnym rogu, gwiazdki i blockquote
+                  w osobnej kolumnie po prawej, bez kolizji. */}
               <div className="lg:col-span-9">
-                {/* Gwiazdki */}
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-accent-gold text-accent-gold" />
-                  ))}
-                </div>
-
-                {/* Cudzysłów + cytat */}
-                <div className="relative">
+                <div className="flex items-start gap-5 sm:gap-7">
+                  {/* Vogue-style decorative open quote */}
                   <span
                     aria-hidden="true"
-                    className="absolute -top-10 -left-2 select-none font-serif text-7xl leading-none text-accent-gold/30"
+                    className="select-none font-serif italic font-medium leading-[0.7] text-accent-gold/45"
+                    style={{ fontSize: 'clamp(5rem, 12vw, 9rem)' }}
                   >
-                    "
+                    “
                   </span>
-                  <blockquote className="font-serif text-xl italic font-normal text-foreground leading-relaxed lg:text-2xl text-pretty">
-                    Korzystam z usług Jarosława od wielu lat i zawsze mogę liczyć na pełen
-                    profesjonalizm oraz realną pomoc. Ogromna wiedza, rzetelne podejście i
-                    uczciwe doradztwo — zarówno przy serwisie, jak i bardziej wymagających
-                    tematach związanych z zegarkami. Dodatkowym atutem jest świetna lokalizacja
-                    w samym centrum Warszawy, przy Mokotowskiej, co jest bardzo wygodne.
-                    Zdecydowanie polecam.
-                  </blockquote>
+
+                  <div className="flex-1 pt-2 sm:pt-3">
+                    {/* Gwiazdki */}
+                    <div className="mb-4 flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3.5 w-3.5 fill-accent-gold text-accent-gold" />
+                      ))}
+                    </div>
+
+                    {/* Treść — bez własnych cudzysłowów, otwarcie zrobione grafiką po lewej,
+                        zamykające na końcu utrzymuje typograficzny domknięty układ. */}
+                    <blockquote className="font-serif text-xl italic font-normal text-foreground leading-relaxed lg:text-2xl text-pretty">
+                      Korzystam z usług Jarosława od wielu lat i zawsze mogę liczyć na pełen
+                      profesjonalizm oraz realną pomoc. Ogromna wiedza, rzetelne podejście i
+                      uczciwe doradztwo — zarówno przy serwisie, jak i bardziej wymagających
+                      tematach związanych z zegarkami. Dodatkowym atutem jest świetna
+                      lokalizacja w samym centrum Warszawy, przy Mokotowskiej, co jest bardzo
+                      wygodne. Zdecydowanie polecam.
+                      <span className="ml-1 align-baseline font-serif italic text-accent-gold/70">
+                        ”
+                      </span>
+                    </blockquote>
+                  </div>
                 </div>
 
                 <div className="mt-6 hidden lg:flex items-center gap-3">
@@ -255,20 +266,20 @@ export function TrustSignals() {
                   <h3 className="font-serif text-2xl font-medium text-foreground">
                     Zaufali nam kolekcjonerzy
                   </h3>
-                  <div className="mt-6 grid grid-cols-2 gap-6">
-                    <div>
-                      <p className="font-serif text-4xl font-medium text-foreground italic sm:text-5xl">
+                  <div className="mt-6 grid grid-cols-1 gap-6 min-[430px]:grid-cols-2">
+                    <div className="min-w-0">
+                      <p className="break-words font-serif text-4xl font-medium text-foreground italic sm:text-5xl">
                         tysiące
                       </p>
-                      <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                      <p className="mt-2 max-w-full break-words text-[10px] font-sans uppercase tracking-[0.18em] text-muted-foreground sm:tracking-[0.3em]">
                         Zrealizowanych<br />transakcji
                       </p>
                     </div>
-                    <div>
-                      <p className="font-serif text-4xl font-medium text-accent-gold/80 sm:text-5xl">
+                    <div className="min-w-0">
+                      <p className="break-words font-serif text-4xl font-medium text-accent-gold/80 sm:text-5xl">
                         od <AnimatedCounter value={2019} />
                       </p>
-                      <p className="mt-2 text-[10px] font-sans uppercase tracking-[0.3em] text-muted-foreground">
+                      <p className="mt-2 max-w-full break-words text-[10px] font-sans uppercase tracking-[0.18em] text-muted-foreground sm:tracking-[0.3em]">
                         Ponad dekada<br />doświadczenia
                       </p>
                     </div>

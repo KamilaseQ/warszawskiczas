@@ -4,23 +4,13 @@ import Link from 'next/link'
 import { FadeIn } from '@/components/ui/fade-in'
 import { Magnetic } from '@/components/ui'
 import { ChevronDown } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function Hero() {
   const contentRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.matchMedia('(max-width: 768px)').matches)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-
-  useEffect(() => {
-    if (isMobile) return
-
     const startVideo = () => {
       const v = videoRef.current
       if (!v) return
@@ -36,7 +26,7 @@ export function Hero() {
 
     window.addEventListener('wc-loading-finish', startVideo, { once: true })
     return () => window.removeEventListener('wc-loading-finish', startVideo)
-  }, [isMobile])
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,27 +51,18 @@ export function Hero() {
     <section className="relative flex min-h-[100vh] w-full flex-col items-center justify-center overflow-hidden bg-black">
       {/* Cinematic Background */}
       <div className="absolute inset-0 z-0 bg-black">
-        {!isMobile ? (
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="h-full w-full object-cover"
-            style={{ filter: 'saturate(1.15) contrast(1.1) brightness(0.88) sepia(0.12) hue-rotate(-8deg)' }}
-          >
-            <source src="/rolex.mp4" type="video/mp4" />
-          </video>
-        ) : (
-          <div
-            className="h-full w-full"
-            style={{
-              background:
-                'radial-gradient(ellipse at 30% 40%, rgba(80,60,30,0.45) 0%, rgba(20,14,8,0.95) 55%, #050403 100%)',
-            }}
-          />
-        )}
+        <video
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          autoPlay
+          preload="auto"
+          className="h-full w-full object-cover"
+          style={{ filter: 'saturate(1.15) contrast(1.1) brightness(0.88) sepia(0.12) hue-rotate(-8deg)' }}
+        >
+          <source src="/rolex.mp4" type="video/mp4" />
+        </video>
 
         {/* Multi-layered Overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] mix-blend-multiply" />
@@ -141,7 +122,7 @@ export function Hero() {
 
         {/* CTA — primary: "Umów prywatną konsultację", secondary tekst-link "Odkryj kolekcję" */}
         <FadeIn delay={0.4} direction="up" className="mt-12 sm:mt-12 flex items-center justify-center gap-6 sm:gap-8 relative flex-wrap hero-mobile-breathe">
-          <div className="absolute -inset-8 bg-black/40 blur-2xl z-0 rounded-full pointer-events-none" />
+          <div className="absolute inset-y-[-2rem] left-0 right-0 bg-black/40 blur-2xl z-0 rounded-full pointer-events-none" />
 
           {/* PRIMARY — Umów prywatną konsultację (magnetic hover) */}
           <Magnetic className="relative z-10" strength={10}>

@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Container, Section, Heading, Text, Button, FaqAccordion, type FaqItem } from '@/components/ui'
-import { ProductCard } from '@/components/products'
+import { RelatedGrid } from '@/components/products'
 import { ProductGallery } from '@/components/products/product-gallery'
-import { mockProducts } from '@/data/mock-products'
+import { mockProducts, productUrlSlug, findProductByUrlSlug } from '@/data/mock-products'
 import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
 
 interface PageProps {
@@ -12,12 +12,12 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return mockProducts.map((p) => ({ slug: p.slug }))
+  return mockProducts.map((p) => ({ slug: productUrlSlug(p) }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = mockProducts.find((p) => p.slug === slug)
+  const product = findProductByUrlSlug(slug) ?? mockProducts.find((p) => p.slug === slug)
   if (!product) return { title: 'Produkt nie znaleziony' }
   return {
     title: `${product.brand} ${product.name}`,
@@ -54,13 +54,50 @@ function formatPrice(value?: number, onRequest?: boolean) {
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params
-  const product = mockProducts.find((p) => p.slug === slug)
+  const product = findProductByUrlSlug(slug) ?? mockProducts.find((p) => p.slug === slug)
   if (!product) notFound()
 
   const price = formatPrice(product.price, product.priceOnRequest)
+
+  const tokens = (s?: string) =>
+    new Set(
+      (s ?? '')
+        .toLowerCase()
+        .split(/[^a-ząćęłńóśźż0-9]+/i)
+        .filter((t) => t.length > 3)
+    )
+  const current = product
+  const productMaterial = tokens(current.material)
+  const productPrice = current.price ?? 0
+
+  function similarity(p: (typeof mockProducts)[number]) {
+    let score = 0
+    if (p.brand === current.brand) score += 4
+    const otherMat = tokens(p.material)
+    let matMatches = 0
+    productMaterial.forEach((t) => {
+      if (otherMat.has(t)) matMatches += 1
+    })
+    score += Math.min(matMatches, 3)
+    if (productPrice && p.price) {
+      const diff = Math.abs(p.price - productPrice)
+      const ratio = diff / Math.max(productPrice, p.price)
+      if (ratio < 0.15) score += 3
+      else if (ratio < 0.3) score += 2
+      else if (ratio < 0.5) score += 1
+    } else if (current.priceOnRequest && p.priceOnRequest) {
+      score += 1
+    }
+    if (p.isExclusive && current.isExclusive) score += 1
+    return score
+  }
+
   const related = mockProducts
     .filter((p) => p.id !== product.id && p.category === product.category)
+    .map((p) => ({ p, s: similarity(p) }))
+    .sort((a, b) => b.s - a.s)
     .slice(0, 3)
+    .map((x) => x.p)
 
   const inquiryHref = `/kontakt?temat=${encodeURIComponent(`Zapytanie o ${product.brand} ${product.name}`)}`
 
@@ -289,11 +326,7 @@ export default async function ProductPage({ params }: PageProps) {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
+            <RelatedGrid products={related} />
           </Container>
         </Section>
       )}

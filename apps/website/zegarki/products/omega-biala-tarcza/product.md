@@ -3,23 +3,22 @@
 **Marka:** Omega  
 **Model:** Constellation Manhattan Quartz Date  
 **Referencja:** rodzina 396 / 1512 - do potwierdzenia z dekla  
-**Rok:** lata 1990-2000., do potwierdzenia  
-**Stan:** dobry, ocena wst?pna ze zdj??  
-**Materia?:** stal nierdzewna
+**Status:** dost?pny  
+**Cena:** cena na zapytanie
 
-## 1. Opis
+## Kr?tki opis
 Omega Constellation Manhattan z jasn? tarcz? i zintegrowan? bransolet? to elegancki kwarcowy klasyk z charakterystycznymi pazurami koperty.
 
-## 2. Cytat
+## Cytat ciekawostkowy
 ?Cztery pazury Constellation Manhattan zacz??y jako element konstrukcyjny, a sta?y si? jednym z najbardziej rozpoznawalnych znak?w Omegi.?
 
-## 3. Parametry
-- Rok: lata 1990-2000., do potwierdzenia
-- Stan: dobry, ocena wst?pna ze zdj??
-- Materia?: stal nierdzewna
-- Referencja: do potwierdzenia
+## Parametry
+- **Rok:** lata 1990-2000., do potwierdzenia
+- **Stan:** dobry, ocena wst?pna ze zdj??
+- **Materia?:** stal nierdzewna
+- **Referencja:** do potwierdzenia
 
-## 4. Historia
+## Historia
 Constellation Manhattan zadebiutowa? w 1982 roku i zmieni? eleganck? lini? Omegi w zegarek o mocnej, architektonicznej kopercie. Jasna tarcza, rzymski bezel i zintegrowana bransoleta tworz? dyskretny, codzienny wariant tej stylistyki.
 
 ## Zdj?cia
@@ -27,5 +26,8 @@ Constellation Manhattan zadebiutowa? w 1982 roku i zmieni? eleganck? lini? Omegi
 - Left: `images/omega-biala-tarcza/left.jpg`
 - Right: `images/omega-biala-tarcza/right.jpg`
 
-## Uwagi weryfikacyjne
+## ?r?d?a / weryfikacja
+- https://dumarko.com/blogs/news/vintage-omega-constellation-collectors-guide
+- https://www.catawiki.com/en/l/99692638-omega-constellation-men-1990-1999
+
 Rok, stan i dok?adna referencja konkretnego egzemplarza powinny zosta? potwierdzone dokumentami, numerem seryjnym lub ogl?dzinami zegarmistrza przed publikacj? sprzeda?ow?.

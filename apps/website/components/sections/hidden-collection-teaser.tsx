@@ -117,7 +117,7 @@ export function HiddenCollectionTeaser() {
               </div>
 
               {/* Offset gold border — dekoracyjne, jak w boutique-preview */}
-              <div className="pointer-events-none absolute -bottom-5 -right-5 h-full w-full border border-accent-gold/25" />
+              <div className="pointer-events-none absolute -bottom-5 -right-5 hidden h-full w-full border border-accent-gold/25 lg:block" />
 
               {/* Animated gold pin — bottom left of image */}
               <div

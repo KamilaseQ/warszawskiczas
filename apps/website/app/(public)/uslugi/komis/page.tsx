@@ -96,7 +96,7 @@ export default function KomisPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       {/* Header */}
-      <Section spacing="md">
+      <Section spacing="md" className="pt-28 lg:pt-32">
         <Container>
           <div className="max-w-2xl">
             <Heading as="h1" size="xl">

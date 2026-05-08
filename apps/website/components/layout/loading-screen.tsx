@@ -86,11 +86,19 @@ export function LoadingScreen() {
   const litTicks = Math.floor((angle / 360) * 60)
 
   return (
-    <div
-      aria-hidden="true"
-      role="status"
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0a0a] transition-opacity duration-[800ms] ease-in-out ${fading ? 'opacity-0' : 'opacity-100'}`}
-    >
+    <>
+      <noscript>
+        <style>{`
+          .wc-loading-screen {
+            display: none !important;
+          }
+        `}</style>
+      </noscript>
+      <div
+        aria-hidden="true"
+        role="status"
+        className={`wc-loading-screen fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a0a0a] transition-opacity duration-[800ms] ease-in-out ${fading ? 'opacity-0' : 'opacity-100'}`}
+      >
       {/* Ciepła złota poświata */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(201,169,98,0.10)_0%,transparent_55%)]" />
 
@@ -229,6 +237,7 @@ export function LoadingScreen() {
           </span>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, Section, WaxSeal } from '@/components/ui'
+import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 const benefits = [
@@ -72,19 +72,6 @@ export function PrivateCollectionRegistration() {
               </ul>
             </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <div className="mt-16 flex items-center gap-5">
-                <WaxSeal size={88} rotate={-12} />
-                <div>
-                  <p className="font-serif italic text-sm text-white/45">
-                    Sygnatura
-                  </p>
-                  <p className="mt-1 font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/70">
-                    Warszawski Czas
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
           </div>
 
           {/* RIGHT — form */}
@@ -92,8 +79,8 @@ export function PrivateCollectionRegistration() {
             <FadeIn delay={0.15}>
               <div className="relative">
                 {/* Decorative offset frames — magazine plate */}
-                <div className="pointer-events-none absolute -bottom-4 -right-4 hidden h-full w-full border border-accent-gold/30 sm:block" />
-                <div className="pointer-events-none absolute -top-4 -left-4 hidden h-full w-full border border-accent-gold/15 sm:block" />
+                <div className="pointer-events-none absolute -bottom-4 -right-4 hidden h-full w-full border border-accent-gold/30 lg:block" />
+                <div className="pointer-events-none absolute -top-4 -left-4 hidden h-full w-full border border-accent-gold/15 lg:block" />
 
                 <div className="relative bg-[#0a0a0a] p-8 lg:p-12">
                   {/* Top gold accent */}
@@ -217,10 +204,7 @@ function Field({
 function SuccessState() {
   return (
     <div className="text-center py-8">
-      <div className="mx-auto flex justify-center wax-seal-stamp">
-        <WaxSeal size={110} rotate={-12} />
-      </div>
-      <h3 className="mt-10 font-serif text-2xl font-medium italic text-white sm:text-3xl">
+      <h3 className="font-serif text-2xl font-medium italic text-white sm:text-3xl">
         Twoja korespondencja została odebrana
       </h3>
       <div className="mx-auto mt-5 h-px w-12 bg-accent-gold/60" />

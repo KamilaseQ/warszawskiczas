@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
-import { Container, Section } from '@/components/ui'
+import { Container, LocationMap, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 export function BoutiquePreview() {
@@ -64,7 +64,7 @@ export function BoutiquePreview() {
                   href="tel:+48604501000"
                   className="mt-3 block font-serif text-2xl font-medium text-accent-gold transition-colors duration-300 hover:text-accent-gold/80"
                 >
-                  +48 604 501 000
+                  +48 604 50 1000
                 </a>
               </div>
 
@@ -93,27 +93,10 @@ export function BoutiquePreview() {
           {/* PRAWA — mapa Google z offset border */}
           <FadeIn direction="left" delay={0.15} className="lg:col-span-8">
             <div className="relative">
-              <div className="relative aspect-[4/3] overflow-hidden bg-[#0f0f0e] lg:aspect-[16/11]">
-                <iframe
-                  src="https://maps.google.com/maps?cid=11669713150774348709&hl=pl&z=17&t=&output=embed"
-                  width="100%"
-                  height="100%"
-                  style={{
-                    border: 0,
-                    filter: 'grayscale(0.85) contrast(1.05) brightness(0.75) sepia(0.25)',
-                    position: 'absolute',
-                    inset: 0,
-                  }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Warszawski Czas — Mokotowska 71, Warszawa"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#0a0a0a]/30 via-transparent to-[#c9a962]/[0.04]" />
-              </div>
+              <LocationMap className="aspect-[4/3] lg:aspect-[16/11]" />
 
               {/* Offset gold border */}
-              <div className="pointer-events-none absolute -bottom-5 -right-5 h-full w-full border border-accent-gold/30" />
+              <div className="pointer-events-none absolute -bottom-5 -right-5 hidden h-full w-full border border-accent-gold/30 lg:block" />
 
               {/* Caption editorial */}
               <div className="mt-4 flex items-center gap-3">

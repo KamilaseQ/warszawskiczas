@@ -47,7 +47,7 @@ export default function DziekujemyPage() {
               className="inline-flex items-center gap-2 text-sm font-sans font-bold uppercase tracking-[0.3em] text-foreground/80 hover:text-accent-gold transition-colors"
             >
               <Phone className="h-4 w-4" />
-              +48 604 501 000
+              +48 604 50 1000
             </a>
             <span className="hidden sm:inline text-muted-foreground/40">·</span>
             <a

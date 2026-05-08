@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { ImagePlaceholder } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 
 interface ProductGalleryProps {
   brand: string
@@ -21,6 +22,8 @@ export function ProductGallery({ brand, name, images = [] }: ProductGalleryProps
   const safeActive = Math.min(active, Math.max(0, images.length - 1))
   const currentSrc = images[safeActive]
 
+  useBodyScrollLock(zoom)
+
   useEffect(() => {
     if (!zoom) return
     const onKey = (e: KeyboardEvent) => {
@@ -30,10 +33,8 @@ export function ProductGallery({ brand, name, images = [] }: ProductGalleryProps
         setActive((i) => (i - 1 + images.length) % images.length)
     }
     window.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
     return () => {
       window.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
     }
   }, [zoom, hasImages, images.length])
 
@@ -49,7 +50,7 @@ export function ProductGallery({ brand, name, images = [] }: ProductGalleryProps
           type="button"
           onClick={() => hasImages && setZoom(true)}
           className={cn(
-            'relative block aspect-[4/5] w-full overflow-hidden bg-muted',
+            'relative block aspect-square w-full overflow-hidden bg-muted sm:aspect-[4/5]',
             hasImages ? 'cursor-zoom-in' : 'cursor-default'
           )}
           aria-label={hasImages ? `Powiększ zdjęcie ${brand} ${name}` : `${brand} ${name}`}

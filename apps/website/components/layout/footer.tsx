@@ -181,7 +181,7 @@ export function Footer() {
                   href="tel:+48604501000"
                   className="text-sm text-white/60 transition-colors hover:text-accent-gold"
                 >
-                  +48 604 501 000
+                  +48 604 50 1000
                 </a>
               </li>
               <li className="flex items-center gap-3">

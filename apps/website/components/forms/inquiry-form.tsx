@@ -62,7 +62,7 @@ export function InquiryForm({
         label="Telefon"
         name="phone"
         type="tel"
-        placeholder="+48 604 501 000"
+        placeholder="+48 604 50 1000"
         required
       />
       {subject && <input type="hidden" name="subject" value={subject} />}

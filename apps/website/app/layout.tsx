@@ -39,10 +39,21 @@ export const metadata: Metadata = {
     'zegarki luksusowe',
   ],
   authors: [{ name: 'Warszawski Czas' }],
+  metadataBase: new URL('https://warszawskiczas.pl'),
   openGraph: {
     type: 'website',
     locale: 'pl_PL',
     siteName: 'Warszawski Czas',
+    title: 'Warszawski Czas | Butik Zegarków Premium',
+    description:
+      'Butik zegarków premium w sercu Warszawy. Mokotowska 71 — kolekcja, serwis, skup, komis.',
+    url: 'https://warszawskiczas.pl',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Warszawski Czas | Butik Zegarków Premium',
+    description:
+      'Butik zegarków premium w sercu Warszawy. Mokotowska 71 — kolekcja, serwis, skup, komis.',
   },
 }
 

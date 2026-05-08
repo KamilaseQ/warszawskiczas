@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay'
@@ -16,7 +17,7 @@ import {
   ShieldCheck,
   Unlock,
 } from 'lucide-react'
-import { Container, Section, ImagePlaceholder, Magnetic } from '@/components/ui'
+import { Container, Section, Magnetic } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 import { ACCESS_CODE } from '@/lib/config'
 import { cn } from '@/lib/utils'
@@ -31,6 +32,7 @@ type FeaturedWatch = {
   status: 'Dostępny' | 'Zarezerwowany'
   provenance: string
   editorial: string
+  image: string
   specs: {
     mechanism: string
     diameter: string
@@ -43,63 +45,66 @@ type FeaturedWatch = {
 
 const featured: FeaturedWatch[] = [
   {
-    id: 'pp-5711',
+    id: 'pp-nautilus-5990',
     brand: 'Patek Philippe',
-    model: 'Nautilus',
-    reference: '5711/1A-010',
-    year: '2019',
+    model: 'Nautilus Travel Time Chronograph',
+    reference: '5990/1R-001',
+    year: 'ok. 2019',
     condition: 'Stan kolekcjonerski',
-    status: 'Zarezerwowany',
-    provenance: 'Pierwszy właściciel — Genewa',
+    status: 'Dostępny',
+    provenance: 'Pierwszy właściciel, Warszawa',
     editorial:
-      'Ostatnia generacja kultowej referencji 5711 w niebieskiej tarczy "Tiffany blue gradient". Zegarek, który w branży zegarmistrzowskiej zmienił definicję sportowej elegancji.',
+      'Najbardziej skomplikowany Nautilus, jaki Patek wprowadził do kolekcji — dwie strefy czasowe z rozdzielonymi wskazaniami LOCAL/HOME, chronograf typu flyback i dyskretny datownik dzień/noc, wszystko upakowane w sportową kopertę Genty z lat 70. W wersji 5990/1R różowe złoto przesuwa ten zegarek z kategorii „sportowa elegancja" w stronę nocnej eleganckiej biżuterii — niebieska tarcza z poziomym reliefem łapie światło inaczej co minutę.',
+    image: '/patek.jpg',
     specs: {
-      mechanism: 'Automat, kal. 26-330 S C',
-      diameter: '40 mm',
-      material: 'Stal szlachetna',
-      boxPapers: 'Pełen komplet, certyfikat Patek',
+      mechanism: 'Automat, kal. CH 28-520 C FUS, flyback',
+      diameter: '40,5 mm',
+      material: 'Złoto różowe 18k, bransoleta integrated',
+      boxPapers: 'Pełen komplet, certyfikat Patek Philippe',
     },
-    origin: 'Prywatna kolekcja, Szwajcaria',
+    origin: 'Patek Philippe Nautilus 5990',
     priceLabel: 'Cena na zapytanie',
   },
   {
-    id: 'ap-15500',
+    id: 'ap-royal-oak-burgundy',
     brand: 'Audemars Piguet',
-    model: 'Royal Oak',
-    reference: '15500ST.OO.1220ST.01',
-    year: '2022',
-    condition: 'Stan kolekcjonerski',
+    model: 'Royal Oak Automatic — Burgundy Dial',
+    reference: '14790ST',
+    year: 'lata 90.',
+    condition: 'Bardzo dobry',
     status: 'Dostępny',
-    provenance: 'Salon AP Mediolan, jeden właściciel',
+    provenance: 'Prywatna kolekcja, Mediolan',
     editorial:
-      'Tarcza Grande Tapisserie w odcieniu kremowym, bransoleta zintegrowana w pełni przeszlifowana. Egzemplarz nienaznaczony — pudełko otwierane wyłącznie do prezentacji.',
+      'Royal Oak w klasycznych proporcjach 36 mm — tych, które Gérald Genta narysował w 1972 r. — z niezwykle rzadką burgundową tarczą Petite Tapisserie. Wino, stal i osiem heksagonalnych śrub na stalowym bezelu: kombinacja, która z na pozór codziennego sportowego zegarka robi pozycję trudną do znalezienia poza prywatnymi zbiorami. Burgundowa skóra aligatora dopowiada ton.',
+    image: '/ap.jpg',
     specs: {
-      mechanism: 'Automat, kal. 4302 in-house',
-      diameter: '41 mm',
-      material: 'Stal szlachetna',
-      boxPapers: 'Pełen komplet, AP Service Card',
+      mechanism: 'Automat, kal. AP 2225',
+      diameter: '36 mm',
+      material: 'Stal, pasek aligator',
+      boxPapers: 'Dokumentacja serwisowa, oryginalny dial',
     },
-    origin: 'Prywatna kolekcja, Włochy',
+    origin: 'Audemars Piguet Royal Oak Vintage',
     priceLabel: 'Cena na zapytanie',
   },
   {
-    id: 'vc-overseas',
-    brand: 'Vacheron Constantin',
-    model: 'Overseas',
-    reference: '4500V/110A-B128',
-    year: '2021',
-    condition: 'Jak nowy',
+    id: 'chopard-haute-joaillerie',
+    brand: 'Chopard',
+    model: 'Haute Joaillerie Chronograph — Full Diamond',
+    reference: 'Pièce unique',
+    year: 'ok. 2010',
+    condition: 'Stan kolekcjonerski',
     status: 'Dostępny',
-    provenance: 'Boutique Vacheron, Paryż',
+    provenance: 'Prywatna kolekcja, Genewa',
     editorial:
-      'Trzy bransolety w komplecie — stalowa, skórzana i kauczukowa, każda wymieniana w sekundę systemem quick-change. Tarcza niebieska z motywem kompasu, rzadko spotykana w tak nieskazitelnym stanie.',
+      'Tu nie chodzi już o pomiar czasu — chodzi o światło. Pełna pavéowa tarcza, trzy subtarcze chronografu wycięte w masie diamentów, koperta i bezel z baguettowymi kamieniami i klasycznymi cyframi rzymskimi w złocie. Kategorię tego zegarka Chopard zarezerwował dla najmniejszej, najbardziej dyskretnej linii haute joaillerie — egzemplarze tej skali rzadko opuszczają prywatne kolekcje rodzin szwajcarskich.',
+    image: '/chopard.jpg',
     specs: {
-      mechanism: 'Automat, kal. 5100 (Hallmark of Geneva)',
-      diameter: '41 mm',
-      material: 'Stal szlachetna',
-      boxPapers: 'Pełen komplet, 5 lat gwarancji VC',
+      mechanism: 'Automat, chronograph',
+      diameter: '38 mm',
+      material: 'Białe złoto 18k, ok. 600 diamentów',
+      boxPapers: 'Komplet, certyfikat haute joaillerie Chopard',
     },
-    origin: 'Prywatna kolekcja, Francja',
+    origin: 'Chopard Haute Joaillerie Chronograph',
     priceLabel: 'Cena na zapytanie',
   },
 ]
@@ -165,7 +170,35 @@ export function PrivateCollectionFeatured() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_15%_85%,rgba(122,76,38,0.12)_0%,transparent_50%)]" />
 
       <Container size="wide" className="relative">
-        {/* PANEL KARUZELI — od razu, bez intro */}
+        {/* MOBILE — kompaktowy "lock" gdy nie odblokowano. Bez ślepego scrolla
+            przez zablurowaną treść. Po odblokowaniu sekcja płynnie się rozwija. */}
+        {!unlocked && (
+          <FadeIn delay={0.15} className="lg:hidden">
+            <MobileLockCard
+              code={code}
+              error={error}
+              onCodeChange={(v) => {
+                setCode(v)
+                if (error) setError(false)
+              }}
+              onSubmit={handleUnlock}
+              onScrollToRegistration={scrollToRegistration}
+            />
+          </FadeIn>
+        )}
+
+        {/* PANEL KARUZELI. Na mobile gdy zablokowane → max-h:0 + opacity:0
+            (sekcja krótka, bez ślepego scrolla). Po odblokowaniu CSS transition
+            płynnie rozwija pełną wysokość. Na desktopie zawsze widoczny —
+            tam blur + overlay daje efekt "podglądu pod woalem". */}
+        <div
+          className={cn(
+            'relative overflow-hidden transition-[max-height,opacity,margin] duration-[800ms] ease-out lg:!max-h-none lg:!overflow-visible lg:!opacity-100',
+            unlocked
+              ? 'max-h-[8000px] opacity-100'
+              : 'pointer-events-none max-h-0 opacity-0 lg:pointer-events-auto'
+          )}
+        >
         <FadeIn delay={0.15}>
           <div className="relative">
             {/* Dekoracyjna ramka offset */}
@@ -177,7 +210,7 @@ export function PrivateCollectionFeatured() {
               {/* Złoty akcent górny */}
               <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#c9a962] to-transparent" />
 
-              {/* Karuzela — blur kiedy zablokowana */}
+              {/* Karuzela — blur kiedy zablokowana (desktop) */}
               <div
                 className={cn(
                   'transition-all duration-1000 ease-out',
@@ -257,10 +290,10 @@ export function PrivateCollectionFeatured() {
                 </div>
               </div>
 
-              {/* OVERLAY — KOD DOSTĘPU */}
+              {/* OVERLAY — KOD DOSTĘPU (desktop only — na mobile mamy MobileLockCard u góry) */}
               {!unlocked && (
                 <div
-                  className="absolute inset-0 z-10 flex items-center justify-center px-6 py-10 lg:px-12 lg:py-16"
+                  className="absolute inset-0 z-10 hidden items-center justify-center px-6 py-10 lg:flex lg:px-12 lg:py-16"
                   style={{
                     background:
                       'radial-gradient(ellipse at center, rgba(243,234,217,0.55) 0%, rgba(243,234,217,0.85) 100%)',
@@ -285,7 +318,7 @@ export function PrivateCollectionFeatured() {
                     </h3>
 
                     <p className="mt-4 text-sm leading-relaxed text-white/55 text-pretty">
-                      Trzy egzemplarze ze szczegółami, prowencją i dokumentacją.
+                      Egzemplarze ze szczegółami, prowencją i dokumentacją.
                       Wpisz kod od specjalisty albo wypełnij krótki formularz.
                     </p>
 
@@ -353,9 +386,86 @@ export function PrivateCollectionFeatured() {
             </div>
           </div>
         </FadeIn>
+        </div>
 
       </Container>
     </Section>
+  )
+}
+
+// Kompaktowa karta odblokowania na mobile — skraca sekcję, pole kodu jest u góry
+// i nie trzeba scrollować przez zablurowaną treść.
+function MobileLockCard({
+  code,
+  error,
+  onCodeChange,
+  onSubmit,
+  onScrollToRegistration,
+}: {
+  code: string
+  error: boolean
+  onCodeChange: (v: string) => void
+  onSubmit: (e: React.FormEvent) => void
+  onScrollToRegistration: (e: React.MouseEvent) => void
+}) {
+  return (
+    <div className="relative bg-[#1f1813] p-7 text-white shadow-[0_30px_70px_-20px_rgba(31,24,19,0.55)] sm:p-9">
+      <div className="mb-7 h-px w-full bg-gradient-to-r from-transparent via-[#c9a962] to-transparent" />
+
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center border border-[#c9a962]/50 bg-[#c9a962]/10">
+          <Lock className="h-4 w-4 text-[#c9a962]" />
+        </span>
+        <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-[#c9a962]">
+          Kod dostępu
+        </p>
+      </div>
+
+      <h3 className="mt-5 font-serif text-[1.6rem] font-medium leading-tight text-white">
+        Odblokuj prezentację
+      </h3>
+
+      <p className="mt-3 text-sm leading-relaxed text-white/55 text-pretty">
+        Egzemplarze ze szczegółami i prowencją — wpisz kod od specjalisty
+        albo zarejestruj się.
+      </p>
+
+      <form onSubmit={onSubmit} className="mt-6 space-y-3">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => onCodeChange(e.target.value)}
+          placeholder="Kod dostępu"
+          className="block w-full border border-white/20 bg-transparent px-4 py-3 font-sans text-sm uppercase tracking-[0.3em] text-white placeholder:text-white/30 focus:border-[#c9a962] focus:outline-none focus:ring-0"
+          autoComplete="off"
+          inputMode="text"
+        />
+        <button type="submit" className="btn-premium-white w-full" style={{ display: 'block' }}>
+          Odblokuj
+        </button>
+        {error && (
+          <p className="text-[11px] font-sans text-red-300">
+            Nieprawidłowy kod. Zarejestruj się, aby go otrzymać.
+          </p>
+        )}
+      </form>
+
+      <div className="mt-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-white/10" />
+        <span className="font-sans text-[9px] uppercase tracking-[0.4em] text-white/30">lub</span>
+        <div className="h-px flex-1 bg-white/10" />
+      </div>
+
+      <a
+        href="#registration"
+        onClick={onScrollToRegistration}
+        className="mt-5 inline-flex w-full items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#c9a962] transition-colors hover:text-[#dab97c]"
+      >
+        Nie mam kodu — zarejestruj się
+        <ArrowRight className="h-3 w-3" />
+      </a>
+
+    </div>
   )
 }
 
@@ -366,12 +476,13 @@ function FeaturedSlide({ watch }: { watch: FeaturedWatch }) {
     <div className="grid items-stretch gap-0 lg:grid-cols-12">
       {/* LEWA — duże zdjęcie z dekorem */}
       <div className="relative lg:col-span-7">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f1e7d3] sm:aspect-[5/4] lg:aspect-auto lg:h-full">
-          <ImagePlaceholder
-            className="absolute inset-0"
-            variant="light"
-            label=""
-            showDial
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f1e7d3] sm:aspect-[5/4] lg:aspect-auto lg:h-full lg:min-h-[36rem]">
+          <Image
+            src={watch.image}
+            alt={`${watch.brand} ${watch.model}`}
+            fill
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="object-cover"
           />
           {/* Warm overlay */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#3a2a1c]/15 via-transparent to-[#c9a962]/10" />
@@ -391,14 +502,6 @@ function FeaturedSlide({ watch }: { watch: FeaturedWatch }) {
                 )}
               />
               {watch.status}
-            </span>
-          </div>
-
-          {/* Provenance — dół */}
-          <div className="absolute bottom-6 left-6 right-6 flex items-center gap-3 text-[#3d2f24]/70">
-            <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-[#8a6a2c]" strokeWidth={1.5} />
-            <span className="font-sans text-[10px] uppercase tracking-[0.3em]">
-              {watch.provenance}
             </span>
           </div>
 
@@ -449,7 +552,7 @@ function FeaturedSlide({ watch }: { watch: FeaturedWatch }) {
           <div className="flex items-center gap-3 text-[#3d2f24]/70">
             <ShieldCheck className="h-4 w-4 text-[#8a6a2c]" strokeWidth={1.5} />
             <span className="font-sans text-[10px] uppercase tracking-[0.3em]">
-              Certyfikat &middot; gwarancja WC
+              Certyfikat &middot; gwarancja Warszawski Czas
             </span>
           </div>
           <div className="text-right">

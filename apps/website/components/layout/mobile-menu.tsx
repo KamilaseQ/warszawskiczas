@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CONTACT_PHONE, CONTACT_PHONE_RAW, ADDRESS } from '@/lib/config'
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 
 const primaryNav = [
   { href: '/', label: 'Strona główna' },
@@ -39,17 +40,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
-  // Lock scroll
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+  useBodyScrollLock(open)
 
   if (!mounted) return null
 

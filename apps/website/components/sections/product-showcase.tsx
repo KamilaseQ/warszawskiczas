@@ -6,7 +6,7 @@ import { useRef } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Container, Section, ImagePlaceholder, KenBurns, Magnetic, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
-import { featuredProduct, otherFeaturedProducts } from '@/data/mock-products'
+import { featuredProduct, otherFeaturedProducts, productUrlSlug } from '@/data/mock-products'
 
 export function ProductShowcase() {
   const scrollerRef = useRef<HTMLDivElement>(null)
@@ -65,7 +65,12 @@ export function ProductShowcase() {
                 </span>
               </div>
 
-              <KenBurns intensity={1.18} className="relative aspect-[3/4] w-full">
+              <KenBurns
+                intensity={1.18}
+                targetRef={featuredRef}
+                offset={['start 85%', 'end 15%']}
+                className="relative aspect-[4/5] w-full sm:aspect-[3/4]"
+              >
                 {featuredProduct.images?.[0] ? (
                   <Image
                     src={featuredProduct.images[0]}
@@ -110,10 +115,10 @@ export function ProductShowcase() {
                 No. 01 · Kwiecień 2026
               </p>
 
-              <h2 className="mt-6 font-serif text-5xl font-medium tracking-tight text-foreground sm:text-6xl lg:text-[4rem] leading-[1]">
+              <h2 className="mt-6 font-serif text-4xl font-medium tracking-tight text-foreground sm:text-6xl lg:text-[4rem] leading-[1]">
                 {featuredProduct.brand}
               </h2>
-              <h3 className="mt-2 font-serif italic text-3xl font-normal text-foreground/80 sm:text-4xl">
+              <h3 className="mt-2 font-serif italic text-2xl font-normal text-foreground/80 sm:text-4xl">
                 {featuredProduct.name}
               </h3>
 
@@ -182,18 +187,20 @@ export function ProductShowcase() {
         </div>
       </Container>
 
-      {/* Pasek kart — full-bleed, przewijalny swipe */}
+      {/* Pasek kart — full-bleed, przewijalny swipe.
+          scroll-pl odpowiada px-* (oraz lg side-padding) tak, żeby po snapie
+          karta nie wpadała pod paddng i była zawsze widoczna od lewej krawędzi. */}
       <FadeIn delay={0.1}>
         <div
           ref={scrollerRef}
-          className="no-scrollbar mt-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 lg:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
+          className="no-scrollbar mt-2 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 scroll-pl-6 lg:px-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:scroll-pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))]"
         >
           {otherFeaturedProducts.map((p, i) => (
             <Link
               key={p.id}
-              href={`/produkty/${p.slug}`}
+              href={`/produkty/${productUrlSlug(p)}`}
               prefetch={false}
-              className="group relative block w-[78vw] flex-shrink-0 snap-start sm:w-[44vw] lg:w-[22vw]"
+              className="group relative block w-[58vw] flex-shrink-0 snap-start sm:w-[44vw] lg:w-[22vw]"
             >
               <div className="relative aspect-[3/4] overflow-hidden transition-all duration-500 group-hover:-translate-y-1">
                 {p.images?.[0] ? (

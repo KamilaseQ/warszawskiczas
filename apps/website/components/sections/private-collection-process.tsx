@@ -61,16 +61,18 @@ export function PrivateCollectionProcess() {
             aria-hidden
             className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-[2.75rem] hidden h-px bg-gradient-to-r from-accent-gold/0 via-accent-gold/45 to-accent-gold/0 lg:block"
           />
-          {/* Vertical connector — mobile only */}
+          {/* Vertical connector — mobile only. Linia biegnie przez środek
+              kółek (left = 2.75rem = połowa 5.5rem), a tekst jest po prawej
+              stronie kółka, dzięki czemu nigdy nie wchodzi w treść. */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-[2.75rem] top-12 bottom-12 w-px bg-gradient-to-b from-accent-gold/40 via-accent-gold/30 to-accent-gold/0 lg:hidden"
           />
 
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-10">
             {steps.map((s, i) => (
               <FadeIn key={s.numeral} delay={i * 0.15}>
-                <article className="relative flex flex-col items-start gap-5 lg:items-center lg:text-center">
+                <article className="relative flex flex-row items-start gap-6 lg:flex-col lg:items-center lg:gap-5 lg:text-center">
                   {/* Subdial — gold circle, like a chronograph minute counter */}
                   <div className="relative flex-shrink-0">
                     {/* Outer ring */}
@@ -95,20 +97,23 @@ export function PrivateCollectionProcess() {
                     </div>
                   </div>
 
-                  {/* Meta — time stamp / chronograph context */}
-                  <p className="font-sans text-[10px] font-bold uppercase tracking-[0.45em] text-accent-gold">
-                    {s.meta}
-                  </p>
+                  {/* Treść kroku — na mobile po prawej kółka, na desktopie pod nim */}
+                  <div className="flex flex-1 flex-col gap-3 pt-1 lg:flex-none lg:items-center lg:gap-5 lg:pt-0">
+                    {/* Meta — time stamp / chronograph context */}
+                    <p className="font-sans text-[10px] font-bold uppercase tracking-[0.45em] text-accent-gold">
+                      {s.meta}
+                    </p>
 
-                  {/* Title */}
-                  <h3 className="font-serif text-xl font-medium text-foreground sm:text-[1.375rem] lg:max-w-[16rem]">
-                    {s.title}
-                  </h3>
+                    {/* Title */}
+                    <h3 className="font-serif text-xl font-medium leading-snug text-foreground sm:text-[1.375rem] lg:max-w-[16rem]">
+                      {s.title}
+                    </h3>
 
-                  {/* Body */}
-                  <p className="max-w-md font-sans text-sm leading-relaxed text-muted-foreground text-pretty lg:max-w-[18rem]">
-                    {s.body}
-                  </p>
+                    {/* Body */}
+                    <p className="font-sans text-sm leading-relaxed text-muted-foreground text-pretty lg:max-w-[18rem]">
+                      {s.body}
+                    </p>
+                  </div>
                 </article>
               </FadeIn>
             ))}

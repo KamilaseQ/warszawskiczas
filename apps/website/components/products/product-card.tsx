@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ImagePlaceholder } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import type { Product } from '@/data/mock-products'
+import { productUrlSlug, type Product } from '@/data/mock-products'
 
 function CardImage({ product }: { product: Product }) {
   const src = product.images?.[0]
@@ -39,9 +39,9 @@ interface ProductCardProps {
 }
 
 const aspectMap = {
-  portrait: 'aspect-[3/4]',
+  portrait: 'aspect-[4/5] sm:aspect-[3/4]',
   square: 'aspect-square',
-  tall: 'aspect-[3/5]',
+  tall: 'aspect-[4/5] sm:aspect-[3/5]',
   wide: 'aspect-[4/3] sm:aspect-[16/10]',
 }
 
@@ -68,7 +68,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
   if (layout === 'feature') {
     return (
       <Link
-        href={`/produkty/${product.slug}`}
+        href={`/produkty/${productUrlSlug(product)}`}
         prefetch={false}
         className={cn('group relative grid grid-cols-5 gap-4 sm:gap-6', className)}
       >
@@ -123,7 +123,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
 
   return (
     <Link
-      href={`/produkty/${product.slug}`}
+      href={`/produkty/${productUrlSlug(product)}`}
       prefetch={false}
       className={cn(
         'group relative block transition-transform duration-500 ease-out will-change-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
@@ -192,14 +192,14 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
           },
         }}
       >
-        <p className="font-sans text-[9px] font-bold uppercase tracking-[0.35em] text-accent-gold sm:text-[10px]">
+        <p className="font-sans text-[8px] font-bold uppercase tracking-[0.35em] text-accent-gold sm:text-[10px]">
           {product.brand}
         </p>
-        <h3 className="mt-1 font-serif text-base font-medium leading-tight text-foreground transition-colors duration-300 group-hover:text-accent-gold sm:text-xl">
+        <h3 className="mt-1 font-serif text-sm font-medium leading-tight text-foreground transition-colors duration-300 group-hover:text-accent-gold sm:text-xl">
           {product.name}
         </h3>
         {product.reference && (
-          <p className="mt-1 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px]">
+          <p className="mt-1 font-sans text-[8px] uppercase tracking-[0.2em] text-muted-foreground sm:text-[11px]">
             Ref. {product.reference}
             {product.year ? ` · ${product.year}` : ''}
           </p>

@@ -1,16 +1,16 @@
-# Warszawski Czas - dane produktowe zegark?w
+# Warszawski Czas - katalog zegark?w
 
-Folder wygenerowany 2026-05-06.
+Gotowy folder danych katalogowych dla strony z luksusowymi zegarkami.
 
-## Struktura
-- `products.json` - zbiorcza tablica produkt?w gotowa do importu.
-- `products.csv` - wersja tabelaryczna do szybkiego przegl?du.
-- `products/<slug>/product.json` - dane pojedynczego zegarka.
-- `products/<slug>/product.md` - opis w formacie redakcyjnym.
-- `images/<slug>/*.jpg` - przekonwertowane zdj?cia JPG z zachowaniem uj??.
-- `image-manifest.json` - manifest zdj?? po konwersji.
-- `conversion-errors.json` - raport konwersji; jeden dodatkowy plik HEIC nie przeszed? dekodowania.
-- `sources.md` - ?r?d?a u?yte do identyfikacji modeli i referencji.
+## Zawarto??
 
-## Wa?ne
-Dane s? przygotowane do katalogu, ale pozycje z polem `do potwierdzenia` wymagaj? sprawdzenia na podstawie dokument?w, numeru referencyjnego na deklu lub ogl?dzin zegarmistrza. Nie dopisywa?em fikcyjnych rocznik?w ani stanu kolekcjonerskiego tam, gdzie nie da si? tego uczciwie potwierdzi? ze zdj??.
+- `products.json` - jedna wsp?lna lista wszystkich produkt?w (33 rekordy).
+- `products.csv` - wersja tabelaryczna do importu lub szybkiej kontroli.
+- `products/<slug>/product.json` - pojedynczy rekord produktu.
+- `products/<slug>/product.md` - wersja opisowa dla copywritingu / CMS.
+- `images/<slug>/` - zdj?cia produktu w JPG.
+- `sources.md` - ?r?d?a i status pewno?ci identyfikacji.
+
+## Uwagi
+
+Dane s? przygotowane pod katalog produktu: kr?tki opis, cytat, parametry, historia, zdj?cia i ?r?d?a. Tam, gdzie zdj?cia nie pokazuj? dekla albo dokument?w, referencja jest oznaczona jako `do potwierdzenia`.

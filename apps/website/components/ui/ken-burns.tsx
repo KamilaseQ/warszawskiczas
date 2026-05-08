@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { type RefObject, useRef } from 'react'
 import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -9,15 +9,24 @@ interface KenBurnsProps {
   className?: string
   intensity?: number
   drift?: boolean
+  targetRef?: RefObject<HTMLElement | null>
+  offset?: [string, string]
 }
 
-export function KenBurns({ children, className, intensity = 1.15, drift = false }: KenBurnsProps) {
+export function KenBurns({
+  children,
+  className,
+  intensity = 1.15,
+  drift = false,
+  targetRef,
+  offset,
+}: KenBurnsProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
+    target: targetRef ?? ref,
+    offset: (offset ?? ['start end', 'end start']) as never,
   })
 
   const rawScale = useTransform(scrollYProgress, [0, 1], [1, intensity])

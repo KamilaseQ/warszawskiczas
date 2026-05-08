@@ -1,5 +1,5 @@
 import { Lock } from 'lucide-react'
-import { Container, Section, WaxSeal } from '@/components/ui'
+import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
 export function PrivateCollectionHero() {
@@ -72,12 +72,6 @@ export function PrivateCollectionHero() {
           </div>
         </FadeIn>
 
-        {/* Wax seal — bottom right anchor */}
-        <FadeIn delay={0.4}>
-          <div className="pointer-events-none absolute right-6 bottom-10 hidden sm:block lg:right-12 lg:bottom-14">
-            <WaxSeal size={92} rotate={-8} />
-          </div>
-        </FadeIn>
       </Container>
     </Section>
   )
