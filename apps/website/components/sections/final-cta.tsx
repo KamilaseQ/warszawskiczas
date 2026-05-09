@@ -44,7 +44,7 @@ export function FinalCTA() {
         <FadeIn delay={0.15} direction="up">
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {/* PRIMARY */}
-            <Link href="/kontakt" prefetch className="btn-premium-white">
+            <Link href="/kontakt?source=final-cta" prefetch className="btn-premium-white">
               Umów wizytę w butiku
             </Link>
             {/* SECONDARY — tertiary style */}

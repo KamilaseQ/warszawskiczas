@@ -17,7 +17,7 @@ const navItems = [
     ],
   },
   { href: '/butik', label: 'Butik' },
-  { href: '/kontakt', label: 'Kontakt', prefetch: true },
+  { href: '/kontakt?source=nav-desktop', label: 'Kontakt', prefetch: true },
 ]
 
 interface NavigationProps {

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
+import { Suspense } from 'react'
 import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
+import { SessionTracker } from '@/components/session-tracker'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -71,6 +73,9 @@ export default function RootLayout({
   return (
     <html lang="pl" className={`${playfair.variable} ${inter.variable} ${cormorant.variable}`}>
       <body className="font-sans">
+        <Suspense fallback={null}>
+          <SessionTracker />
+        </Suspense>
         {children}
         {/* 16.3 Schema.org LocalBusiness */}
         <script

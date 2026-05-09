@@ -126,7 +126,7 @@ export function Hero() {
 
           {/* PRIMARY — Umów prywatną konsultację (magnetic hover) */}
           <Magnetic className="relative z-10" strength={10}>
-            <Link href="/kontakt" prefetch className="btn-premium-white inline-block">
+            <Link href="/kontakt?source=home-hero" prefetch className="btn-premium-white inline-block">
               Umów prywatną konsultację
             </Link>
           </Magnetic>

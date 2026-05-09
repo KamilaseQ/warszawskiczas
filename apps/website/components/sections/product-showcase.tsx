@@ -137,7 +137,7 @@ export function ProductShowcase() {
               {/* CTA editorial — magnetic hover */}
               <Magnetic className="mt-10 block w-full" strength={8}>
                 <Link
-                  href="/kontakt"
+                  href="/kontakt?source=product-showcase"
                   prefetch
                   className="btn-sharp w-full text-center"
                   style={{ display: 'block' }}

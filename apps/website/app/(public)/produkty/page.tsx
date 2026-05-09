@@ -67,7 +67,7 @@ export default function ProduktyPage() {
               <Link href="/kolekcja-na-zapytanie">Kolekcja Prywatna</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link href="/kontakt">Skontaktuj się</Link>
+              <Link href="/kontakt?source=product-listing">Skontaktuj się</Link>
             </Button>
           </div>
         </Container>

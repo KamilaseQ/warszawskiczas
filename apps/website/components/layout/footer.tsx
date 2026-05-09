@@ -13,7 +13,7 @@ const footerLinks = {
   ],
   informacje: [
     { href: '/butik', label: 'O butiku' },
-    { href: '/kontakt', label: 'Kontakt' },
+    { href: '/kontakt?source=nav-footer', label: 'Kontakt' },
   ],
 }
 

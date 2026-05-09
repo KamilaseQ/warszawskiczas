@@ -18,7 +18,7 @@ const primaryNav = [
   { href: '/uslugi/skup', label: 'Skup zegarków' },
   { href: '/uslugi/komis', label: 'Komis' },
   { href: '/butik', label: 'Butik' },
-  { href: '/kontakt', label: 'Kontakt' },
+  { href: '/kontakt?source=nav-mobile', label: 'Kontakt' },
 ]
 
 interface MobileMenuProps {
@@ -141,7 +141,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               className="mt-10"
             >
               <Link
-                href="/kontakt"
+                href="/kontakt?source=mobile-menu-cta"
                 onClick={onClose}
                 className="block w-full bg-accent-gold py-4 text-center font-serif text-xs uppercase tracking-[0.3em] text-[#0a0a0a] transition-colors hover:bg-white"
               >

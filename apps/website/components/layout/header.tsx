@@ -57,7 +57,7 @@ export function Header() {
               +48 604 50 1000
             </a>
             <Link
-              href="/kontakt"
+              href="/kontakt?source=nav-header"
               className={cn(
                 "inline-block text-[10px] font-bold uppercase tracking-[0.3em] px-5 py-2.5 transition-all duration-500 ease-in-out",
                 !isSolid

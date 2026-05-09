@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: PageProps) {
     .slice(0, 3)
     .map((x) => x.p)
 
-  const inquiryHref = `/kontakt?temat=${encodeURIComponent(`Zapytanie o ${product.brand} ${product.name}`)}`
+  const inquiryHref = `/kontakt?source=product-detail&product=${encodeURIComponent(`${product.brand} ${product.name}`)}`
 
   const statusTone =
     product.status === 'Sprzedany'

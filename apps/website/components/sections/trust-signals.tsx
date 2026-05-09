@@ -244,7 +244,7 @@ export function TrustSignals() {
                     pomożemy znaleźć.
                   </p>
                   <Link
-                    href="/kontakt"
+                    href="/kontakt?source=trust-signals"
                     prefetch
                     className="mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/80 transition-colors duration-300 hover:text-accent-gold"
                   >

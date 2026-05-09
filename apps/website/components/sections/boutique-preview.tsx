@@ -70,7 +70,7 @@ export function BoutiquePreview() {
 
               <div className="flex flex-col gap-3">
                 <Link
-                  href="/kontakt"
+                  href="/kontakt?source=boutique-preview"
                   prefetch
                   className="btn-sharp inline-block w-full text-center"
                 >

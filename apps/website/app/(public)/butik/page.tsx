@@ -238,7 +238,7 @@ export default function ButikPage() {
 
               <div className="mt-10">
                 <Link
-                  href="/kontakt"
+                  href="/kontakt?source=butik"
                   className="group inline-flex items-center gap-3 border-b border-foreground/20 pb-2 font-sans text-[11px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold"
                 >
                   Umów wizytę
