@@ -19,10 +19,35 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const product = findProductByUrlSlug(slug) ?? mockProducts.find((p) => p.slug === slug)
-  if (!product) return { title: 'Produkt nie znaleziony' }
+  if (!product) return { title: 'Produkt nie znaleziony', robots: { index: false, follow: true } }
+
+  const canonicalSlug = productUrlSlug(product)
+  const url = `https://warszawskiczas.pl/produkty/${canonicalSlug}`
+  const title = `${product.brand} ${product.name}${product.reference ? ` · ref. ${product.reference}` : ''} — Warszawa`
+  const description = product.description
+  const image = product.images?.[0]
+    ? `https://warszawskiczas.pl${product.images[0]}`
+    : 'https://warszawskiczas.pl/opengraph-image.jpg'
+
   return {
-    title: `${product.brand} ${product.name}`,
-    description: product.description,
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article',
+      url,
+      title,
+      description,
+      siteName: 'Warszawski Czas',
+      locale: 'pl_PL',
+      images: [{ url: image, alt: `${product.brand} ${product.name}` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image],
+    },
   }
 }
 
@@ -109,33 +134,68 @@ export default async function ProductPage({ params }: PageProps) {
         ? 'text-muted-foreground'
         : 'text-accent-gold'
 
-  const jsonLd = {
+  const canonicalSlug = productUrlSlug(product)
+  const productUrl = `https://warszawskiczas.pl/produkty/${canonicalSlug}`
+  const productImages = (product.images ?? []).map((src) => `https://warszawskiczas.pl${src}`)
+
+  const productJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: `${product.brand} ${product.name}`,
     brand: { '@type': 'Brand', name: product.brand },
+    model: product.name,
+    category: 'Zegarki luksusowe',
     description: product.description,
     sku: product.reference,
+    mpn: product.reference,
+    image: productImages.length ? productImages : undefined,
+    url: productUrl,
+    material: product.material,
     productionDate: product.year ? String(product.year).replace(/^#/, '') : undefined,
+    itemCondition:
+      product.condition && /nowy/i.test(product.condition)
+        ? 'https://schema.org/NewCondition'
+        : 'https://schema.org/UsedCondition',
     offers: {
       '@type': 'Offer',
+      url: productUrl,
       priceCurrency: 'PLN',
       price: product.price ?? undefined,
+      ...(product.priceOnRequest && !product.price ? { priceSpecification: { '@type': 'PriceSpecification', priceCurrency: 'PLN', price: 0, valueAddedTaxIncluded: true } } : {}),
       availability:
         product.status === 'Niedostępny'
           ? 'https://schema.org/SoldOut'
           : product.status === 'Zarezerwowany'
             ? 'https://schema.org/PreOrder'
             : 'https://schema.org/InStock',
-      seller: { '@type': 'Organization', name: 'Warszawski Czas' },
+      itemCondition:
+        product.condition && /nowy/i.test(product.condition)
+          ? 'https://schema.org/NewCondition'
+          : 'https://schema.org/UsedCondition',
+      seller: { '@type': 'Organization', name: 'Warszawski Czas', url: 'https://warszawskiczas.pl' },
+      areaServed: { '@type': 'Country', name: 'PL' },
     },
+  }
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Strona główna', item: 'https://warszawskiczas.pl' },
+      { '@type': 'ListItem', position: 2, name: 'Zegarki', item: 'https://warszawskiczas.pl/produkty' },
+      { '@type': 'ListItem', position: 3, name: `${product.brand} ${product.name}`, item: productUrl },
+    ],
   }
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       {/* Breadcrumb / nav back */}

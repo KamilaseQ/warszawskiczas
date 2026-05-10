@@ -4,9 +4,18 @@ import { Container, Section, Heading, Text, Card } from '@/components/ui'
 import { InquiryForm } from '@/components/forms'
 
 export const metadata: Metadata = {
-  title: 'Komis zegarków',
+  title: 'Komis zegarków Warszawa — sprzedaż dyskretna i premium',
   description:
-    'Profesjonalna sprzedaż komisowa zegarków premium. Dotrzemy do właściwych kolekcjonerów i uzyskamy najlepszą cenę za Twój zegarek.',
+    'Profesjonalna sprzedaż komisowa zegarków premium w Warszawie. Dotrzemy do właściwych kolekcjonerów i uzyskamy najlepszą cenę. Mokotowska 71.',
+  alternates: { canonical: '/uslugi/komis' },
+  openGraph: {
+    type: 'website',
+    url: 'https://warszawskiczas.pl/uslugi/komis',
+    title: 'Komis zegarków Warszawa — sprzedaż dyskretna i premium',
+    description: 'Sprzedaż komisowa zegarków premium. Dyskrecja, dostęp do kolekcjonerów, prezentacja butikowa.',
+    siteName: 'Warszawski Czas',
+    locale: 'pl_PL',
+  },
 }
 
 const serviceJsonLd = {

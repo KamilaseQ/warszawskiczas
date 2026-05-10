@@ -31,17 +31,11 @@ export const metadata: Metadata = {
   },
   description:
     'Butik zegarków premium w sercu Warszawy. Ekskluzywna kolekcja zegarków, profesjonalny serwis zegarmistrzowski, skup i komis. Mokotowska 71.',
-  keywords: [
-    'zegarki premium',
-    'butik zegarków',
-    'Warszawa',
-    'Mokotowska',
-    'serwis zegarmistrzowski',
-    'skup zegarków',
-    'zegarki luksusowe',
-  ],
   authors: [{ name: 'Warszawski Czas' }],
   metadataBase: new URL('https://warszawskiczas.pl'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'pl_PL',
@@ -56,6 +50,22 @@ export const metadata: Metadata = {
     title: 'Warszawski Czas | Butik Zegarków Premium',
     description:
       'Butik zegarków premium w sercu Warszawy. Mokotowska 71 — kolekcja, serwis, skup, komis.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
   },
 }
 
@@ -83,26 +93,46 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'LocalBusiness',
+              '@type': ['LocalBusiness', 'JewelryStore', 'Store'],
+              '@id': 'https://warszawskiczas.pl/#localbusiness',
               name: 'Warszawski Czas',
-              description: 'Butik zegarków premium w sercu Warszawy. Ekskluzywna kolekcja zegarków, profesjonalny serwis zegarmistrzowski, skup i komis.',
+              alternateName: 'Warszawski Czas — Butik Zegarków Premium',
+              description:
+                'Butik zegarków premium w sercu Warszawy. Ekskluzywna kolekcja zegarków, profesjonalny serwis zegarmistrzowski, skup i komis.',
               url: 'https://warszawskiczas.pl',
               telephone: '+48604501000',
               email: 'biuro@warszawskiczas.pl',
+              image: 'https://warszawskiczas.pl/opengraph-image.jpg',
+              logo: 'https://warszawskiczas.pl/icon.png',
+              hasMap: 'https://www.google.com/maps?q=Mokotowska+71,+Warszawa',
               address: {
                 '@type': 'PostalAddress',
                 streetAddress: 'ul. Mokotowska 71',
                 addressLocality: 'Warszawa',
                 postalCode: '00-530',
+                addressRegion: 'mazowieckie',
                 addressCountry: 'PL',
               },
+              geo: {
+                '@type': 'GeoCoordinates',
+                latitude: 52.2207,
+                longitude: 21.0177,
+              },
+              areaServed: [
+                { '@type': 'City', name: 'Warszawa' },
+                { '@type': 'Country', name: 'Polska' },
+              ],
               openingHoursSpecification: [
                 { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '11:00', closes: '18:00' },
                 { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday'], opens: '11:00', closes: '15:00' },
               ],
               priceRange: '$$$$',
               currenciesAccepted: 'PLN',
-              paymentAccepted: 'Cash, Credit Card',
+              paymentAccepted: 'Cash, Credit Card, Bank Transfer',
+              sameAs: [
+                'https://www.instagram.com/warszawskiczas',
+                'https://www.facebook.com/warszawskiczas',
+              ],
             })
           }}
         />

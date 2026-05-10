@@ -5,9 +5,18 @@ import { Container, Section, Heading, Text, Card, Button } from '@/components/ui
 import { InquiryForm } from '@/components/forms'
 
 export const metadata: Metadata = {
-  title: 'Naprawa i serwis zegarków',
+  title: 'Serwis zegarków Warszawa — naprawa, przegląd, renowacja',
   description:
-    'Profesjonalny serwis zegarmistrzowski w Warszawie. Przeglądy, naprawy, regulacje, renowacje zegarków mechanicznych wszystkich marek.',
+    'Profesjonalny serwis zegarmistrzowski w Warszawie. Przeglądy, naprawy, regulacje, renowacje zegarków mechanicznych — Rolex, Omega, Patek Philippe i inne marki premium.',
+  alternates: { canonical: '/uslugi/naprawa-i-serwis' },
+  openGraph: {
+    type: 'website',
+    url: 'https://warszawskiczas.pl/uslugi/naprawa-i-serwis',
+    title: 'Serwis zegarków Warszawa — naprawa, przegląd, renowacja',
+    description: 'Profesjonalny serwis zegarmistrzowski przy Mokotowskiej 71 w Warszawie.',
+    siteName: 'Warszawski Czas',
+    locale: 'pl_PL',
+  },
 }
 
 const serviceJsonLd = {

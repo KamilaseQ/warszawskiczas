@@ -39,6 +39,19 @@ const nextConfig = {
       },
     ]
   },
+  async redirects() {
+    return [
+      // Stare URL-e z poprzedniej wersji domeny — 301 do najmocniejszej nowej strony.
+      { source: '/skup-zegarkow', destination: '/skup-zegarkow-warszawa', permanent: true },
+      { source: '/skup', destination: '/skup-zegarkow-warszawa', permanent: true },
+      { source: '/komis', destination: '/komis-zegarkow-warszawa', permanent: true },
+      { source: '/naprawa-i-serwis', destination: '/uslugi/naprawa-i-serwis', permanent: true },
+      { source: '/serwis', destination: '/uslugi/naprawa-i-serwis', permanent: true },
+      { source: '/oferta', destination: '/produkty', permanent: true },
+      { source: '/kontakt-lokalizacja', destination: '/kontakt', permanent: true },
+      { source: '/lokalizacja', destination: '/kontakt', permanent: true },
+    ]
+  },
 }
 
 module.exports = nextConfig

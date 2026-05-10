@@ -3,17 +3,67 @@ import Link from 'next/link'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button } from '@/components/ui'
 import { ProductCatalog } from '@/components/products'
-import { mockProducts } from '@/data/mock-products'
+import { mockProducts, productUrlSlug } from '@/data/mock-products'
 
 export const metadata: Metadata = {
-  title: 'Produkty',
+  title: 'Zegarki luksusowe w Warszawie — katalog Warszawski Czas',
   description:
-    'Odkryj naszą starannie wyselekcjonowaną kolekcję zegarków premium. Każdy egzemplarz zweryfikowany pod kątem autentyczności i stanu.',
+    'Katalog zegarków luksusowych dostępnych w butiku przy Mokotowskiej 71. Rolex, Patek Philippe, Audemars Piguet, Omega, Cartier, Breitling — certyfikowane egzemplarze z gwarancją autentyczności.',
+  alternates: { canonical: '/produkty' },
+  openGraph: {
+    type: 'website',
+    url: 'https://warszawskiczas.pl/produkty',
+    title: 'Zegarki luksusowe w Warszawie — katalog Warszawski Czas',
+    description:
+      'Certyfikowane zegarki premium dostępne od ręki. Rolex, Patek Philippe, Audemars Piguet, Omega, Cartier i więcej — Mokotowska 71.',
+    siteName: 'Warszawski Czas',
+    locale: 'pl_PL',
+  },
+}
+
+const collectionJsonLd = (() => {
+  const watches = mockProducts.filter((p) => p.category === 'zegarki' && p.status !== 'Niedostępny')
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Zegarki luksusowe w Warszawie',
+    description:
+      'Katalog certyfikowanych zegarków premium dostępnych w butiku Warszawski Czas, Mokotowska 71.',
+    url: 'https://warszawskiczas.pl/produkty',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: watches.length,
+      itemListElement: watches.slice(0, 30).map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `https://warszawskiczas.pl/produkty/${productUrlSlug(p)}`,
+        name: `${p.brand} ${p.name}`,
+      })),
+    },
+  }
+})()
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Strona główna', item: 'https://warszawskiczas.pl' },
+    { '@type': 'ListItem', position: 2, name: 'Zegarki', item: 'https://warszawskiczas.pl/produkty' },
+  ],
 }
 
 export default function ProduktyPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Slim editorial banner — odstęp od headera, czytelny H1 */}
       <Section variant="muted" spacing="sm" className="border-b border-border pt-28 lg:pt-32">
         <Container>

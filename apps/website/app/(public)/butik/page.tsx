@@ -9,9 +9,18 @@ import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
 const PHONE_RAW = CONTACT_PHONE_RAW
 
 export const metadata: Metadata = {
-  title: 'Butik',
+  title: 'Butik Warszawski Czas — Mokotowska 71, Warszawa',
   description:
-    'Odwiedź butik Warszawski Czas na Mokotowskiej 71. Editorialna przestrzeń dla kolekcjonerów zegarków premium w sercu Warszawy.',
+    'Odwiedź butik Warszawski Czas na Mokotowskiej 71 w Warszawie. Editorialna przestrzeń dla kolekcjonerów zegarków premium — godziny, dojazd, kontakt.',
+  alternates: { canonical: '/butik' },
+  openGraph: {
+    type: 'website',
+    url: 'https://warszawskiczas.pl/butik',
+    title: 'Butik Warszawski Czas — Mokotowska 71, Warszawa',
+    description: 'Editorialna przestrzeń dla kolekcjonerów zegarków premium w sercu Warszawy.',
+    siteName: 'Warszawski Czas',
+    locale: 'pl_PL',
+  },
 }
 
 const JAREK_PHONE = '+48 604 312 411'
