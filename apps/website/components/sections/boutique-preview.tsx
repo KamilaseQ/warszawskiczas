@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 import { Container, LocationMap, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
@@ -41,11 +42,11 @@ export function BoutiquePreview() {
                 <div className="mt-4 space-y-2 font-sans text-sm text-foreground">
                   <div className="flex justify-between gap-6">
                     <span>Poniedziałek – Piątek</span>
-                    <span className="tabular-nums">10:00 – 18:00</span>
+                    <span className="tabular-nums">11:00 – 18:00</span>
                   </div>
                   <div className="flex justify-between gap-6">
                     <span>Sobota</span>
-                    <span className="tabular-nums">10:00 – 15:00</span>
+                    <span className="tabular-nums">11:00 – 15:00</span>
                   </div>
                   <div className="flex justify-between gap-6 text-muted-foreground">
                     <span>Niedziela</span>
@@ -69,13 +70,13 @@ export function BoutiquePreview() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <Link
-                  href="/kontakt?source=boutique-preview"
+                <ContactLink
+                  source="boutique-preview"
                   prefetch
                   className="btn-sharp inline-block w-full text-center"
                 >
                   Umów wizytę w butiku
-                </Link>
+                </ContactLink>
 
                 <a
                   href="https://maps.app.goo.gl/v3iC97EKPkc3BtkU8"

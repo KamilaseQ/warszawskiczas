@@ -31,7 +31,7 @@ export function HiddenCollectionTeaser() {
             <ScrollDrift targetRef={featureRef} start={-140} end={130} className="lg:-mt-10">
               <p className="mb-6 flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
                 <Lock className="h-3 w-3" />
-                Tylko dla wybranych
+                Kolekcja prywatna — dostęp na zaproszenie
               </p>
 
               <h2 className="font-serif text-4xl font-medium tracking-tight text-white text-balance sm:text-5xl lg:text-[3.5rem] leading-[1.05]">
@@ -41,12 +41,9 @@ export function HiddenCollectionTeaser() {
               </h2>
 
               <p className="mt-8 max-w-md text-base leading-relaxed text-white/60 text-pretty">
-                Zegarki z prywatnych kolekcji, nigdy niepublikowane. Dostęp po
-                indywidualnej weryfikacji.
-              </p>
-
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-white/40 text-pretty italic">
-                Aktualnie 3 pozycje dostępne dla zweryfikowanych klientów.
+                Zegarki z prywatnych kolekcji — wyjątkowe egzemplarze, które
+                udostępniamy po krótkim, indywidualnym kontakcie z naszym
+                specjalistą.
               </p>
 
               <Link
@@ -55,7 +52,7 @@ export function HiddenCollectionTeaser() {
                 className="mt-10 inline-block btn-sharp"
                 style={{ backgroundColor: 'hsl(42 50% 45%)', color: '#0a0a0a' }}
               >
-                Sprawdź, czy kwalifikujesz się
+                Wejdź do kolekcji prywatnej
               </Link>
             </ScrollDrift>
           </FadeIn>
@@ -104,35 +101,17 @@ export function HiddenCollectionTeaser() {
                     </span>
                   </div>
 
-                  {/* Bottom-left — No. 001 */}
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-white/45">
-                      No. 001
-                    </p>
-                    <p className="mt-1.5 font-serif italic text-sm text-white/70">
-                      Egzemplarz dostępny po weryfikacji
-                    </p>
-                  </div>
                 </div>
               </div>
 
               {/* Offset gold border — dekoracyjne, jak w boutique-preview */}
               <div className="pointer-events-none absolute -bottom-5 -right-5 hidden h-full w-full border border-accent-gold/25 lg:block" />
 
-              {/* Animated gold pin — bottom left of image */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -left-2 bottom-10 flex h-2 w-2 items-center justify-center"
-              >
-                <span className="absolute h-2 w-2 bg-accent-gold/80" />
-                <span className="absolute h-4 w-4 animate-ping bg-accent-gold/30" />
-              </div>
-
               {/* Caption editorial */}
               <div className="mt-6 flex items-center gap-3">
                 <div className="h-px w-8 bg-accent-gold/60" />
                 <span className="font-serif italic text-sm text-white/55">
-                  Pojedyncza sztuka — szczegóły wyłącznie po weryfikacji.
+                  Zegarki z prywatnych kolekcji, wyjątkowe dzieła sztuki.
                 </span>
               </div>
             </div>

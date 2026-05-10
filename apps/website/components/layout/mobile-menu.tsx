@@ -4,13 +4,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Phone, MapPin, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ContactLink } from '@/components/contact-link'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CONTACT_PHONE, CONTACT_PHONE_RAW, ADDRESS } from '@/lib/config'
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 
-const primaryNav = [
+interface NavEntry {
+  href: string
+  label: string
+  contactSource?: string
+}
+
+const primaryNav: NavEntry[] = [
   { href: '/', label: 'Strona główna' },
   { href: '/produkty', label: 'Produkty' },
   { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
@@ -18,7 +25,7 @@ const primaryNav = [
   { href: '/uslugi/skup', label: 'Skup zegarków' },
   { href: '/uslugi/komis', label: 'Komis' },
   { href: '/butik', label: 'Butik' },
-  { href: '/kontakt?source=nav-mobile', label: 'Kontakt' },
+  { href: '/kontakt', label: 'Kontakt', contactSource: 'nav-mobile' },
 ]
 
 interface MobileMenuProps {
@@ -48,6 +55,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
     <AnimatePresence>
       {open && (
         <motion.div
+          id="mobile-menu"
           initial={{ y: '-100%' }}
           animate={{ y: 0 }}
           exit={{ y: '-100%' }}
@@ -99,6 +107,26 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             >
               {primaryNav.map((item) => {
                 const isActive = pathname === item.href
+                const linkClass = cn(
+                  'group flex items-baseline justify-between border-b border-white/10 py-4 transition-colors duration-300',
+                  isActive ? 'text-accent-gold' : 'text-white hover:text-accent-gold'
+                )
+                const inner = (
+                  <>
+                    <span className="font-serif text-3xl font-normal sm:text-4xl">
+                      {item.label}
+                    </span>
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'translate-x-0 font-sans text-[10px] uppercase tracking-[0.3em] transition-all duration-300 group-hover:translate-x-1',
+                        isActive ? 'text-accent-gold' : 'text-white/30 group-hover:text-accent-gold'
+                      )}
+                    >
+                      →
+                    </span>
+                  </>
+                )
                 return (
                   <motion.li
                     key={item.href}
@@ -107,27 +135,15 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                       visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] } },
                     }}
                   >
-                    <Link
-                      href={item.href}
-                      onClick={onClose}
-                      className={cn(
-                        'group flex items-baseline justify-between border-b border-white/10 py-4 transition-colors duration-300',
-                        isActive ? 'text-accent-gold' : 'text-white hover:text-accent-gold'
-                      )}
-                    >
-                      <span className="font-serif text-3xl font-normal sm:text-4xl">
-                        {item.label}
-                      </span>
-                      <span
-                        aria-hidden
-                        className={cn(
-                          'translate-x-0 font-sans text-[10px] uppercase tracking-[0.3em] transition-all duration-300 group-hover:translate-x-1',
-                          isActive ? 'text-accent-gold' : 'text-white/30 group-hover:text-accent-gold'
-                        )}
-                      >
-                        →
-                      </span>
-                    </Link>
+                    {item.contactSource ? (
+                      <ContactLink source={item.contactSource} onClick={onClose} className={linkClass}>
+                        {inner}
+                      </ContactLink>
+                    ) : (
+                      <Link href={item.href} onClick={onClose} className={linkClass}>
+                        {inner}
+                      </Link>
+                    )}
                   </motion.li>
                 )
               })}
@@ -140,13 +156,13 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               transition={{ duration: 0.5, delay: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
               className="mt-10"
             >
-              <Link
-                href="/kontakt?source=mobile-menu-cta"
+              <ContactLink
+                source="mobile-menu-cta"
                 onClick={onClose}
                 className="block w-full bg-accent-gold py-4 text-center font-serif text-xs uppercase tracking-[0.3em] text-[#0a0a0a] transition-colors hover:bg-white"
               >
                 Umów konsultację
-              </Link>
+              </ContactLink>
             </motion.div>
           </nav>
 

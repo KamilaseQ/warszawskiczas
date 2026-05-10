@@ -12,7 +12,11 @@ interface PageTransitionProps {
 const CURTAIN_COVER_MS = 460
 const CURTAIN_TOTAL_MS = 920
 const CURTAIN_REVEAL_AFTER_ROUTE_MS = 520
-const CURTAIN_FALLBACK_MS = 3200
+// Pure safety net dla nawigacji która nigdy nie dochodzi do skutku (network fail,
+// zerwana kompilacja w devie). Pierwsze wejście na route dynamiczny w devie potrafi
+// trwać 3-4s przez kompilację Next.js — fallback MUSI być znacząco dłuższy, inaczej
+// kurtyna otwiera się zanim pathname zdąży się zmienić i layoutEffect odpala drugi cykl.
+const CURTAIN_FALLBACK_MS = 12000
 
 const useIsomorphicLayoutEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect
@@ -33,6 +37,9 @@ export function PageTransition({ children }: PageTransitionProps) {
   const showCurtainRef = useRef(false)
   const pushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // True dopóki nawigacja zainicjowana klikiem nie dotarła do nowego pathname.
+  // Chroni przed drugim cyklem kurtyny gdyby fallback hide odpalił przed kompilacją.
+  const userInitiatedRef = useRef(false)
 
   const setCurtain = (visible: boolean) => {
     showCurtainRef.current = visible
@@ -80,8 +87,14 @@ export function PageTransition({ children }: PageTransitionProps) {
       if (samePage) return
 
       event.preventDefault()
+      // Bez tego next/link <Link> w fazie bubble odpala własny router.push natychmiast,
+      // równolegle do naszego harmonogramu — pathname zmienia się zanim kurtyna zakryje
+      // ekran i timing wszystkich efektów się rozjeżdża.
+      event.stopPropagation()
+      event.stopImmediatePropagation()
 
       const href = `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
+      userInitiatedRef.current = true
 
       // If a curtain is already showing or a navigation is mid-flight, push
       // immediately — never swallow the click silently.
@@ -154,10 +167,17 @@ export function PageTransition({ children }: PageTransitionProps) {
 
     if (showCurtainRef.current) {
       scheduleHide(transitionId, CURTAIN_REVEAL_AFTER_ROUTE_MS)
+    } else if (userInitiatedRef.current) {
+      // Klik użytkownika zainicjował nawigację, ale kurtyna już zniknęła (np. fallback
+      // hide odpalił podczas wolnej kompilacji w devie). Nie pokazuj jej drugi raz —
+      // user już zobaczył pełen cykl, druga kurtyna byłaby błyskiem na nowej stronie.
     } else {
+      // Pathname zmienił się bez naszego klika (programowe router.push, redirect z
+      // form action itp.) — pokaż kurtynę, żeby zachować spójną estetykę przejść.
       setCurtain(true)
       scheduleHide(transitionId, CURTAIN_TOTAL_MS)
     }
+    userInitiatedRef.current = false
   }, [pathname, reducedMotion])
 
   useEffect(() => {

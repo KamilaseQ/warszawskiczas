@@ -1,10 +1,10 @@
 'use client'
 
-import { Suspense, useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { readSessionPath } from '@/components/session-tracker'
+import { clearContactSource, readContactSource } from '@/components/contact-link'
 
 interface ContactFormProps {
   variant?: 'light' | 'dark'
@@ -12,8 +12,7 @@ interface ContactFormProps {
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-function ContactFormInner({ variant = 'light' }: ContactFormProps) {
-  const searchParams = useSearchParams()
+export function ContactForm({ variant = 'light' }: ContactFormProps) {
   const mountedAt = useRef<number>(Date.now())
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState<string>('')
@@ -31,6 +30,7 @@ function ContactFormInner({ variant = 'light' }: ContactFormProps) {
     const form = e.currentTarget
     const fd = new FormData(form)
 
+    const tracked = readContactSource()
     const payload = {
       name: String(fd.get('name') ?? ''),
       email: String(fd.get('email') ?? ''),
@@ -39,8 +39,8 @@ function ContactFormInner({ variant = 'light' }: ContactFormProps) {
       rodo: fd.get('rodo') === 'on',
       company: String(fd.get('company') ?? ''),
       t: mountedAt.current,
-      source: searchParams?.get('source') ?? undefined,
-      product: searchParams?.get('product') ?? undefined,
+      source: tracked.source,
+      product: tracked.product,
       sessionPath: readSessionPath(),
       referrer: typeof document !== 'undefined' ? document.referrer || undefined : undefined,
     }
@@ -53,6 +53,7 @@ function ContactFormInner({ variant = 'light' }: ContactFormProps) {
       })
 
       if (res.ok) {
+        clearContactSource()
         setStatus('success')
         return
       }
@@ -169,22 +170,73 @@ function ContactFormInner({ variant = 'light' }: ContactFormProps) {
         />
       </div>
 
-      <label className="flex items-start gap-3 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          required
-          name="rodo"
-          className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold"
-        />
-        <span
+      <div className="space-y-3">
+        <label className="flex items-start gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            required
+            name="rodo"
+            className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold"
+          />
+          <span
+            className={cn(
+              'font-sans text-xs leading-relaxed text-pretty',
+              isDark ? 'text-white/50' : 'text-muted-foreground',
+            )}
+          >
+            Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu
+            w celu odpowiedzi na zapytanie. *
+          </span>
+        </label>
+
+        <details
           className={cn(
-            'font-sans text-xs leading-relaxed text-pretty',
-            isDark ? 'text-white/50' : 'text-muted-foreground',
+            'group border-l-2 pl-4 text-xs',
+            isDark ? 'border-white/15' : 'border-border',
           )}
         >
-          Wyrażam zgodę na przetwarzanie danych osobowych w celu odpowiedzi na zapytanie. *
-        </span>
-      </label>
+          <summary
+            className={cn(
+              'cursor-pointer select-none font-sans text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-accent-gold',
+              isDark ? 'text-white/40' : 'text-muted-foreground/70',
+            )}
+          >
+            Informacja o przetwarzaniu danych
+          </summary>
+          <div
+            className={cn(
+              'mt-3 space-y-2 font-sans leading-relaxed text-pretty',
+              isDark ? 'text-white/50' : 'text-muted-foreground',
+            )}
+          >
+            <p>
+              Administratorem Twoich danych jest butik Warszawski Czas, ul. Mokotowska 71,
+              00-530 Warszawa. Dane przetwarzamy w celu udzielenia odpowiedzi na zapytanie
+              złożone przez formularz, na podstawie Twojej zgody (art. 6 ust. 1 lit. a RODO)
+              oraz w celu podjęcia działań na Twoje żądanie (art. 6 ust. 1 lit. b RODO).
+            </p>
+            <p>
+              Dane przechowujemy przez okres niezbędny do prowadzenia korespondencji
+              i obsługi sprawy, z uwzględnieniem obowiązujących przepisów prawa.
+              Masz prawo dostępu do danych,
+              ich sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu, przenoszenia
+              oraz cofnięcia zgody w dowolnym momencie, a także wniesienia skargi do PUODO.
+            </p>
+            <p>
+              Pełne informacje znajdziesz w{' '}
+              <a
+                href="/polityka-prywatnosci"
+                target="_blank"
+                rel="noopener"
+                className="text-accent-gold underline"
+              >
+                polityce prywatności
+              </a>
+              .
+            </p>
+          </div>
+        </details>
+      </div>
 
       {status === 'error' && errorMsg && (
         <div
@@ -226,10 +278,3 @@ function ContactFormInner({ variant = 'light' }: ContactFormProps) {
   )
 }
 
-export function ContactForm(props: ContactFormProps) {
-  return (
-    <Suspense fallback={null}>
-      <ContactFormInner {...props} />
-    </Suspense>
-  )
-}

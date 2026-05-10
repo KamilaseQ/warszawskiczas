@@ -1,8 +1,5 @@
 // Globalna konfiguracja front-endowa (placeholdery — bez backendu)
 
-// TODO: przenieść do bazy danych / zmiennej środowiskowej po wdrożeniu backendu
-export const ACCESS_CODE = 'WC2024'
-
 // TODO: podmień docelowy numer telefonu
 export const CONTACT_PHONE = '+48 604 50 1000'
 export const CONTACT_PHONE_RAW = '+48604501000'
@@ -20,8 +17,8 @@ export const ADDRESS = {
 }
 
 export const HOURS = {
-  weekdays: '10:00 – 18:00',
-  saturday: '10:00 – 15:00',
+  weekdays: '11:00 – 18:00',
+  saturday: '11:00 – 15:00',
   sunday: 'Zamknięte',
 }
 

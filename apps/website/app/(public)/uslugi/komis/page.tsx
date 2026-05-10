@@ -155,29 +155,17 @@ export default function KomisPage() {
             </div>
             <Card variant="outlined" padding="lg">
               <h3 className="font-serif text-xl font-semibold">
-                Warunki komisowe
+                Warunki współpracy
               </h3>
-              <ul className="mt-6 space-y-4 text-sm">
-                <li className="flex justify-between border-b border-border pb-4">
-                  <span className="text-muted-foreground">Prowizja</span>
-                  <span className="font-medium">10-15% od ceny sprzedaży</span>
-                </li>
-                <li className="flex justify-between border-b border-border pb-4">
-                  <span className="text-muted-foreground">Minimalny okres</span>
-                  <span className="font-medium">30 dni</span>
-                </li>
-                <li className="flex justify-between border-b border-border pb-4">
-                  <span className="text-muted-foreground">Ubezpieczenie</span>
-                  <span className="font-medium">W cenie</span>
-                </li>
-                <li className="flex justify-between">
-                  <span className="text-muted-foreground">Wypłata</span>
-                  <span className="font-medium">Do 3 dni od sprzedaży</span>
-                </li>
-              </ul>
-              <p className="mt-6 text-xs text-muted-foreground">
-                Szczegółowe warunki ustalamy indywidualnie w zależności od 
-                wartości i rodzaju zegarka.
+              <p className="mt-6 text-sm text-muted-foreground">
+                Każdy egzemplarz traktujemy indywidualnie. Warunki —
+                prowizję, czas trwania komisu i sposób rozliczenia —
+                ustalamy z właścicielem zegarka po oględzinach,
+                w zależności od wartości i rodzaju modelu.
+              </p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Przez cały okres komisu zegarek pozostaje pod naszą
+                opieką w butiku.
               </p>
             </Card>
           </div>

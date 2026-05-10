@@ -4,24 +4,24 @@ import { FadeIn } from '@/components/ui/fade-in'
 const steps = [
   {
     numeral: 'I',
-    meta: 'Dzień 1',
-    title: 'Kontakt i rejestracja',
+    meta: 'Pierwszy kontakt',
+    title: 'Telefon lub formularz',
     body:
-      'Wypełniasz formularz na dole strony. Specjalista kontaktuje się w ciągu 24 godzin.',
+      'Zadzwoń albo wypełnij krótki formularz na dole strony. Specjalista skontaktuje się z Tobą w odpowiedzi.',
   },
   {
     numeral: 'II',
-    meta: '60–90 minut',
-    title: 'Indywidualna konsultacja',
+    meta: 'Krótka rozmowa',
+    title: 'Wstępna weryfikacja',
     body:
-      'Omawiamy Twoje preferencje, historię kolekcji, budżet i oczekiwania wobec zegarka.',
+      'Krótka rozmowa o Twoich preferencjach i oczekiwaniach — bez zobowiązań, w spokojnej atmosferze.',
   },
   {
     numeral: 'III',
-    meta: 'Spotkanie w butiku',
-    title: 'Dostęp i transakcja',
+    meta: 'Od ręki',
+    title: 'Kod dostępu',
     body:
-      'Otrzymujesz kod dostępu, wybierasz model, finalizujemy dyskretnie i bezpiecznie.',
+      'Po wstępnej weryfikacji od razu otrzymujesz kod dostępu do prezentacji egzemplarzy.',
   },
 ]
 
@@ -123,7 +123,7 @@ export function PrivateCollectionProcess() {
         {/* Outro meta */}
         <FadeIn delay={0.3}>
           <p className="mx-auto mt-20 max-w-2xl text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/45">
-            Cały proces: 24h–7 dni &nbsp;·&nbsp; Dyskrecja zachowana zawsze
+            Indywidualne podejście &nbsp;·&nbsp; Pełna poufność
           </p>
         </FadeIn>
       </Container>

@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-
-// TODO: podmień numer na docelowy
-const WHATSAPP_NUMBER = '48604501000'
+import { WHATSAPP_NUMBER } from '@/lib/config'
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (

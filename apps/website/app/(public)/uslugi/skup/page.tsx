@@ -22,13 +22,13 @@ const serviceJsonLd = {
 const benefits = [
   {
     icon: Banknote,
-    title: 'Uczciwa wycena',
-    description: 'Realne ceny rynkowe oparte na aktualnych notowaniach i stanie zegarka.',
+    title: 'Bezpłatna wycena',
+    description: 'Realne ceny rynkowe oparte na aktualnych notowaniach i stanie zegarka — bez zobowiązań.',
   },
   {
     icon: Clock,
-    title: 'Szybka płatność',
-    description: 'Decyzja i płatność w dniu spotkania. Gotówka lub przelew.',
+    title: 'Szybko i sprawnie',
+    description: 'Decyzja i płatność uzgadniane indywidualnie — gotówka lub przelew.',
   },
   {
     icon: Shield,

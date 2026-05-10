@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button } from '@/components/ui'
 import { ProductCatalog } from '@/components/products'
 import { mockProducts } from '@/data/mock-products'
@@ -26,7 +27,6 @@ export default function ProduktyPage() {
               </h1>
               <p className="mt-4 max-w-xl font-sans text-sm leading-relaxed text-muted-foreground sm:text-base text-pretty">
                 Każdy egzemplarz zweryfikowany pod kątem autentyczności i stanu.
-                Filtruj po marce, materiale lub przedziale cenowym.
               </p>
             </div>
 
@@ -67,7 +67,7 @@ export default function ProduktyPage() {
               <Link href="/kolekcja-na-zapytanie">Kolekcja Prywatna</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link href="/kontakt?source=product-listing">Skontaktuj się</Link>
+              <ContactLink source="product-listing">Skontaktuj się</ContactLink>
             </Button>
           </div>
         </Container>

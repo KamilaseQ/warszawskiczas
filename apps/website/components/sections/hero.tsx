@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { ContactLink } from '@/components/contact-link'
 import { FadeIn } from '@/components/ui/fade-in'
 import { Magnetic } from '@/components/ui'
 import { ChevronDown } from 'lucide-react'
@@ -126,9 +127,9 @@ export function Hero() {
 
           {/* PRIMARY — Umów prywatną konsultację (magnetic hover) */}
           <Magnetic className="relative z-10" strength={10}>
-            <Link href="/kontakt?source=home-hero" prefetch className="btn-premium-white inline-block">
+            <ContactLink source="home-hero" prefetch className="btn-premium-white inline-block">
               Umów prywatną konsultację
-            </Link>
+            </ContactLink>
           </Magnetic>
 
           {/* TERTIARY — tekst-link z strzałką: Odkryj kolekcję */}

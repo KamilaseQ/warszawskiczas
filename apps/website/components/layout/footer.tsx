@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 
 const footerLinks = {
   oferta: [
@@ -13,7 +14,7 @@ const footerLinks = {
   ],
   informacje: [
     { href: '/butik', label: 'O butiku' },
-    { href: '/kontakt?source=nav-footer', label: 'Kontakt' },
+    { href: '/kontakt', label: 'Kontakt', contactSource: 'nav-footer' as const },
   ],
 }
 
@@ -93,7 +94,7 @@ export function Footer() {
                 <TikTokIcon className="h-5 w-5" />
               </a>
               <a
-                href="https://facebook.com/warszawskiczas"
+                href="https://www.facebook.com/people/WarszawskiCzas/100064090685061/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/40 transition-colors duration-300 hover:text-accent-gold"
@@ -150,12 +151,21 @@ export function Footer() {
               <ul className="mt-4 space-y-3">
                 {footerLinks.informacje.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-white/60 transition-colors hover:text-accent-gold"
-                    >
-                      {link.label}
-                    </Link>
+                    {'contactSource' in link && link.contactSource ? (
+                      <ContactLink
+                        source={link.contactSource}
+                        className="text-sm text-white/60 transition-colors hover:text-accent-gold"
+                      >
+                        {link.label}
+                      </ContactLink>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-white/60 transition-colors hover:text-accent-gold"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -196,8 +206,8 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Clock className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-gold" />
                 <span className="text-sm text-white/60">
-                  Pon – Pt: 10:00 – 18:00<br />
-                  Sob: 10:00 – 15:00<br />
+                  Pon – Pt: 11:00 – 18:00<br />
+                  Sob: 11:00 – 15:00<br />
                   Nd: Zamknięte
                 </span>
               </li>

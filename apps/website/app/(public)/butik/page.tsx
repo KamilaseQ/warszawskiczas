@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight, Clock, MapPin, Train } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section, LocationMap } from '@/components/ui'
 import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
 
@@ -13,26 +14,25 @@ export const metadata: Metadata = {
     'Odwiedź butik Warszawski Czas na Mokotowskiej 71. Editorialna przestrzeń dla kolekcjonerów zegarków premium w sercu Warszawy.',
 }
 
+const JAREK_PHONE = '+48 604 312 411'
+const JAREK_PHONE_RAW = '+48604312411'
+const JAREK_EMAIL = 'jarexzegarex@gmail.com'
+
 const socials = [
   {
     label: 'Instagram',
-    handle: '@warszawskiczas',
-    href: 'https://instagram.com/warszawskiczas',
-  },
-  {
-    label: 'Facebook',
-    handle: '/warszawskiczas',
-    href: 'https://facebook.com/warszawskiczas',
-  },
-  {
-    label: 'TikTok',
-    handle: '@warszawskiczas',
-    href: 'https://www.tiktok.com/@warszawskiczas',
+    handle: '@jarekjarosz_',
+    href: 'https://instagram.com/jarekjarosz_',
   },
   {
     label: 'Telefon',
-    handle: CONTACT_PHONE,
-    href: `tel:${PHONE_RAW}`,
+    handle: JAREK_PHONE,
+    href: `tel:${JAREK_PHONE_RAW}`,
+  },
+  {
+    label: 'Email',
+    handle: JAREK_EMAIL,
+    href: `mailto:${JAREK_EMAIL}`,
   },
 ] as const
 
@@ -46,18 +46,11 @@ function SocialIcon({ label }: { label: (typeof socials)[number]['label'] }) {
           <circle cx="17.4" cy="6.6" r="0.6" fill="currentColor" />
         </svg>
       )
-    case 'Facebook':
+    case 'Email':
       return (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 9V6.5C14 5.7 14.7 5 15.5 5H17.5" />
-          <path d="M11 21V13M11 13V10.5C11 9.1 12.1 8 13.5 8H17M11 13H8M11 13H14" />
-        </svg>
-      )
-    case 'TikTok':
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M14 4.5V14.5C14 16.4 12.4 18 10.5 18C8.6 18 7 16.4 7 14.5C7 12.6 8.6 11 10.5 11" />
-          <path d="M14 4.5C14 6.7 15.8 8.5 18 8.5" />
+          <rect x="3" y="5" width="18" height="14" rx="1.5" />
+          <path d="M3 7l9 6 9-6" />
         </svg>
       )
     case 'Telefon':
@@ -72,56 +65,28 @@ function SocialIcon({ label }: { label: (typeof socials)[number]['label'] }) {
 export default function ButikPage() {
   return (
     <>
-      {/* ───── HERO ───── placeholder na widok z lotu ptaka — Plac Trzech Krzyży */}
-      <section className="relative isolate min-h-[78vh] w-full overflow-hidden bg-[#0a0a0a] text-white">
-        {/* Stylizowany placeholder — ciemny gradient w kierunku centrum, delikatna siatka,
-            kompasowy znacznik lokalizacji butiku. Zastąp w przyszłości realnym
-            zdjęciem z drona w /public/hero-butik.webp i podmień element <Image>. */}
+      {/* ───── HERO ───── proste, czyste */}
+      <section className="relative isolate min-h-screen w-full overflow-hidden bg-[#050403] text-white">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,rgba(80,60,30,0.35)_0%,rgba(15,12,8,0.95)_55%,#050403_100%)]" />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.18] mix-blend-overlay"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(201,169,98,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,98,0.22) 1px, transparent 1px)',
-              backgroundSize: '64px 64px',
-            }}
+          <Image
+            src="/butikmain.jpg"
+            alt="Butik Warszawski Czas — Mokotowska 71"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover [filter:brightness(0.85)_contrast(1.06)_saturate(0.88)_sepia(0.1)]"
+            style={{ objectPosition: '50% 45%' }}
           />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-[0.05]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              backgroundSize: '180px 180px',
-            }}
-          />
+          {/* Subtelny film nadający spójny ton */}
+          <div className="absolute inset-0 bg-[#050403]/15" />
+          {/* Złoty refleks z prawej-góry — łapie się z resztą strony */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_20%,rgba(201,169,98,0.14)_0%,transparent_55%)] mix-blend-screen" />
+          {/* Łagodny gradient pod typografię — głównie dół */}
+          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-[#050403]/85 via-[#050403]/35 to-transparent" />
         </div>
 
-        {/* Marker lokalizacji — pulsujący punkt na "mapie" */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[55%] z-10 -translate-x-1/2 -translate-y-1/2"
-        >
-          <span className="relative flex h-3 w-3 items-center justify-center">
-            <span className="absolute inline-flex h-full w-full animate-[wc-butik-ping_2400ms_ease-out_infinite] rounded-full bg-accent-gold/40" />
-            <span className="absolute inline-flex h-7 w-7 animate-[wc-butik-ping_2400ms_ease-out_infinite] rounded-full bg-accent-gold/15" style={{ animationDelay: '600ms' }} />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-gold shadow-[0_0_18px_rgba(201,169,98,0.85)]" />
-          </span>
-        </div>
-
-        {/* Crop-marks editorial */}
-        <span aria-hidden className="pointer-events-none absolute left-8 top-28 h-5 w-5 lg:left-12">
-          <span className="absolute left-0 top-0 h-px w-5 bg-accent-gold/55" />
-          <span className="absolute left-0 top-0 h-5 w-px bg-accent-gold/55" />
-        </span>
-        <span aria-hidden className="pointer-events-none absolute right-8 top-28 h-5 w-5 lg:right-12">
-          <span className="absolute right-0 top-0 h-px w-5 bg-accent-gold/55" />
-          <span className="absolute right-0 top-0 h-5 w-px bg-accent-gold/55" />
-        </span>
-
-        {/* Headline */}
-        <div className="relative z-10 mx-auto flex min-h-[78vh] w-full max-w-[88rem] flex-col justify-end px-6 pb-20 pt-40 lg:px-12 lg:pb-28 lg:pt-44">
+        {/* Treść — eyebrow + tytuł + jeden lead */}
+        <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[88rem] flex-col justify-end px-6 pb-20 pt-40 lg:px-12 lg:pb-28 lg:pt-44">
           <span className="font-sans text-[10px] font-bold uppercase tracking-[0.55em] text-accent-gold">
             Butik
           </span>
@@ -134,23 +99,10 @@ export default function ButikPage() {
             Mokotowska 71 — kameralna przestrzeń dla kolekcjonerów zegarków
             premium w sercu warszawskiego Śródmieścia.
           </p>
-
-          <div className="mt-12 flex flex-wrap items-end justify-between gap-6 border-t border-white/15 pt-6">
-            <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-white/55">
-              ul. Mokotowska 71 · 00-530 Warszawa
-            </div>
-            <div className="font-sans text-[10px] uppercase tracking-[0.4em] text-white/35">
-              Plac Trzech Krzyży · widok z drona [placeholder]
-            </div>
+          <div className="mt-10 font-sans text-[10px] uppercase tracking-[0.4em] text-white/55">
+            ul. Mokotowska 71 · 00-530 Warszawa
           </div>
         </div>
-
-        <style>{`
-          @keyframes wc-butik-ping {
-            0% { transform: scale(1); opacity: 0.7; }
-            80%, 100% { transform: scale(4.5); opacity: 0; }
-          }
-        `}</style>
       </section>
 
       {/* ───── ATMOSFERA ───── editorial intro with drop cap */}
@@ -237,13 +189,13 @@ export default function ButikPage() {
               </ul>
 
               <div className="mt-10">
-                <Link
-                  href="/kontakt?source=butik"
+                <ContactLink
+                  source="butik"
                   className="group inline-flex items-center gap-3 border-b border-foreground/20 pb-2 font-sans text-[11px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold"
                 >
                   Umów wizytę
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </Link>
+                </ContactLink>
               </div>
             </div>
           </div>
@@ -315,7 +267,7 @@ export default function ButikPage() {
                 <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/70">
                   Kontakt prywatny
                 </p>
-                <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                <ul className="mt-5 flex flex-col gap-3">
                   {socials.map((s) => (
                     <li key={s.label}>
                       <a
@@ -388,9 +340,9 @@ export default function ButikPage() {
                       Godziny
                     </dt>
                     <dd className="mt-2 font-serif text-base leading-relaxed text-foreground">
-                      Pon – Pt &nbsp;·&nbsp; 10:00 – 18:00
+                      Pon – Pt &nbsp;·&nbsp; 11:00 – 18:00
                       <br />
-                      <span className="text-muted-foreground">Sobota · 10:00 – 14:00</span>
+                      <span className="text-muted-foreground">Sobota · 11:00 – 14:00</span>
                     </dd>
                   </div>
                 </div>

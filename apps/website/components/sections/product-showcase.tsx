@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRef } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section, ImagePlaceholder, KenBurns, Magnetic, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 import { featuredProduct, otherFeaturedProducts, productUrlSlug } from '@/data/mock-products'
@@ -136,14 +137,14 @@ export function ProductShowcase() {
 
               {/* CTA editorial — magnetic hover */}
               <Magnetic className="mt-10 block w-full" strength={8}>
-                <Link
-                  href="/kontakt?source=product-showcase"
+                <ContactLink
+                  source="product-showcase"
                   prefetch
                   className="btn-sharp w-full text-center"
                   style={{ display: 'block' }}
                 >
                   Zapytaj o dostępność
-                </Link>
+                </ContactLink>
               </Magnetic>
               <p className="mt-3 text-center font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60">
                 Bezpłatna wycena i konsultacja

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { Shield, Lock, Star, Users, Handshake, ArrowRight } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
@@ -243,14 +244,14 @@ export function TrustSignals() {
                     stylu, budżetu i historii — a jeśli nie mamy tego, czego szukasz,
                     pomożemy znaleźć.
                   </p>
-                  <Link
-                    href="/kontakt?source=trust-signals"
+                  <ContactLink
+                    source="trust-signals"
                     prefetch
                     className="mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/80 transition-colors duration-300 hover:text-accent-gold"
                   >
                     Umów konsultację
                     <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
+                  </ContactLink>
                 </div>
               </div>
             </div>

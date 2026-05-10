@@ -4,8 +4,8 @@ import { FadeIn } from '@/components/ui/fade-in'
 
 const faqs: FaqItem[] = [
   {
-    q: 'Dlaczego ta kolekcja jest ukryta?',
-    a: 'Właściciele zegarków z prywatnych kolekcji cenią dyskrecję. Nie publikujemy wszystkich pozycji, aby chronić ich interesy i prywatność transakcji.',
+    q: 'Dlaczego ta kolekcja jest poza katalogiem?',
+    a: 'Właściciele zegarków z prywatnych kolekcji preferują indywidualne podejście. Część egzemplarzy nie trafia do publicznego katalogu, by zachować spokojną, kameralną formę kontaktu z zainteresowanymi.',
   },
   {
     q: 'Jak zweryfikować autentyczność?',
@@ -13,7 +13,7 @@ const faqs: FaqItem[] = [
   },
   {
     q: 'Jak przebiega zakup?',
-    a: 'Kontakt ze specjalistą, spotkanie w butiku na Mokotowskiej lub w dogodnym miejscu, prezentacja zegarka, negocjacja warunków i dyskretna transakcja. Pełna dokumentacja i gwarancja.',
+    a: 'Kontakt ze specjalistą, spotkanie w butiku na Mokotowskiej lub w dogodnym miejscu, prezentacja zegarka, omówienie warunków i bezpieczna, poufna transakcja. Pełna dokumentacja i gwarancja.',
   },
   {
     q: 'Czy mogę kupić w imieniu osoby trzeciej lub jako prezent?',
@@ -81,7 +81,7 @@ export function PrivateCollectionFAQ() {
                 Nadal masz pytania?
               </p>
               <p className="mt-3 font-serif italic text-lg text-white/70 sm:text-xl">
-                Specjalista odpowie dyskretnie, w ciągu 24 godzin.
+                Specjalista odpowie indywidualnie, w ciągu 24 godzin.
               </p>
             </div>
             <Magnetic strength={6}>

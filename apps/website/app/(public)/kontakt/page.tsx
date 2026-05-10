@@ -169,11 +169,11 @@ export default function KontaktPage() {
                   <div className="mt-4 space-y-2 font-sans text-sm text-foreground">
                     <div className="flex justify-between gap-6">
                       <span>Pon – Pt</span>
-                      <span className="tabular-nums">10:00 – 18:00</span>
+                      <span className="tabular-nums">11:00 – 18:00</span>
                     </div>
                     <div className="flex justify-between gap-6">
                       <span>Sobota</span>
-                      <span className="tabular-nums">10:00 – 15:00</span>
+                      <span className="tabular-nums">11:00 – 15:00</span>
                     </div>
                     <div className="flex justify-between gap-6 text-muted-foreground">
                       <span>Niedziela</span>

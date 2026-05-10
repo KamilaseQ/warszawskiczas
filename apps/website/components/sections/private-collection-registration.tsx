@@ -1,21 +1,76 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { readSessionPath } from '@/components/session-tracker'
 
 const benefits = [
-  { numeral: 'I', text: 'Dostęp do zegarków niedostępnych publicznie' },
+  { numeral: 'I', text: 'Dostęp do zegarków poza katalogiem butiku' },
   { numeral: 'II', text: 'Indywidualna konsultacja ze specjalistą' },
-  { numeral: 'III', text: 'Dyskretna, bezpieczna transakcja' },
+  { numeral: 'III', text: 'Bezpieczna, poufna transakcja' },
 ]
 
-export function PrivateCollectionRegistration() {
-  const [submitted, setSubmitted] = useState(false)
+type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-  const handleSubmit = (e: React.FormEvent) => {
+export function PrivateCollectionRegistration() {
+  const mountedAt = useRef<number>(Date.now())
+  const [status, setStatus] = useState<Status>('idle')
+  const [errorMsg, setErrorMsg] = useState<string>('')
+
+  useEffect(() => {
+    mountedAt.current = Date.now()
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (status === 'submitting') return
+    setStatus('submitting')
+    setErrorMsg('')
+
+    const form = e.currentTarget
+    const fd = new FormData(form)
+    const aboutMe = String(fd.get('message') ?? '').trim()
+    const message = aboutMe.length > 0
+      ? `[Kolekcja Prywatna] ${aboutMe}`
+      : '[Kolekcja Prywatna] Prośba o dostęp do kolekcji prywatnej.'
+
+    const payload = {
+      name: String(fd.get('name') ?? ''),
+      email: String(fd.get('email') ?? ''),
+      phone: String(fd.get('phone') ?? ''),
+      message,
+      rodo: fd.get('rodo') === 'on',
+      company: String(fd.get('company') ?? ''),
+      t: mountedAt.current,
+      source: 'kolekcja-prywatna',
+      sessionPath: readSessionPath(),
+      referrer: typeof document !== 'undefined' ? document.referrer || undefined : undefined,
+    }
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (res.ok) {
+        setStatus('success')
+        return
+      }
+
+      const data = await res.json().catch(() => ({}))
+      setErrorMsg(
+        typeof data?.error === 'string'
+          ? data.error
+          : 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub zadzwoń: +48 604 50 1000.',
+      )
+      setStatus('error')
+    } catch {
+      setErrorMsg('Brak połączenia. Sprawdź internet i spróbuj ponownie.')
+      setStatus('error')
+    }
   }
 
   return (
@@ -51,8 +106,8 @@ export function PrivateCollectionRegistration() {
                 <span className="italic font-normal">do Kolekcji Prywatnej</span>
               </h2>
               <p className="mt-8 max-w-md font-sans text-[15px] leading-relaxed text-white/55 text-pretty">
-                Wypełnij formularz. Specjalista skontaktuje się z Tobą w ciągu 24 godzin
-                i przekaże indywidualny kod dostępu.
+                Zostaw kontakt — specjalista oddzwoni i po krótkiej rozmowie
+                przekaże indywidualny kod dostępu. Możesz też zadzwonić bezpośrednio.
               </p>
               <div className="mt-8 font-serif text-2xl text-accent-gold/55 leading-none">· · ·</div>
             </FadeIn>
@@ -78,53 +133,31 @@ export function PrivateCollectionRegistration() {
           <div className="lg:col-span-7">
             <FadeIn delay={0.15}>
               <div className="relative">
-                {/* Decorative offset frames — magazine plate */}
                 <div className="pointer-events-none absolute -bottom-4 -right-4 hidden h-full w-full border border-accent-gold/30 lg:block" />
                 <div className="pointer-events-none absolute -top-4 -left-4 hidden h-full w-full border border-accent-gold/15 lg:block" />
 
                 <div className="relative bg-[#0a0a0a] p-8 lg:p-12">
-                  {/* Top gold accent */}
                   <div className="mb-10 h-px w-full bg-gradient-to-r from-transparent via-accent-gold/60 to-transparent" />
 
-                  {submitted ? (
+                  {status === 'success' ? (
                     <SuccessState />
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-7">
+                      {/* Honeypot */}
+                      <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
+                        <label>
+                          Nie wypełniaj
+                          <input type="text" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
+                        </label>
+                      </div>
+
                       <div className="grid gap-7 sm:grid-cols-2">
                         <Field label="Imię i nazwisko *" name="name" required />
                         <Field label="E-mail *" name="email" type="email" required />
                       </div>
 
-                      <div className="grid gap-7 sm:grid-cols-2">
+                      <div>
                         <Field label="Numer telefonu *" name="phone" type="tel" required />
-
-                        <div>
-                          <label className="mb-3 block text-[10px] font-sans font-bold uppercase tracking-[0.35em] text-white/60">
-                            Co Cię interesuje? *
-                          </label>
-                          <select
-                            required
-                            name="interest"
-                            defaultValue=""
-                            className="block w-full appearance-none border-b border-white/25 bg-transparent px-0 py-2 font-sans text-sm text-white focus:border-accent-gold focus:outline-none focus:ring-0"
-                          >
-                            <option value="" disabled className="bg-[#0a0a0a]">
-                              Wybierz...
-                            </option>
-                            <option value="zakup" className="bg-[#0a0a0a]">
-                              Zakup zegarka z kolekcji prywatnej
-                            </option>
-                            <option value="wycena" className="bg-[#0a0a0a]">
-                              Wycena posiadanego zegarka
-                            </option>
-                            <option value="komis" className="bg-[#0a0a0a]">
-                              Komis
-                            </option>
-                            <option value="inne" className="bg-[#0a0a0a]">
-                              Inne
-                            </option>
-                          </select>
-                        </div>
                       </div>
 
                       <div>
@@ -134,6 +167,7 @@ export function PrivateCollectionRegistration() {
                         <textarea
                           name="message"
                           rows={4}
+                          maxLength={2000}
                           placeholder="Np. jaki typ zegarków Cię interesuje, jaki mniej więcej budżet..."
                           className="block w-full resize-none border-b border-white/25 bg-transparent px-0 py-2 font-sans text-sm italic text-white placeholder:italic placeholder:text-white/30 focus:border-accent-gold focus:outline-none focus:ring-0"
                         />
@@ -152,16 +186,23 @@ export function PrivateCollectionRegistration() {
                         </span>
                       </label>
 
+                      {status === 'error' && errorMsg && (
+                        <div role="alert" className="border-l-2 border-red-500/70 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                          {errorMsg}
+                        </div>
+                      )}
+
                       <button
                         type="submit"
+                        disabled={status === 'submitting'}
                         className="btn-premium-white w-full"
                         style={{ display: 'block' }}
                       >
-                        Wyślij zapytanie i uzyskaj kod dostępu
+                        {status === 'submitting' ? 'Wysyłanie...' : 'Wyślij zapytanie'}
                       </button>
 
                       <p className="text-center font-sans text-[10px] uppercase tracking-[0.4em] text-white/35">
-                        Odpowiedź w ciągu 24 godzin
+                        Odpowiadamy w ciągu 24 godzin
                       </p>
                     </form>
                   )}
@@ -205,7 +246,7 @@ function SuccessState() {
   return (
     <div className="text-center py-8">
       <h3 className="font-serif text-2xl font-medium italic text-white sm:text-3xl">
-        Twoja korespondencja została odebrana
+        Twoja wiadomość dotarła
       </h3>
       <div className="mx-auto mt-5 h-px w-12 bg-accent-gold/60" />
       <p className="mx-auto mt-7 max-w-md text-sm leading-relaxed text-white/55 text-pretty">

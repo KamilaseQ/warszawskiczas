@@ -2,9 +2,18 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { ContactLink } from '@/components/contact-link'
 import { cn } from '@/lib/utils'
 
-const navItems = [
+interface NavItem {
+  href: string
+  label: string
+  prefetch?: boolean
+  contactSource?: string
+  children?: { href: string; label: string }[]
+}
+
+const navItems: NavItem[] = [
   { href: '/produkty', label: 'Produkty', prefetch: true },
   { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja', prefetch: true },
   {
@@ -17,7 +26,7 @@ const navItems = [
     ],
   },
   { href: '/butik', label: 'Butik' },
-  { href: '/kontakt?source=nav-desktop', label: 'Kontakt', prefetch: true },
+  { href: '/kontakt', label: 'Kontakt', prefetch: true, contactSource: 'nav-desktop' },
 ]
 
 interface NavigationProps {
@@ -71,18 +80,33 @@ export function Navigation({ className, isTransparent = false }: NavigationProps
           )
         }
 
+        const linkClass = cn(
+          'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
+          isActive ? 'active' : '',
+          isActive
+            ? 'text-accent-gold'
+            : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
+        )
+
+        if (item.contactSource) {
+          return (
+            <ContactLink
+              key={item.href}
+              source={item.contactSource}
+              prefetch={item.prefetch ?? undefined}
+              className={linkClass}
+            >
+              {item.label}
+            </ContactLink>
+          )
+        }
+
         return (
           <Link
             key={item.href}
             href={item.href}
             prefetch={item.prefetch ?? undefined}
-            className={cn(
-              'nav-link inline-flex items-center px-4 py-2 font-medium transition-colors duration-500 ease-in-out',
-              isActive ? 'active' : '',
-              isActive
-                ? 'text-accent-gold'
-                : isTransparent ? 'text-white hover:text-white/80' : 'text-muted-foreground hover:text-foreground'
-            )}
+            className={linkClass}
           >
             {item.label}
           </Link>

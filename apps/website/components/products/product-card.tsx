@@ -58,7 +58,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
       : null
 
   const statusColor =
-    product.status === 'Sprzedany'
+    product.status === 'Niedostępny'
       ? 'text-muted-foreground/60 line-through'
       : product.status === 'Zarezerwowany'
         ? 'text-muted-foreground/80'

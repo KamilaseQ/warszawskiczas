@@ -7,7 +7,7 @@ const services = [
   {
     num: '01',
     eyebrow: 'Atelier zegarmistrzowski',
-    duration: '3 – 6 tygodni',
+    duration: 'Indywidualnie',
     icon: Wrench,
     title: 'Naprawa i serwis',
     description:
@@ -17,7 +17,7 @@ const services = [
   {
     num: '02',
     eyebrow: 'Wycena i transakcja',
-    duration: 'Od ręki',
+    duration: 'Szybko i sprawnie',
     icon: ArrowDownToLine,
     title: 'Skup zegarków',
     description:
@@ -27,7 +27,7 @@ const services = [
   {
     num: '03',
     eyebrow: 'Sprzedaż dyskretna',
-    duration: '30 – 90 dni',
+    duration: 'Indywidualnie',
     icon: Repeat,
     title: 'Komis',
     description:

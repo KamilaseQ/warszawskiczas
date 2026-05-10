@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Lock } from 'lucide-react'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
@@ -8,17 +9,36 @@ export function PrivateCollectionHero() {
       spacing="xl"
       className="relative overflow-hidden bg-[#050403] text-white"
     >
+      {/* Background photo — wytonowane zdjęcie z kolekcji, dopasowane do klimatu */}
+      <div className="pointer-events-none absolute inset-0">
+        <Image
+          src="/watch-31.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover [filter:brightness(0.62)_contrast(1.05)_saturate(0.82)_sepia(0.14)]"
+          style={{ objectPosition: '50% 40%' }}
+        />
+        {/* Przyciemnienie pod typografię */}
+        <div className="absolute inset-0 bg-[#050403]/50" />
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_0%,rgba(5,4,3,0.55)_70%,rgba(5,4,3,0.92)_100%)]" />
+        {/* Domknięcie sekcji od dołu */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#050403] via-[#050403]/70 to-transparent" />
+      </div>
+
       {/* Grain */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
           backgroundSize: '220px 220px',
         }}
       />
-      {/* Atmospheric depth — two radial gradients */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_25%_30%,rgba(201,169,98,0.12)_0%,transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_90%,rgba(201,169,98,0.06)_0%,transparent_55%)]" />
+      {/* Atmospheric depth — gold accents */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_25%_30%,rgba(201,169,98,0.14)_0%,transparent_55%)] mix-blend-screen" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_90%,rgba(201,169,98,0.08)_0%,transparent_55%)] mix-blend-screen" />
 
       {/* Hairline edge accents */}
       <div className="pointer-events-none absolute left-6 top-1/2 hidden h-[40%] w-px -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-gold/30 to-transparent lg:block" />
@@ -53,8 +73,9 @@ export function PrivateCollectionHero() {
 
         <FadeIn delay={0.2}>
           <p className="mt-10 max-w-xl font-sans text-base leading-relaxed text-white/55 text-pretty lg:text-lg">
-            Zegarki z prywatnych kolekcji, nigdy niepublikowane w standardowej ofercie.
-            Dla klientów, którzy wiedzą, czego szukają.
+            Zegarki z prywatnych kolekcji, których nie znajdziesz w katalogu butiku.
+            Dostęp dajemy po krótkim, indywidualnym kontakcie — telefonicznie lub
+            przez formularz.
           </p>
         </FadeIn>
 
@@ -63,7 +84,7 @@ export function PrivateCollectionHero() {
             <div className="flex items-center gap-4">
               <div className="h-px w-12 bg-accent-gold/60" />
               <span className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/45">
-                Weryfikacja wymagana
+                Dostęp na zaproszenie
               </span>
             </div>
             <span className="hidden font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/35 sm:inline">

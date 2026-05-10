@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Lock, Unlock } from 'lucide-react'
 import { Container, Section, ImagePlaceholder } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
-import { ACCESS_CODE } from '@/lib/config'
 import { cn } from '@/lib/utils'
 
 type Item = {
@@ -29,14 +28,28 @@ export function PrivateCollectionGallery() {
   const [unlocked, setUnlocked] = useState(false)
   const [code, setCode] = useState('')
   const [error, setError] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (code.trim().toUpperCase() === ACCESS_CODE) {
-      setUnlocked(true)
-      setError(false)
-    } else {
+    if (submitting) return
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/private-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      })
+      if (res.ok) {
+        setUnlocked(true)
+        setError(false)
+      } else {
+        setError(true)
+      }
+    } catch {
       setError(true)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -191,10 +204,11 @@ export function PrivateCollectionGallery() {
                     </div>
                     <button
                       type="submit"
-                      className="btn-premium-white w-full"
+                      disabled={submitting}
+                      className={cn('btn-premium-white w-full', submitting && 'cursor-wait opacity-70')}
                       style={{ display: 'block' }}
                     >
-                      Odblokuj
+                      {submitting ? 'Sprawdzanie...' : 'Odblokuj'}
                     </button>
 
                     {error && (

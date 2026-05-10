@@ -17,12 +17,10 @@ const CATEGORIES = [
   { value: 'bizuteria', label: 'Biżuteria' },
 ] as const
 
-const STATUSES = ['Wszystkie', 'Dostępny', 'Zarezerwowany', 'Sprzedany'] as const
+const STATUSES = ['Wszystkie', 'Dostępny', 'Zarezerwowany', 'Niedostępny'] as const
 
 const SORTS = [
   { value: 'featured', label: 'Polecane' },
-  { value: 'newest', label: 'Najnowsze (rok)' },
-  { value: 'oldest', label: 'Najstarsze (rok)' },
   { value: 'price-asc', label: 'Cena rosnąco' },
   { value: 'price-desc', label: 'Cena malejąco' },
   { value: 'brand-asc', label: 'Marka A–Z' },
@@ -31,15 +29,20 @@ const SORTS = [
 const PRICE_MIN = 0
 const PRICE_MAX = 500000
 
-const yearNum = (y: Product['year']) =>
-  typeof y === 'number' ? y : Number(String(y ?? '').replace(/^#/, '')) || 0
+// Marki preferowane w sortowaniu "Polecane" — kolejność ma znaczenie
+const FEATURED_BRAND_ORDER = ['Rolex', 'Cartier', 'Patek Philippe', 'Audemars Piguet', 'Breitling']
+const featuredBrandRank = (brand: string) => {
+  const idx = FEATURED_BRAND_ORDER.findIndex((b) => b.toLowerCase() === brand.toLowerCase())
+  return idx === -1 ? FEATURED_BRAND_ORDER.length : idx
+}
 
 export function ProductCatalog({ products }: ProductCatalogProps) {
   const reducedMotion = useReducedMotion()
   const [category, setCategory] = useState<'zegarki' | 'bizuteria'>('zegarki')
-  const [brand, setBrand] = useState<string>('Wszystkie')
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [status, setStatus] = useState<string>('Wszystkie')
   const [sort, setSort] = useState<string>('featured')
+  const [priceMin, setPriceMin] = useState<number>(PRICE_MIN)
   const [priceMax, setPriceMax] = useState<number>(PRICE_MAX)
   const [onlyOnRequest, setOnlyOnRequest] = useState<boolean>(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -48,42 +51,70 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
   const brandsForCategory = useMemo(() => {
     const set = new Set<string>()
     products.filter((p) => p.category === category).forEach((p) => set.add(p.brand))
-    return ['Wszystkie', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'pl'))]
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'pl'))
   }, [products, category])
+
+  const toggleBrand = (b: string) => {
+    setSelectedBrands((prev) => (prev.includes(b) ? prev.filter((x) => x !== b) : [...prev, b]))
+  }
 
   const filtered = useMemo(() => {
     let out = products.filter((p) => p.category === category)
-    if (brand !== 'Wszystkie') out = out.filter((p) => p.brand === brand)
+    if (selectedBrands.length > 0) out = out.filter((p) => selectedBrands.includes(p.brand))
     if (status !== 'Wszystkie') out = out.filter((p) => p.status === status)
     if (onlyOnRequest) out = out.filter((p) => p.priceOnRequest)
-    out = out.filter((p) => (p.price ? p.price <= priceMax : true))
+    out = out.filter((p) => {
+      if (!p.price) return true
+      return p.price >= priceMin && p.price <= priceMax
+    })
 
     if (sort === 'price-asc') {
       out = [...out].sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity))
     } else if (sort === 'price-desc') {
       out = [...out].sort((a, b) => (b.price ?? -Infinity) - (a.price ?? -Infinity))
-    } else if (sort === 'newest') {
-      out = [...out].sort((a, b) => yearNum(b.year) - yearNum(a.year))
-    } else if (sort === 'oldest') {
-      out = [...out].sort((a, b) => yearNum(a.year) - yearNum(b.year))
     } else if (sort === 'brand-asc') {
       out = [...out].sort((a, b) => a.brand.localeCompare(b.brand, 'pl'))
     } else if (sort === 'featured') {
-      out = [...out].sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false))
+      // Top 4 marki przeplecione round-robin (Rolex / Cartier / Patek / AP),
+      // potem Breitling, potem reszta alfabetycznie. Stabilne — nie miesza się
+      // przy każdym renderze.
+      const TOP_N = 4
+      const buckets: Product[][] = FEATURED_BRAND_ORDER.slice(0, TOP_N).map((brand) =>
+        out.filter((p) => p.brand.toLowerCase() === brand.toLowerCase()),
+      )
+      const rest = out
+        .filter((p) => featuredBrandRank(p.brand) >= TOP_N)
+        .sort((a, b) => {
+          const ra = featuredBrandRank(a.brand)
+          const rb = featuredBrandRank(b.brand)
+          if (ra !== rb) return ra - rb
+          return a.brand.localeCompare(b.brand, 'pl')
+        })
+
+      const interleaved: Product[] = []
+      let i = 0
+      while (buckets.some((b) => i < b.length)) {
+        for (const b of buckets) {
+          if (i < b.length) interleaved.push(b[i]!)
+        }
+        i++
+      }
+      out = [...interleaved, ...rest]
     }
 
     return out
-  }, [products, category, brand, status, sort, priceMax, onlyOnRequest])
+  }, [products, category, selectedBrands, status, sort, priceMin, priceMax, onlyOnRequest])
 
   const activeFilterCount =
-    (brand !== 'Wszystkie' ? 1 : 0) +
+    (selectedBrands.length > 0 ? 1 : 0) +
     (status !== 'Wszystkie' ? 1 : 0) +
-    (priceMax !== PRICE_MAX ? 1 : 0) +
+    (priceMin !== PRICE_MIN || priceMax !== PRICE_MAX ? 1 : 0) +
     (onlyOnRequest ? 1 : 0)
 
   const clearFilters = () => {
-    setBrand('Wszystkie')
+    setSelectedBrands([])
     setStatus('Wszystkie')
+    setPriceMin(PRICE_MIN)
     setPriceMax(PRICE_MAX)
     setOnlyOnRequest(false)
   }
@@ -116,7 +147,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                 type="button"
                 onClick={() => {
                   setCategory(c.value as 'zegarki' | 'bizuteria')
-                  setBrand('Wszystkie')
+                  setSelectedBrands([])
                 }}
                 className={cn(
                   'relative pb-3 font-serif text-xs uppercase tracking-[0.3em] transition-colors duration-300 sm:text-sm',
@@ -142,6 +173,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
             onClick={() => setDrawerOpen(true)}
             aria-label="Otwórz filtry"
             aria-expanded={drawerOpen}
+            aria-controls="catalog-filters"
             className="group inline-flex items-center gap-2 border border-foreground/15 bg-transparent px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold sm:px-4"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -185,14 +217,20 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-muted-foreground/70">
                 Aktywne:
               </span>
-              {brand !== 'Wszystkie' && (
-                <FilterChip label={brand} onClear={() => setBrand('Wszystkie')} />
-              )}
+              {selectedBrands.map((b) => (
+                <FilterChip key={b} label={b} onClear={() => toggleBrand(b)} />
+              ))}
               {status !== 'Wszystkie' && (
                 <FilterChip label={status} onClear={() => setStatus('Wszystkie')} />
               )}
-              {priceMax !== PRICE_MAX && (
-                <FilterChip label={`do ${fmt(priceMax)}`} onClear={() => setPriceMax(PRICE_MAX)} />
+              {(priceMin !== PRICE_MIN || priceMax !== PRICE_MAX) && (
+                <FilterChip
+                  label={`${fmt(priceMin)} – ${fmt(priceMax)}`}
+                  onClear={() => {
+                    setPriceMin(PRICE_MIN)
+                    setPriceMax(PRICE_MAX)
+                  }}
+                />
               )}
               {onlyOnRequest && (
                 <FilterChip label="Cena na zapytanie" onClear={() => setOnlyOnRequest(false)} />
@@ -215,7 +253,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
 
       {filtered.length > 0 ? (
         <motion.div
-          key={`${category}-${brand}-${status}-${priceMax}-${onlyOnRequest}-${sort}`}
+          key={`${category}-${selectedBrands.join(',')}-${status}-${priceMin}-${priceMax}-${onlyOnRequest}-${sort}`}
           initial="hidden"
           animate="visible"
           variants={{
@@ -273,6 +311,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               aria-hidden="true"
             />
             <motion.aside
+              id="catalog-filters"
               role="dialog"
               aria-modal="true"
               aria-label="Filtry"
@@ -303,28 +342,45 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
 
               <div className="flex-1 overflow-y-auto px-6 py-6 lg:px-8">
                 <div className="space-y-8">
-                  {/* Marka — chips, generowane z aktualnych danych */}
-                  <FilterSection label={`Marka · ${brandsForCategory.length - 1}`}>
-                    <div className="flex flex-wrap gap-2">
+                  {/* Marka — checkboxy, multi-select */}
+                  <FilterSection label={`Marka · ${brandsForCategory.length}`}>
+                    <ul className="space-y-1.5">
                       {brandsForCategory.map((b) => {
-                        const isActive = b === brand
+                        const isActive = selectedBrands.includes(b)
+                        const id = `brand-${b.replace(/\s+/g, '-').toLowerCase()}`
                         return (
-                          <button
-                            key={b}
-                            type="button"
-                            onClick={() => setBrand(b)}
-                            className={cn(
-                              'border px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300',
-                              isActive
-                                ? 'border-accent-gold bg-accent-gold text-[#0a0a0a]'
-                                : 'border-foreground/15 text-foreground hover:border-accent-gold hover:text-accent-gold'
-                            )}
-                          >
-                            {b}
-                          </button>
+                          <li key={b}>
+                            <label
+                              htmlFor={id}
+                              className="flex cursor-pointer items-center gap-3 py-1.5 font-sans text-[12px] uppercase tracking-[0.18em] text-foreground transition-colors hover:text-accent-gold"
+                            >
+                              <span
+                                className={cn(
+                                  'relative flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors duration-200',
+                                  isActive
+                                    ? 'border-accent-gold bg-accent-gold'
+                                    : 'border-foreground/30 bg-transparent'
+                                )}
+                              >
+                                {isActive && (
+                                  <svg viewBox="0 0 12 12" className="h-3 w-3 text-[#0a0a0a]" aria-hidden>
+                                    <path d="M2.5 6.5L5 9L9.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                                  </svg>
+                                )}
+                              </span>
+                              <input
+                                id={id}
+                                type="checkbox"
+                                checked={isActive}
+                                onChange={() => toggleBrand(b)}
+                                className="sr-only"
+                              />
+                              <span>{b}</span>
+                            </label>
+                          </li>
                         )
                       })}
-                    </div>
+                    </ul>
                   </FilterSection>
 
                   {/* Status / dostępność */}
@@ -351,23 +407,50 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                     </div>
                   </FilterSection>
 
-                  {/* Cena */}
-                  <FilterSection label={`Cena maks. ${fmt(priceMax)}`}>
-                    <input
-                      type="range"
-                      min={PRICE_MIN}
-                      max={PRICE_MAX}
-                      step={1000}
-                      value={priceMax}
-                      onChange={(e) => setPriceMax(Number(e.target.value))}
-                      className="price-slider"
-                      aria-label="Maksymalna cena"
-                    />
-                    <div className="mt-3 flex justify-between font-sans text-[9px] uppercase tracking-[0.25em] text-muted-foreground/70">
-                      <span>{fmt(PRICE_MIN)}</span>
-                      <span>{fmt(PRICE_MAX)}+</span>
+                  {/* Cena — widełki min/max */}
+                  <FilterSection label={`Cena · ${fmt(priceMin)} – ${fmt(priceMax)}`}>
+                    <div className="dual-range relative h-6">
+                      <span aria-hidden className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-foreground/20" />
+                      <span
+                        aria-hidden
+                        className="absolute top-1/2 h-px -translate-y-1/2 bg-accent-gold"
+                        style={{
+                          left: `${(priceMin / PRICE_MAX) * 100}%`,
+                          right: `${100 - (priceMax / PRICE_MAX) * 100}%`,
+                        }}
+                      />
+                      <input
+                        type="range"
+                        min={PRICE_MIN}
+                        max={PRICE_MAX}
+                        step={1000}
+                        value={priceMin}
+                        onChange={(e) => {
+                          const v = Math.min(Number(e.target.value), priceMax - 1000)
+                          setPriceMin(Math.max(PRICE_MIN, v))
+                        }}
+                        aria-label="Cena minimalna"
+                        className="dual-range-input"
+                      />
+                      <input
+                        type="range"
+                        min={PRICE_MIN}
+                        max={PRICE_MAX}
+                        step={1000}
+                        value={priceMax}
+                        onChange={(e) => {
+                          const v = Math.max(Number(e.target.value), priceMin + 1000)
+                          setPriceMax(Math.min(PRICE_MAX, v))
+                        }}
+                        aria-label="Cena maksymalna"
+                        className="dual-range-input"
+                      />
                     </div>
-                    <p className="mt-2 font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
+                    <div className="mt-4 flex items-center justify-between gap-3 font-sans text-[10px] uppercase tracking-[0.25em] text-muted-foreground/80">
+                      <span>od&nbsp;<strong className="font-bold text-foreground">{fmt(priceMin)}</strong></span>
+                      <span>do&nbsp;<strong className="font-bold text-foreground">{fmt(priceMax)}{priceMax === PRICE_MAX ? '+' : ''}</strong></span>
+                    </div>
+                    <p className="mt-3 font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
                       Pozycje &ldquo;Cena na zapytanie&rdquo; nie są filtrowane wg ceny.
                     </p>
                   </FilterSection>
@@ -429,34 +512,49 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
       </AnimatePresence>
 
       <style jsx>{`
-        .price-slider {
-          -webkit-appearance: none;
-          appearance: none;
+        .dual-range-input {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
           width: 100%;
-          height: 1px;
-          background: rgba(24, 24, 22, 0.2);
-          outline: none;
-          cursor: pointer;
-        }
-        .price-slider::-webkit-slider-thumb {
+          height: 100%;
+          background: transparent;
+          pointer-events: none;
           -webkit-appearance: none;
           appearance: none;
-          width: 16px;
-          height: 16px;
+          outline: none;
+          margin: 0;
+        }
+        .dual-range-input::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
           background: #c9a962;
           border: 2px solid #0a0a0a;
           cursor: pointer;
+          pointer-events: auto;
           transition: transform 0.2s ease;
         }
-        .price-slider::-webkit-slider-thumb:hover {
-          transform: scale(1.15);
+        .dual-range-input::-webkit-slider-thumb:hover {
+          transform: scale(1.12);
         }
-        .price-slider::-moz-range-thumb {
-          width: 16px;
-          height: 16px;
+        .dual-range-input::-moz-range-thumb {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
           background: #c9a962;
           border: 2px solid #0a0a0a;
           cursor: pointer;
+          pointer-events: auto;
+        }
+        .dual-range-input::-webkit-slider-runnable-track {
+          background: transparent;
+        }
+        .dual-range-input::-moz-range-track {
+          background: transparent;
         }
       `}</style>
     </div>

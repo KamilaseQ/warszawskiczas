@@ -4,9 +4,9 @@ import { FadeIn } from '@/components/ui/fade-in'
 const points = [
   {
     num: '01',
-    title: 'Egzemplarze niedostępne publicznie',
+    title: 'Egzemplarze poza katalogiem',
     body:
-      'Z prywatnych kolekcji, często pojedyncze sztuki. Nie publikujemy tego, co nie ma być publiczne.',
+      'Z prywatnych kolekcji, często pojedyncze sztuki — nie umieszczamy ich w głównej ofercie butiku.',
   },
   {
     num: '02',
@@ -47,13 +47,14 @@ export function PrivateCollectionValue() {
                 </p>
               </div>
               <h2 className="mt-8 font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-[3.75rem] text-balance leading-[1.02]">
-                Kolekcja,<br />
-                <span className="italic font-normal">która nie żyje publicznie.</span>
+                Kolekcja<br />
+                <span className="italic font-normal">poza katalogiem.</span>
               </h2>
               <p className="mt-8 max-w-lg font-sans text-base leading-relaxed text-muted-foreground text-pretty lg:text-[17px]">
-                Trzon oferty Warszawskiego Czasu, który nigdy nie pojawia się
-                w katalogu. Kupujemy z prywatnych depozytów, prezentujemy wyłącznie
-                po weryfikacji klienta — i tylko jednemu na raz.
+                Trzon oferty Warszawskiego Czasu, który nie trafia do
+                publicznego katalogu butiku. Kupujemy z prywatnych depozytów
+                i prezentujemy w spokoju — po krótkim, indywidualnym kontakcie
+                z naszym specjalistą.
               </p>
             </FadeIn>
 
@@ -99,8 +100,8 @@ export function PrivateCollectionValue() {
                 </span>
                 <blockquote className="-mt-6 font-serif text-[1.625rem] font-normal italic leading-[1.25] text-foreground/90 sm:text-[1.875rem] lg:text-[2rem] text-pretty">
                   Zakup zegarka z Kolekcji Prywatnej to nie transakcja —
-                  to dostęp do dyskretnej obsługi i egzemplarzy, których
-                  <span className="text-accent-gold/85"> nie kupisz nigdzie indziej</span>.
+                  to dostęp do indywidualnej obsługi i egzemplarzy, których
+                  <span className="text-accent-gold/85"> nie znajdziesz w katalogu</span>.
                 </blockquote>
 
                 <div className="mt-10 flex items-center gap-4">

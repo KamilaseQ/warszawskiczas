@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
 
@@ -44,9 +45,9 @@ export function FinalCTA() {
         <FadeIn delay={0.15} direction="up">
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {/* PRIMARY */}
-            <Link href="/kontakt?source=final-cta" prefetch className="btn-premium-white">
+            <ContactLink source="final-cta" prefetch className="btn-premium-white">
               Umów wizytę w butiku
-            </Link>
+            </ContactLink>
             {/* SECONDARY — tertiary style */}
             <Link
               href="/produkty"

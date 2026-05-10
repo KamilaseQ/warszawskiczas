@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button, FaqAccordion, type FaqItem } from '@/components/ui'
 import { RelatedGrid } from '@/components/products'
 import { ProductGallery } from '@/components/products/product-gallery'
@@ -99,10 +100,10 @@ export default async function ProductPage({ params }: PageProps) {
     .slice(0, 3)
     .map((x) => x.p)
 
-  const inquiryHref = `/kontakt?source=product-detail&product=${encodeURIComponent(`${product.brand} ${product.name}`)}`
+  const productLabel = `${product.brand} ${product.name}`
 
   const statusTone =
-    product.status === 'Sprzedany'
+    product.status === 'Niedostępny'
       ? 'text-muted-foreground/70 line-through'
       : product.status === 'Zarezerwowany'
         ? 'text-muted-foreground'
@@ -121,7 +122,7 @@ export default async function ProductPage({ params }: PageProps) {
       priceCurrency: 'PLN',
       price: product.price ?? undefined,
       availability:
-        product.status === 'Sprzedany'
+        product.status === 'Niedostępny'
           ? 'https://schema.org/SoldOut'
           : product.status === 'Zarezerwowany'
             ? 'https://schema.org/PreOrder'
@@ -231,6 +232,14 @@ export default async function ProductPage({ params }: PageProps) {
                     <dd className="mt-1 font-serif text-lg text-foreground">{product.reference}</dd>
                   </div>
                 )}
+                {product.caseSize && (
+                  <div>
+                    <dt className="font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/70">
+                      Rozmiar
+                    </dt>
+                    <dd className="mt-1 font-serif text-lg text-foreground">{product.caseSize}</dd>
+                  </div>
+                )}
               </dl>
 
               {/* Price + CTA */}
@@ -242,7 +251,7 @@ export default async function ProductPage({ params }: PageProps) {
                 )}
                 <div className="mt-6 flex flex-col gap-3">
                   <Button asChild className="w-full" size="lg">
-                    <Link href={inquiryHref}>Zapytaj o dostępność</Link>
+                    <ContactLink source="product-detail" product={productLabel}>Zapytaj o dostępność</ContactLink>
                   </Button>
                   <a
                     href={`tel:${CONTACT_PHONE_RAW}`}
@@ -342,7 +351,7 @@ export default async function ProductPage({ params }: PageProps) {
           </Text>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button asChild>
-              <Link href={inquiryHref}>Umów konsultację</Link>
+              <ContactLink source="product-detail" product={productLabel}>Umów konsultację</ContactLink>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/butik">Odwiedź butik</Link>

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Phone } from 'lucide-react'
+import { ContactLink } from '@/components/contact-link'
 import { cn } from '@/lib/utils'
 import { Navigation } from './navigation'
 import { MobileMenu } from './mobile-menu'
@@ -56,8 +57,8 @@ export function Header() {
               <Phone className="h-3.5 w-3.5 text-accent-gold transition-colors duration-500 ease-in-out" />
               +48 604 50 1000
             </a>
-            <Link
-              href="/kontakt?source=nav-header"
+            <ContactLink
+              source="nav-header"
               className={cn(
                 "inline-block text-[10px] font-bold uppercase tracking-[0.3em] px-5 py-2.5 transition-all duration-500 ease-in-out",
                 !isSolid
@@ -66,7 +67,7 @@ export function Header() {
               )}
             >
               Umów konsultację
-            </Link>
+            </ContactLink>
           </div>
 
           {/* Mobile Menu Button — animowany hamburger→X */}
@@ -78,7 +79,9 @@ export function Header() {
               e.stopPropagation();
               setMobileMenuOpen((prev) => !prev);
             }}
-            aria-label="Otwórz menu"
+            aria-label={mobileMenuOpen ? 'Zamknij menu' : 'Otwórz menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             <span
               className={cn(

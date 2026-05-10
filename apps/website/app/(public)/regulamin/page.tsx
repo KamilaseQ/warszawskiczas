@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text } from '@/components/ui'
 
 export const metadata: Metadata = {
@@ -33,12 +34,12 @@ export default function RegulaminPage() {
         </div>
 
         <div className="mt-16 flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Link
-            href="/kontakt?source=regulamin"
+          <ContactLink
+            source="regulamin"
             className="inline-flex items-center justify-center bg-foreground px-8 py-3 font-serif text-xs uppercase tracking-[0.25em] text-background transition-colors hover:bg-accent-gold hover:text-foreground"
           >
             Skontaktuj się z nami
-          </Link>
+          </ContactLink>
           <Link
             href="/"
             className="inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-accent-gold transition-colors"
