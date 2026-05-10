@@ -6,8 +6,12 @@ import { FadeIn } from '@/components/ui/fade-in'
 import { Magnetic } from '@/components/ui'
 import { ChevronDown } from 'lucide-react'
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import { localeFromPathname, localizePath } from '@/lib/i18n'
 
 export function Hero() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
   const contentRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -47,6 +51,35 @@ export function Hero() {
       window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
     }
   }
+  const copy = {
+    pl: {
+      h1a: 'Luksusowe',
+      h1b: 'Zegarki',
+      lead: 'Wyselekcjonowana kolekcja dla wymagających kolekcjonerów',
+      consult: 'Umów prywatną konsultację',
+      discover: 'Odkryj kolekcję',
+      scroll: 'Przewiń',
+      scrollAria: 'Przewiń do kolekcji',
+    },
+    en: {
+      h1a: 'Luxury',
+      h1b: 'Watches',
+      lead: 'A curated collection for demanding collectors',
+      consult: 'Book a private consultation',
+      discover: 'Discover the collection',
+      scroll: 'Scroll',
+      scrollAria: 'Scroll to the collection',
+    },
+    ua: {
+      h1a: 'Люксові',
+      h1b: 'Годинники',
+      lead: 'Кураторська колекція для вимогливих колекціонерів',
+      consult: 'Записатися на приватну консультацію',
+      discover: 'Відкрити колекцію',
+      scroll: 'Прокрутити',
+      scrollAria: 'Прокрутити до колекції',
+    },
+  }[locale]
 
   return (
     <section className="relative flex min-h-[100vh] w-full flex-col items-center justify-center overflow-hidden bg-black">
@@ -110,14 +143,14 @@ export function Hero() {
         <FadeIn delay={0.1} direction="up">
           {/* 1.1 — powiększony H1 na desktopie, H1 jako element wizualny */}
           <h1 className="font-serif text-5xl font-medium tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[7.5rem] xl:text-[8.5rem] drop-shadow-xl text-balance leading-[0.95]">
-            Luksusowe<br />
-            <span className="italic font-normal">Zegarki</span>
+            {copy.h1a}<br />
+            <span className="italic font-normal">{copy.h1b}</span>
           </h1>
         </FadeIn>
 
         <FadeIn delay={0.2} direction="up" className="mt-8">
           <p className="max-w-xl font-sans text-xs md:text-sm font-extralight tracking-[0.22em] uppercase text-white/70 text-balance leading-loose drop-shadow-sm">
-            Wyselekcjonowana kolekcja dla wymagających kolekcjonerów
+            {copy.lead}
           </p>
         </FadeIn>
 
@@ -128,17 +161,17 @@ export function Hero() {
           {/* PRIMARY — Umów prywatną konsultację (magnetic hover) */}
           <Magnetic className="relative z-10" strength={10}>
             <ContactLink source="home-hero" prefetch className="btn-premium-white inline-block">
-              Umów prywatną konsultację
+              {copy.consult}
             </ContactLink>
           </Magnetic>
 
           {/* TERTIARY — tekst-link z strzałką: Odkryj kolekcję */}
           <Link
-            href="/produkty"
+            href={localizePath('/produkty', locale)}
             prefetch
             className="relative z-10 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.3em] text-white/70 transition-colors duration-300 hover:text-accent-gold group"
           >
-            Odkryj kolekcję
+            {copy.discover}
             <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
           </Link>
         </FadeIn>
@@ -149,10 +182,10 @@ export function Hero() {
         type="button"
         onClick={handleScrollDown}
         className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 cursor-pointer bg-transparent border-none p-0"
-        aria-label="Przewiń do kolekcji"
+        aria-label={copy.scrollAria}
       >
         <div className="scroll-indicator-group flex flex-col items-center gap-2">
-          <span className="scroll-indicator-label">Przewiń</span>
+          <span className="scroll-indicator-label">{copy.scroll}</span>
           <ChevronDown
             className="scroll-indicator-icon scroll-indicator-bounce h-4 w-4 transition-colors"
             style={{ color: 'rgba(245, 243, 239, 0.4)' }}

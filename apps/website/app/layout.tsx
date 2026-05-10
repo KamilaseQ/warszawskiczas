@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next'
+import { headers } from 'next/headers'
 import { Suspense } from 'react'
 import { Playfair_Display, Inter, Cormorant_Garamond } from 'next/font/google'
 import { SessionTracker } from '@/components/session-tracker'
+import { localeConfig, type Locale } from '@/lib/i18n'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -75,13 +77,17 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const requestHeaders = await headers()
+  const locale = (requestHeaders.get('x-wc-locale') ?? 'pl') as Locale
+  const htmlLang = localeConfig[locale]?.htmlLang ?? 'pl'
+
   return (
-    <html lang="pl" className={`${playfair.variable} ${inter.variable} ${cormorant.variable}`}>
+    <html lang={htmlLang} className={`${playfair.variable} ${inter.variable} ${cormorant.variable}`}>
       <body className="font-sans">
         <Suspense fallback={null}>
           <SessionTracker />

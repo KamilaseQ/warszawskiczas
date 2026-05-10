@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { ComponentProps, MouseEvent, ReactNode } from 'react'
+import { localeFromPathname, localizePath } from '@/lib/i18n'
 
 export const CONTACT_SOURCE_KEY = 'wc_contact_source'
 const STALE_AFTER_MS = 30 * 60 * 1000
@@ -20,6 +22,9 @@ interface ContactLinkProps extends Omit<ComponentProps<typeof Link>, 'href' | 'c
 }
 
 export function ContactLink({ source, product, children, onClick, ...rest }: ContactLinkProps) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     try {
       const payload: StoredSource = { source, ts: Date.now() }
@@ -32,7 +37,7 @@ export function ContactLink({ source, product, children, onClick, ...rest }: Con
   }
 
   return (
-    <Link href="/kontakt" onClick={handleClick} {...rest}>
+    <Link href={localizePath('/kontakt', locale)} onClick={handleClick} {...rest}>
       {children}
     </Link>
   )

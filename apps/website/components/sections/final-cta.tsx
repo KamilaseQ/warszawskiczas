@@ -1,9 +1,41 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { localeFromPathname, localizePath } from '@/lib/i18n'
 
 export function FinalCTA() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const copy = {
+    pl: {
+      eyebrow: 'Zacznij rozmowę',
+      h1: 'Szukasz czegoś',
+      accent: 'wyjątkowego?',
+      text: 'Skontaktuj się z nami lub odwiedź butik na Mokotowskiej 71. Każda wizyta to konsultacja z ekspertem — bez zobowiązań.',
+      visit: 'Umów wizytę w butiku',
+      collection: 'Zobacz kolekcję',
+    },
+    en: {
+      eyebrow: 'Start the conversation',
+      h1: 'Looking for something',
+      accent: 'exceptional?',
+      text: 'Contact us or visit the boutique at Mokotowska 71. Every visit is a consultation with an expert, with no obligation.',
+      visit: 'Book a boutique visit',
+      collection: 'View the collection',
+    },
+    ua: {
+      eyebrow: 'Почніть розмову',
+      h1: 'Шукаєте щось',
+      accent: 'особливе?',
+      text: 'Зв’яжіться з нами або відвідайте бутік на Mokotowska 71. Кожен візит — це консультація з експертом без зобов’язань.',
+      visit: 'Записатися до бутіка',
+      collection: 'Переглянути колекцію',
+    },
+  }[locale]
   return (
     // 8.3 Ciemne tło z białym tekstem i złotem
     <Section spacing="lg" className="relative overflow-hidden bg-[#0a0a0a] text-white">
@@ -23,18 +55,17 @@ export function FinalCTA() {
         <FadeIn direction="up">
           {/* 8.4 Subttelny element pilności — elegancki */}
           <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold mb-8">
-            VII &nbsp;——&nbsp; Zacznij rozmowę
+            VII &nbsp;——&nbsp; {copy.eyebrow}
           </p>
 
           {/* 8.1 Heading — większy */}
           <h2 className="font-serif text-4xl lg:text-5xl font-medium tracking-tight text-white text-balance">
-            Szukasz czegoś<br />
-            <span className="italic font-normal text-accent-gold">wyjątkowego?</span>
+            {copy.h1}<br />
+            <span className="italic font-normal text-accent-gold">{copy.accent}</span>
           </h2>
 
           <p className="mx-auto mt-8 max-w-xl text-base lg:text-lg leading-relaxed text-white/50">
-            Skontaktuj się z nami lub odwiedź butik na Mokotowskiej 71.
-            Każda wizyta to konsultacja z ekspertem — bez zobowiązań.
+            {copy.text}
           </p>
 
           {/* Subtelny separator */}
@@ -46,15 +77,15 @@ export function FinalCTA() {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             {/* PRIMARY */}
             <ContactLink source="final-cta" prefetch className="btn-premium-white">
-              Umów wizytę w butiku
+              {copy.visit}
             </ContactLink>
             {/* SECONDARY — tertiary style */}
             <Link
-              href="/produkty"
+              href={localizePath('/produkty', locale)}
               prefetch
               className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 hover:text-accent-gold transition-colors duration-300 group py-4"
             >
-              Zobacz kolekcję
+              {copy.collection}
               <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </Link>
           </div>

@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { localeFromPathname } from '@/lib/i18n'
 
 // Cel: gdy strona ładuje się błyskawicznie → cała animacja w ~1s.
 // Gdy strona ładuje się dłużej → wskazówka pełznie wolniej, ale ZAWSZE
@@ -11,6 +13,8 @@ const PESSIMISTIC_DURATION_MS = 5000 // wskazówka osiąga 92% w tym czasie jeś
 const HARD_TIMEOUT_MS = 8000 // bezwzględny fallback gdyby `load` nigdy nie poleciał
 
 export function LoadingScreen() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
   const [hidden, setHidden] = useState(false)
   const [fading, setFading] = useState(false)
   const [angle, setAngle] = useState(0)
@@ -230,7 +234,7 @@ export function LoadingScreen() {
           }}
         >
           <span className="font-sans text-[9px] font-bold uppercase tracking-[0.5em] text-white/40">
-            Ładowanie strony
+            {locale === 'pl' ? 'Ładowanie strony' : locale === 'en' ? 'Loading page' : 'Завантаження сторінки'}
           </span>
           <span className="font-serif text-base tracking-[0.35em] text-accent-gold/85 sm:text-lg">
             WARSZAWSKI CZAS

@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { ArrowRight, Check, MapPin, Phone, MessageCircle } from 'lucide-react'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button, FaqAccordion, type FaqItem } from '@/components/ui'
-import { CONTACT_PHONE, CONTACT_PHONE_RAW, WHATSAPP_NUMBER, ADDRESS, HOURS } from '@/lib/config'
+import { CONTACT_PHONE, CONTACT_PHONE_RAW, WHATSAPP_NUMBER, ADDRESS } from '@/lib/config'
+import { absoluteUrl, localizePath, type Locale, ui } from '@/lib/i18n'
 import { type Product, productUrlSlug } from '@/data/mock-products'
 
 export interface LandingStep {
@@ -22,6 +23,7 @@ export interface LandingBodyBlock {
 }
 
 export interface SeoLandingProps {
+  locale?: Locale
   eyebrow: string
   h1: string
   intro: string
@@ -53,10 +55,11 @@ export interface SeoLandingProps {
 }
 
 export function SeoLanding({
+  locale = 'pl',
   eyebrow,
   h1,
   intro,
-  primaryCtaLabel = 'Skontaktuj się',
+  primaryCtaLabel = ui[locale].contactUs,
   source,
   heroImage,
   body,
@@ -73,7 +76,8 @@ export function SeoLanding({
   closingText,
   relatedLinks,
 }: SeoLandingProps) {
-  const waMessage = encodeURIComponent(`Dzień dobry, piszę w sprawie: ${h1}.`)
+  const t = ui[locale]
+  const waMessage = encodeURIComponent(`${t.whatsappIntro}: ${h1}.`)
 
   return (
     <>
@@ -121,7 +125,7 @@ export function SeoLanding({
 
               <p className="mt-6 inline-flex items-center gap-2 font-sans text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5 text-accent-gold" />
-                {ADDRESS.street}, {ADDRESS.postal} {ADDRESS.city} · {HOURS.weekdays}
+                {ADDRESS.street}, {ADDRESS.postal} {ADDRESS.city} · {t.weekdays}
               </p>
             </div>
 
@@ -234,7 +238,7 @@ export function SeoLanding({
             <div className="mb-10 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-accent-gold">
-                  Wybrane egzemplarze
+                  {t.selectedPieces}
                 </p>
                 <Heading as="h2" size="md" className="mt-3">
                   {productPreview.heading}
@@ -247,10 +251,10 @@ export function SeoLanding({
               </div>
               {productPreview.href ? (
                 <Link
-                  href={productPreview.href}
+                  href={localizePath(productPreview.href, locale)}
                   className="inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground hover:text-accent-gold transition-colors"
                 >
-                  {productPreview.hrefLabel ?? 'Zobacz cały katalog'} <ArrowRight className="h-3 w-3" />
+                  {productPreview.hrefLabel ?? t.viewFullCatalog} <ArrowRight className="h-3 w-3" />
                 </Link>
               ) : null}
             </div>
@@ -262,7 +266,7 @@ export function SeoLanding({
                 return (
                   <Link
                     key={p.id}
-                    href={`/produkty/${slug}`}
+                    href={localizePath(`/produkty/${slug}`, locale)}
                     className="group block bg-background"
                   >
                     <div className="relative aspect-[4/5] overflow-hidden bg-muted">
@@ -324,7 +328,7 @@ export function SeoLanding({
         <Section variant="muted" spacing="lg">
           <Container size="narrow">
             <Heading as="h2" size="md" className="text-center">
-              Najczęstsze pytania
+              {t.faqHeading}
             </Heading>
             <div className="mt-12">
               <FaqAccordion items={faq} />
@@ -361,7 +365,7 @@ export function SeoLanding({
               {relatedLinks.map((l, i) => (
                 <Link
                   key={i}
-                  href={l.href}
+                  href={localizePath(l.href, locale)}
                   className="inline-flex items-center gap-1 font-sans text-[11px] uppercase tracking-[0.25em] text-muted-foreground hover:text-accent-gold transition-colors"
                 >
                   {l.label} <ArrowRight className="h-3 w-3" />
@@ -387,13 +391,15 @@ export function faqJsonLd(items: FaqItem[]) {
   }
 }
 
-export function landingBreadcrumbJsonLd(slug: string, name: string) {
+export function landingBreadcrumbJsonLd(slug: string, name: string, locale: Locale = 'pl') {
+  const homeName = locale === 'en' ? 'Home' : locale === 'ua' ? 'Головна' : 'Strona główna'
+  const path = slug.startsWith('/') ? slug : `/${slug}`
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Strona główna', item: 'https://warszawskiczas.pl' },
-      { '@type': 'ListItem', position: 2, name, item: `https://warszawskiczas.pl/${slug}` },
+      { '@type': 'ListItem', position: 1, name: homeName, item: absoluteUrl('/', locale) },
+      { '@type': 'ListItem', position: 2, name, item: absoluteUrl(path, locale) },
     ],
   }
 }
@@ -430,7 +436,8 @@ export function serviceJsonLd(opts: {
   }
 }
 
-export function itemListJsonLd(opts: { name: string; url: string; products: Product[] }) {
+export function itemListJsonLd(opts: { name: string; url: string; products: Product[]; locale?: Locale }) {
+  const locale = opts.locale ?? 'pl'
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -442,7 +449,7 @@ export function itemListJsonLd(opts: { name: string; url: string; products: Prod
       itemListElement: opts.products.slice(0, 30).map((p, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `https://warszawskiczas.pl/produkty/${productUrlSlug(p)}`,
+        url: absoluteUrl(`/produkty/${productUrlSlug(p)}`, locale),
         name: `${p.brand} ${p.name}`,
       })),
     },

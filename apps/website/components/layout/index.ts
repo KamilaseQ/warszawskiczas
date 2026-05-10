@@ -1,6 +1,7 @@
 export { Header } from './header'
 export { Navigation } from './navigation'
 export { MobileMenu } from './mobile-menu'
+export { LanguageSwitcher } from './language-switcher'
 export { Footer } from './footer'
 export { ScrollProgress } from './scroll-progress'
 export { LoadingScreen } from './loading-screen'

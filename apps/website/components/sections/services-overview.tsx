@@ -1,7 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import { Wrench, ArrowDownToLine, Repeat, ArrowUpRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { localeFromPathname, localizePath } from '@/lib/i18n'
 
 const services = [
   {
@@ -37,6 +41,66 @@ const services = [
 ]
 
 export function ServicesOverview() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const localized = locale === 'pl' ? services : [
+    {
+      num: '01',
+      eyebrow: locale === 'en' ? 'Watchmaking atelier' : 'Годинникове ательє',
+      duration: locale === 'en' ? 'Individual' : 'Індивідуально',
+      icon: Wrench,
+      title: locale === 'en' ? 'Repair and service' : 'Ремонт і сервіс',
+      description: locale === 'en' ? 'Professional watch service, diagnostics, regulation and restoration for mechanical watches from premium brands.' : 'Професійний сервіс, діагностика, регулювання та реставрація механічних годинників преміальних брендів.',
+      href: '/uslugi/naprawa-i-serwis',
+    },
+    {
+      num: '02',
+      eyebrow: locale === 'en' ? 'Valuation and transaction' : 'Оцінка та угода',
+      duration: locale === 'en' ? 'Fast and discreet' : 'Швидко і дискретно',
+      icon: ArrowDownToLine,
+      title: locale === 'en' ? 'Watch buying' : 'Викуп годинників',
+      description: locale === 'en' ? 'Fair valuation and immediate payment for premium watches, including modern and vintage references.' : 'Справедлива оцінка та негайна оплата за преміальні годинники, включно з сучасними й вінтажними референсами.',
+      href: '/uslugi/skup',
+    },
+    {
+      num: '03',
+      eyebrow: locale === 'en' ? 'Discreet sale' : 'Дискретний продаж',
+      duration: locale === 'en' ? 'Individual' : 'Індивідуально',
+      icon: Repeat,
+      title: locale === 'en' ? 'Consignment' : 'Комісія',
+      description: locale === 'en' ? 'Boutique consignment reaches the right collectors and helps achieve a stronger retail price.' : 'Комісійний продаж у бутіку допомагає дістатися до правильних колекціонерів і отримати сильнішу роздрібну ціну.',
+      href: '/uslugi/komis',
+    },
+  ]
+  const copy = {
+    pl: {
+      eyebrow: 'Usługi atelier',
+      headingA: 'Ekspercka obsługa',
+      headingB: 'na każdym etapie.',
+      intro: 'Od pierwszej weryfikacji do późniejszego serwisu — wszystkie etapy życia zegarka pod jednym dachem warszawskiego butiku.',
+      learn: 'Dowiedz się więcej',
+      scope: 'Zakres usługi',
+      outro: 'Mokotowska 71 · Atelier zegarmistrzowski od 2019',
+    },
+    en: {
+      eyebrow: 'Atelier services',
+      headingA: 'Expert support',
+      headingB: 'at every stage.',
+      intro: 'From first verification to later service, every stage of a watch’s life is handled under one Warsaw boutique roof.',
+      learn: 'Learn more',
+      scope: 'Service scope',
+      outro: 'Mokotowska 71 · Watchmaking atelier since 2019',
+    },
+    ua: {
+      eyebrow: 'Послуги ательє',
+      headingA: 'Експертний супровід',
+      headingB: 'на кожному етапі.',
+      intro: 'Від першої перевірки до подальшого сервісу — усі етапи життя годинника під одним дахом варшавського бутіка.',
+      learn: 'Дізнатися більше',
+      scope: 'Обсяг послуги',
+      outro: 'Mokotowska 71 · Годинникове ательє з 2019',
+    },
+  }[locale]
   return (
     <Section spacing="xl" className="relative overflow-hidden">
       {/* Subtle warmth from the right */}
@@ -61,18 +125,17 @@ export function ServicesOverview() {
               <div className="flex items-center gap-4">
                 <div className="h-px w-12 bg-accent-gold/60" />
                 <p className="font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold">
-                  V &nbsp;——&nbsp; Usługi atelier
+                  V &nbsp;——&nbsp; {copy.eyebrow}
                 </p>
               </div>
               <h2 className="mt-8 font-serif text-4xl font-medium tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem] text-balance leading-[1.05]">
-                Ekspercka obsługa<br />
-                <span className="italic font-normal">na każdym etapie.</span>
+                {copy.headingA}<br />
+                <span className="italic font-normal">{copy.headingB}</span>
               </h2>
             </div>
             <div className="lg:col-span-5 lg:pb-3">
               <p className="max-w-md text-base leading-relaxed text-muted-foreground text-pretty">
-                Od pierwszej weryfikacji do późniejszego serwisu — wszystkie etapy życia
-                zegarka pod jednym dachem warszawskiego butiku.
+                {copy.intro}
               </p>
             </div>
           </div>
@@ -86,12 +149,12 @@ export function ServicesOverview() {
             className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent-gold/40 to-transparent"
           />
 
-          {services.map((service, index) => {
+          {localized.map((service, index) => {
             const Icon = service.icon
             return (
               <FadeIn key={service.num} delay={index * 0.08}>
                 <Link
-                  href={service.href}
+                  href={localizePath(service.href, locale)}
                   className="group relative block border-b border-accent-gold/15"
                 >
                   {/* Hover wash — slides in from left */}
@@ -136,7 +199,7 @@ export function ServicesOverview() {
                           <span className="text-accent-gold/80">·</span>&nbsp;{service.duration}
                         </span>
                         <span className="inline-flex items-center gap-1.5 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold">
-                          Dowiedz się więcej
+                          {copy.learn}
                           <ArrowUpRight className="h-3 w-3" />
                         </span>
                       </div>
@@ -146,7 +209,7 @@ export function ServicesOverview() {
                     <div className="relative z-10 hidden flex-col items-end gap-5 self-center lg:flex">
                       <div className="text-right">
                         <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-foreground/45">
-                          Zakres usługi
+                          {copy.scope}
                         </p>
                         <p className="mt-2 font-serif italic text-base text-foreground/80">
                           {service.duration}
@@ -166,7 +229,7 @@ export function ServicesOverview() {
         {/* Outro */}
         <FadeIn delay={0.3}>
           <p className="mt-16 text-center font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/45">
-            Mokotowska 71 &nbsp;·&nbsp; Atelier zegarmistrzowski od 2019
+            {copy.outro}
           </p>
         </FadeIn>
       </Container>

@@ -2,14 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Phone, MapPin, X } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { MapPin, Phone, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ContactLink } from '@/components/contact-link'
+import { ADDRESS, CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
+import { canonicalPath, localeFromPathname, localizePath, ui } from '@/lib/i18n'
+import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { CONTACT_PHONE, CONTACT_PHONE_RAW, ADDRESS } from '@/lib/config'
-import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
+import { LanguageSwitcher } from './language-switcher'
 
 interface NavEntry {
   href: string
@@ -17,16 +19,19 @@ interface NavEntry {
   contactSource?: string
 }
 
-const primaryNav: NavEntry[] = [
-  { href: '/', label: 'Strona główna' },
-  { href: '/produkty', label: 'Produkty' },
-  { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
-  { href: '/uslugi/naprawa-i-serwis', label: 'Naprawa i serwis' },
-  { href: '/uslugi/skup', label: 'Skup zegarków' },
-  { href: '/uslugi/komis', label: 'Komis' },
-  { href: '/butik', label: 'Butik' },
-  { href: '/kontakt', label: 'Kontakt', contactSource: 'nav-mobile' },
-]
+function getPrimaryNav(locale: ReturnType<typeof localeFromPathname>): NavEntry[] {
+  const t = ui[locale]
+  return [
+    { href: '/', label: t.home },
+    { href: '/produkty', label: t.products },
+    { href: '/kolekcja-na-zapytanie', label: t.hiddenCollection },
+    { href: '/uslugi/naprawa-i-serwis', label: t.repair },
+    { href: '/uslugi/skup', label: t.buyingWatches },
+    { href: '/uslugi/komis', label: t.consignment },
+    { href: '/butik', label: t.boutique },
+    { href: '/kontakt', label: t.contact, contactSource: 'nav-mobile' },
+  ]
+}
 
 interface MobileMenuProps {
   open: boolean
@@ -35,13 +40,16 @@ interface MobileMenuProps {
 
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const cleanPath = canonicalPath(pathname ?? '/', locale)
+  const t = ui[locale]
+  const primaryNav = getPrimaryNav(locale)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Close on route change
   useEffect(() => {
     onClose()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +70,6 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
           className="fixed inset-0 z-[200] flex flex-col bg-[#0a0a0a] text-white lg:hidden"
         >
-          {/* Grain texture */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 opacity-[0.08]"
@@ -72,28 +79,30 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             }}
           />
 
-          {/* Top bar — logo + close */}
           <div className="relative flex h-20 flex-shrink-0 items-center justify-between border-b border-white/10 px-6">
             <Link
-              href="/"
+              href={localizePath('/', locale)}
               onClick={onClose}
               className="font-serif text-xl font-medium tracking-wide text-white"
             >
               Warszawski Czas
             </Link>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Zamknij menu"
-              className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/80 transition-colors hover:border-accent-gold hover:text-accent-gold"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher isTransparent onChange={onClose} />
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={t.closeMenu}
+                className="inline-flex h-10 w-10 items-center justify-center border border-white/20 text-white/80 transition-colors hover:border-accent-gold hover:text-accent-gold"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           <nav className="relative flex-1 overflow-y-auto px-8 py-10">
             <p className="font-sans text-[10px] font-bold uppercase tracking-[0.45em] text-accent-gold">
-              Menu
+              {t.menu}
             </p>
 
             <motion.ul
@@ -106,24 +115,22 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               className="mt-8 space-y-1"
             >
               {primaryNav.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = cleanPath === item.href
                 const linkClass = cn(
                   'group flex items-baseline justify-between border-b border-white/10 py-4 transition-colors duration-300',
-                  isActive ? 'text-accent-gold' : 'text-white hover:text-accent-gold'
+                  isActive ? 'text-accent-gold' : 'text-white hover:text-accent-gold',
                 )
                 const inner = (
                   <>
-                    <span className="font-serif text-3xl font-normal sm:text-4xl">
-                      {item.label}
-                    </span>
+                    <span className="font-serif text-3xl font-normal sm:text-4xl">{item.label}</span>
                     <span
                       aria-hidden
                       className={cn(
                         'translate-x-0 font-sans text-[10px] uppercase tracking-[0.3em] transition-all duration-300 group-hover:translate-x-1',
-                        isActive ? 'text-accent-gold' : 'text-white/30 group-hover:text-accent-gold'
+                        isActive ? 'text-accent-gold' : 'text-white/30 group-hover:text-accent-gold',
                       )}
                     >
-                      →
+                      -&gt;
                     </span>
                   </>
                 )
@@ -140,7 +147,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                         {inner}
                       </ContactLink>
                     ) : (
-                      <Link href={item.href} onClick={onClose} className={linkClass}>
+                      <Link href={localizePath(item.href, locale)} onClick={onClose} className={linkClass}>
                         {inner}
                       </Link>
                     )}
@@ -149,7 +156,6 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               })}
             </motion.ul>
 
-            {/* CTA */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -161,12 +167,11 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                 onClick={onClose}
                 className="block w-full bg-accent-gold py-4 text-center font-serif text-xs uppercase tracking-[0.3em] text-[#0a0a0a] transition-colors hover:bg-white"
               >
-                Umów konsultację
+                {t.consult}
               </ContactLink>
             </motion.div>
           </nav>
 
-          {/* Footer w menu — telefon i adres */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

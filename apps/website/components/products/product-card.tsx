@@ -2,9 +2,11 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ImagePlaceholder } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { localeFromPathname, localizePath, ui } from '@/lib/i18n'
 import { productUrlSlug, type Product } from '@/data/mock-products'
 
 function CardImage({ product }: { product: Product }) {
@@ -46,15 +48,18 @@ const aspectMap = {
 }
 
 export function ProductCard({ product, className, aspect = 'portrait', layout = 'default' }: ProductCardProps) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const t = ui[locale]
   const reducedMotion = useReducedMotion()
   const formattedPrice = product.price
-    ? new Intl.NumberFormat('pl-PL', {
+    ? new Intl.NumberFormat(locale === 'ua' ? 'uk-UA' : locale === 'en' ? 'en-US' : 'pl-PL', {
       style: 'currency',
       currency: 'PLN',
       minimumFractionDigits: 0,
     }).format(product.price)
     : product.priceOnRequest
-      ? 'Cena na zapytanie'
+      ? t.priceOnRequest
       : null
 
   const statusColor =
@@ -63,12 +68,20 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
       : product.status === 'Zarezerwowany'
         ? 'text-muted-foreground/80'
         : 'text-accent-gold'
+  const statusLabel =
+    product.status === 'Niedostępny'
+      ? t.unavailable
+      : product.status === 'Zarezerwowany'
+        ? t.reserved
+        : product.status === 'Dostępny'
+          ? t.available
+          : product.status
 
   // Feature layout: szeroka karta z obrazem po lewej, treścią po prawej.
   if (layout === 'feature') {
     return (
       <Link
-        href={`/produkty/${productUrlSlug(product)}`}
+        href={localizePath(`/produkty/${productUrlSlug(product)}`, locale)}
         prefetch={false}
         className={cn('group relative grid grid-cols-5 gap-4 sm:gap-6', className)}
       >
@@ -87,7 +100,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
               variant="light"
             />
           )}
-          <Badges product={product} statusColor={statusColor} />
+          <Badges product={product} statusColor={statusColor} statusLabel={statusLabel} labels={{ new: t.new, onRequest: t.onRequest }} />
           <div className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-accent-gold/40" />
         </div>
 
@@ -114,7 +127,8 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
             {formattedPrice}
           </span>
           <span className="mt-2 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold sm:text-[10px]">
-            Zobacz <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            {locale === 'pl' ? 'Zobacz' : locale === 'en' ? 'View' : 'Переглянути'}{' '}
+            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </div>
       </Link>
@@ -123,7 +137,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
 
   return (
     <Link
-      href={`/produkty/${productUrlSlug(product)}`}
+      href={localizePath(`/produkty/${productUrlSlug(product)}`, locale)}
       prefetch={false}
       className={cn(
         'group relative block transition-transform duration-500 ease-out will-change-transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
@@ -143,7 +157,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
           <CardImage product={product} />
         </motion.div>
 
-        <Badges product={product} statusColor={statusColor} />
+        <Badges product={product} statusColor={statusColor} statusLabel={statusLabel} labels={{ new: t.new, onRequest: t.onRequest }} />
 
         {/* Akcent w prawym dolnym narożniku — kreślony złotem na hover */}
         <span
@@ -214,7 +228,7 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
             {formattedPrice}
           </span>
           <span className="hidden items-center gap-1 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold sm:inline-flex">
-            Zobacz
+            {locale === 'pl' ? 'Zobacz' : locale === 'en' ? 'View' : 'Переглянути'}
             <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
           </span>
         </div>
@@ -223,7 +237,17 @@ export function ProductCard({ product, className, aspect = 'portrait', layout = 
   )
 }
 
-function Badges({ product, statusColor }: { product: Product; statusColor: string }) {
+function Badges({
+  product,
+  statusColor,
+  statusLabel,
+  labels,
+}: {
+  product: Product
+  statusColor: string
+  statusLabel?: string
+  labels: { new: string; onRequest: string }
+}) {
   return (
     <>
       {product.status && (
@@ -234,7 +258,7 @@ function Badges({ product, statusColor }: { product: Product; statusColor: strin
               statusColor
             )}
           >
-            {product.status}
+            {statusLabel ?? product.status}
           </span>
         </div>
       )}
@@ -242,12 +266,12 @@ function Badges({ product, statusColor }: { product: Product; statusColor: strin
         <div className="absolute left-0 top-0 flex flex-col gap-0">
           {product.isNew && (
             <span className="bg-accent-gold px-2 py-1 font-sans text-[8px] font-bold uppercase tracking-[0.3em] text-[#0a0a0a] sm:px-3 sm:py-1.5 sm:text-[9px]">
-              Nowość
+              {labels.new}
             </span>
           )}
           {product.isExclusive && (
             <span className="bg-[#0a0a0a] px-2 py-1 font-sans text-[8px] font-bold uppercase tracking-[0.3em] text-accent-gold sm:px-3 sm:py-1.5 sm:text-[9px]">
-              Na zapytanie
+              {labels.onRequest}
             </span>
           )}
         </div>

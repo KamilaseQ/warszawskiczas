@@ -3,12 +3,48 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { Lock } from 'lucide-react'
 import { Container, Section, ImagePlaceholder, KenBurns, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { localeFromPathname, localizePath } from '@/lib/i18n'
 
 export function HiddenCollectionTeaser() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
   const featureRef = useRef<HTMLDivElement>(null)
+  const copy = {
+    pl: {
+      eyebrow: 'Kolekcja prywatna — dostęp na zaproszenie',
+      h1a: 'Kolekcja,',
+      h1b: 'której nie znajdziesz',
+      h1c: 'w katalogu',
+      text: 'Zegarki z prywatnych kolekcji — wyjątkowe egzemplarze, które udostępniamy po krótkim, indywidualnym kontakcie z naszym specjalistą.',
+      cta: 'Wejdź do kolekcji prywatnej',
+      label: 'Kolekcja Prywatna',
+      caption: 'Zegarki z prywatnych kolekcji, wyjątkowe dzieła sztuki.',
+    },
+    en: {
+      eyebrow: 'Private collection — access by invitation',
+      h1a: 'A collection',
+      h1b: 'you will not find',
+      h1c: 'in the catalogue',
+      text: 'Watches from private collections — exceptional pieces presented after a short, individual conversation with our specialist.',
+      cta: 'Enter the private collection',
+      label: 'Private Collection',
+      caption: 'Watches from private collections, exceptional mechanical objects.',
+    },
+    ua: {
+      eyebrow: 'Приватна колекція — доступ за запрошенням',
+      h1a: 'Колекція,',
+      h1b: 'якої ви не знайдете',
+      h1c: 'у каталозі',
+      text: 'Годинники з приватних колекцій — виняткові екземпляри, які ми показуємо після короткої індивідуальної розмови зі спеціалістом.',
+      cta: 'Увійти до приватної колекції',
+      label: 'Приватна колекція',
+      caption: 'Годинники з приватних колекцій, виняткові механічні об’єкти.',
+    },
+  }[locale]
 
   return (
     <Section spacing="lg" className="relative overflow-hidden bg-[#0b1410] text-white">
@@ -31,28 +67,26 @@ export function HiddenCollectionTeaser() {
             <ScrollDrift targetRef={featureRef} start={-140} end={130} className="lg:-mt-10">
               <p className="mb-6 flex items-center gap-3 text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
                 <Lock className="h-3 w-3" />
-                Kolekcja prywatna — dostęp na zaproszenie
+                {copy.eyebrow}
               </p>
 
               <h2 className="font-serif text-4xl font-medium tracking-tight text-white text-balance sm:text-5xl lg:text-[3.5rem] leading-[1.05]">
-                Kolekcja,<br />
-                <span className="italic font-normal">której nie znajdziesz</span>
-                <br /> w katalogu
+                {copy.h1a}<br />
+                <span className="italic font-normal">{copy.h1b}</span>
+                <br /> {copy.h1c}
               </h2>
 
               <p className="mt-8 max-w-md text-base leading-relaxed text-white/60 text-pretty">
-                Zegarki z prywatnych kolekcji — wyjątkowe egzemplarze, które
-                udostępniamy po krótkim, indywidualnym kontakcie z naszym
-                specjalistą.
+                {copy.text}
               </p>
 
               <Link
-                href="/kolekcja-na-zapytanie"
+                href={localizePath('/kolekcja-na-zapytanie', locale)}
                 prefetch
                 className="mt-10 inline-block btn-sharp"
                 style={{ backgroundColor: 'hsl(42 50% 45%)', color: '#0a0a0a' }}
               >
-                Wejdź do kolekcji prywatnej
+                {copy.cta}
               </Link>
             </ScrollDrift>
           </FadeIn>
@@ -97,7 +131,7 @@ export function HiddenCollectionTeaser() {
                   <div className="absolute left-6 top-6 flex items-center gap-2.5">
                     <Lock className="h-3 w-3 text-accent-gold" />
                     <span className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-accent-gold/85">
-                      Kolekcja Prywatna
+                      {copy.label}
                     </span>
                   </div>
 
@@ -111,7 +145,7 @@ export function HiddenCollectionTeaser() {
               <div className="mt-6 flex items-center gap-3">
                 <div className="h-px w-8 bg-accent-gold/60" />
                 <span className="font-serif italic text-sm text-white/55">
-                  Zegarki z prywatnych kolekcji, wyjątkowe dzieła sztuki.
+                  {copy.caption}
                 </span>
               </div>
             </div>

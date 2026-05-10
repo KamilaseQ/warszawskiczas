@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { ProductCard } from './product-card'
 import { cn } from '@/lib/utils'
 import { useBodyScrollLock } from '@/lib/use-body-scroll-lock'
 import type { Product } from '@/data/mock-products'
+import { localeFromPathname, ui } from '@/lib/i18n'
 
 interface ProductCatalogProps {
   products: Product[]
@@ -37,6 +39,9 @@ const featuredBrandRank = (brand: string) => {
 }
 
 export function ProductCatalog({ products }: ProductCatalogProps) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const t = ui[locale]
   const reducedMotion = useReducedMotion()
   const [category, setCategory] = useState<'zegarki' | 'bizuteria'>('zegarki')
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
@@ -46,6 +51,19 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
   const [priceMax, setPriceMax] = useState<number>(PRICE_MAX)
   const [onlyOnRequest, setOnlyOnRequest] = useState<boolean>(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const categoryLabels: Record<string, string> = { zegarki: t.products, bizuteria: t.jewelry }
+  const statusLabels: Record<string, string> = {
+    Wszystkie: t.all,
+    Dostępny: t.available,
+    Zarezerwowany: t.reserved,
+    Niedostępny: t.unavailable,
+  }
+  const sortLabels: Record<string, string> = {
+    featured: t.featured,
+    'price-asc': t.priceAsc,
+    'price-desc': t.priceDesc,
+    'brand-asc': t.brandAsc,
+  }
 
   // Marki z aktualnych danych — skaluje się automatycznie wraz z rozbudową katalogu
   const brandsForCategory = useMemo(() => {
@@ -120,7 +138,11 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
   }
 
   const fmt = (v: number) =>
-    new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', minimumFractionDigits: 0 }).format(v)
+    new Intl.NumberFormat(locale === 'ua' ? 'uk-UA' : locale === 'en' ? 'en-US' : 'pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
+      minimumFractionDigits: 0,
+    }).format(v)
 
   useBodyScrollLock(drawerOpen)
 
@@ -154,7 +176,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                   isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                {c.label}
+                {categoryLabels[c.value]}
                 <span
                   className={cn(
                     'absolute -bottom-px left-0 right-0 h-px transition-all duration-500',
@@ -171,13 +193,13 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            aria-label="Otwórz filtry"
+            aria-label={t.filters}
             aria-expanded={drawerOpen}
             aria-controls="catalog-filters"
             className="group inline-flex items-center gap-2 border border-foreground/15 bg-transparent px-3 py-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors duration-300 hover:border-accent-gold hover:text-accent-gold sm:px-4"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
-            <span>Filtry</span>
+            <span>{t.filters}</span>
             {activeFilterCount > 0 && (
               <span className="ml-1 inline-flex h-4 min-w-4 items-center justify-center bg-accent-gold px-1 font-sans text-[9px] font-bold tracking-normal text-[#0a0a0a]">
                 {activeFilterCount}
@@ -189,12 +211,12 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              aria-label="Sortuj"
+              aria-label={t.sort}
               className="appearance-none border border-foreground/15 bg-transparent py-2 pl-3 pr-8 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors duration-300 hover:border-accent-gold focus:outline-none focus:ring-0 sm:pl-4 sm:pr-9"
             >
               {SORTS.map((s) => (
                 <option key={s.value} value={s.value} className="bg-background">
-                  {s.label}
+                  {sortLabels[s.value]}
                 </option>
               ))}
             </select>
@@ -215,13 +237,13 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
           >
             <div className="mb-6 flex flex-wrap items-center gap-2">
               <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-muted-foreground/70">
-                Aktywne:
+                {t.active}
               </span>
               {selectedBrands.map((b) => (
                 <FilterChip key={b} label={b} onClear={() => toggleBrand(b)} />
               ))}
               {status !== 'Wszystkie' && (
-                <FilterChip label={status} onClear={() => setStatus('Wszystkie')} />
+                <FilterChip label={statusLabels[status] ?? status} onClear={() => setStatus('Wszystkie')} />
               )}
               {(priceMin !== PRICE_MIN || priceMax !== PRICE_MAX) && (
                 <FilterChip
@@ -233,14 +255,14 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                 />
               )}
               {onlyOnRequest && (
-                <FilterChip label="Cena na zapytanie" onClear={() => setOnlyOnRequest(false)} />
+                <FilterChip label={t.priceOnRequest} onClear={() => setOnlyOnRequest(false)} />
               )}
               <button
                 type="button"
                 onClick={clearFilters}
                 className="ml-1 font-sans text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-accent-gold"
               >
-                Wyczyść wszystkie
+                {t.clearAll}
               </button>
             </div>
           </motion.div>
@@ -248,7 +270,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
       </AnimatePresence>
 
       <p className="mb-6 font-sans text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-        {filtered.length} {filtered.length === 1 ? 'pozycja' : filtered.length < 5 ? 'pozycje' : 'pozycji'}
+        {filtered.length} {filtered.length === 1 ? t.itemSingular : filtered.length < 5 ? t.itemFew : t.itemMany}
       </p>
 
       {filtered.length > 0 ? (
@@ -282,8 +304,12 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
         <div className="border border-dashed border-border py-24 text-center">
           <p className="font-serif italic text-lg text-muted-foreground">
             {category === 'bizuteria'
-              ? 'Kolekcja biżuterii pojawi się wkrótce.'
-              : 'Brak pozycji spełniających wybrane filtry.'}
+              ? locale === 'pl'
+                ? 'Kolekcja biżuterii pojawi się wkrótce.'
+                : locale === 'en'
+                  ? 'The jewellery collection will appear soon.'
+                  : 'Колекція ювелірних виробів з’явиться незабаром.'
+              : t.noMatchingItems}
           </p>
           {activeFilterCount > 0 && (
             <button
@@ -291,7 +317,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               onClick={clearFilters}
               className="mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-accent-gold"
             >
-              Wyczyść filtry
+              {t.clearFilters}
             </button>
           )}
         </div>
@@ -314,7 +340,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               id="catalog-filters"
               role="dialog"
               aria-modal="true"
-              aria-label="Filtry"
+              aria-label={t.filters}
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -324,16 +350,16 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               <header className="flex items-center justify-between border-b border-border px-6 py-5 lg:px-8">
                 <div>
                   <p className="font-sans text-[9px] font-bold uppercase tracking-[0.4em] text-accent-gold">
-                    Selekcja
+                    {locale === 'pl' ? 'Selekcja' : locale === 'en' ? 'Selection' : 'Добірка'}
                   </p>
                   <h3 className="mt-1 font-serif text-2xl font-medium tracking-tight text-foreground">
-                    Filtry
+                    {t.filters}
                   </h3>
                 </div>
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(false)}
-                  aria-label="Zamknij filtry"
+                  aria-label={t.closeFilters}
                   className="flex h-9 w-9 items-center justify-center text-foreground transition-colors hover:text-accent-gold"
                 >
                   <X className="h-5 w-5" />
@@ -343,7 +369,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               <div className="flex-1 overflow-y-auto px-6 py-6 lg:px-8">
                 <div className="space-y-8">
                   {/* Marka — checkboxy, multi-select */}
-                  <FilterSection label={`Marka · ${brandsForCategory.length}`}>
+                  <FilterSection label={`${t.brand} · ${brandsForCategory.length}`}>
                     <ul className="space-y-1.5">
                       {brandsForCategory.map((b) => {
                         const isActive = selectedBrands.includes(b)
@@ -384,7 +410,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                   </FilterSection>
 
                   {/* Status / dostępność */}
-                  <FilterSection label="Dostępność">
+                  <FilterSection label={t.availability}>
                     <div className="flex flex-wrap gap-2">
                       {STATUSES.map((s) => {
                         const isActive = s === status
@@ -400,7 +426,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                                 : 'border-foreground/15 text-foreground hover:border-accent-gold hover:text-accent-gold'
                             )}
                           >
-                            {s}
+                            {statusLabels[s] ?? s}
                           </button>
                         )
                       })}
@@ -408,7 +434,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                   </FilterSection>
 
                   {/* Cena — widełki min/max */}
-                  <FilterSection label={`Cena · ${fmt(priceMin)} – ${fmt(priceMax)}`}>
+                  <FilterSection label={`${t.price} · ${fmt(priceMin)} – ${fmt(priceMax)}`}>
                     <div className="dual-range relative h-6">
                       <span aria-hidden className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-foreground/20" />
                       <span
@@ -429,7 +455,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                           const v = Math.min(Number(e.target.value), priceMax - 1000)
                           setPriceMin(Math.max(PRICE_MIN, v))
                         }}
-                        aria-label="Cena minimalna"
+                        aria-label={t.priceMin}
                         className="dual-range-input"
                       />
                       <input
@@ -442,7 +468,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                           const v = Math.max(Number(e.target.value), priceMin + 1000)
                           setPriceMax(Math.min(PRICE_MAX, v))
                         }}
-                        aria-label="Cena maksymalna"
+                        aria-label={t.priceMax}
                         className="dual-range-input"
                       />
                     </div>
@@ -451,12 +477,12 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                       <span>do&nbsp;<strong className="font-bold text-foreground">{fmt(priceMax)}{priceMax === PRICE_MAX ? '+' : ''}</strong></span>
                     </div>
                     <p className="mt-3 font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
-                      Pozycje &ldquo;Cena na zapytanie&rdquo; nie są filtrowane wg ceny.
+                      {t.onRequestNotFiltered}
                     </p>
                   </FilterSection>
 
                   {/* Toggle: tylko cena na zapytanie */}
-                  <FilterSection label="Wyróżnienia">
+                  <FilterSection label={t.featuredFilter}>
                     <label className="flex cursor-pointer items-center gap-3 select-none">
                       <input
                         type="checkbox"
@@ -482,7 +508,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                         />
                       </span>
                       <span className="font-sans text-[11px] uppercase tracking-[0.2em] text-foreground">
-                        Tylko cena na zapytanie
+                        {locale === 'pl' ? 'Tylko cena na zapytanie' : locale === 'en' ? 'Only price on request' : 'Тільки ціна за запитом'}
                       </span>
                     </label>
                   </FilterSection>
@@ -496,14 +522,14 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                   disabled={activeFilterCount === 0}
                   className="flex-1 border border-foreground/15 px-4 py-3 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground transition-colors hover:border-accent-gold hover:text-accent-gold disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-foreground/15 disabled:hover:text-foreground"
                 >
-                  Wyczyść
+                  {t.clear}
                 </button>
                 <button
                   type="button"
                   onClick={() => setDrawerOpen(false)}
                   className="btn-sharp flex-[2] text-center"
                 >
-                  Pokaż {filtered.length}
+                  {locale === 'pl' ? 'Pokaż' : locale === 'en' ? 'Show' : 'Показати'} {filtered.length}
                 </button>
               </footer>
             </motion.aside>

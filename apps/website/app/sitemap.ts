@@ -1,71 +1,62 @@
 import { MetadataRoute } from 'next'
 import { mockProducts, productUrlSlug } from '@/data/mock-products'
+import { absoluteUrl, locales, publicRoutePaths, type Locale } from '@/lib/i18n'
 
-// Statyczna data ostatniej znaczącej aktualizacji treści — nie używamy `new Date()`,
-// żeby Google nie traktował każdego buildu jako zmiany treści.
 const LAST_CONTENT_UPDATE = '2026-05-10'
 
-const baseUrl = 'https://warszawskiczas.pl'
+const priorityForPath = (path: string) => {
+  if (path === '/') return 1
+  if (path === '/produkty') return 0.9
+  if (path.includes('skup') || path.includes('zegarki-')) return 0.85
+  if (path === '/butik') return 0.8
+  if (path.startsWith('/uslugi')) return 0.75
+  if (path === '/kontakt') return 0.6
+  return 0.55
+}
 
-const seoLandingSlugs = [
-  // Poziom 1 — szybki obrót zegarkami w Warszawie
-  'skup-zegarkow-warszawa',
-  'skup-rolex-warszawa',
-  'wycena-zegarka-warszawa',
-  'komis-zegarkow-warszawa',
-  'skup-zegarkow-centrum-warszawy',
-  // Poziom 2 — sprzedaż zegarków w Warszawie
-  'zegarki-luksusowe-warszawa',
-  'zegarki-uzywane-warszawa',
-  'zegarki-rolex-warszawa',
-  'zegarki-omega-warszawa',
-  'zegarki-cartier-warszawa',
-  'zegarki-damskie-warszawa',
-  'zegarki-ze-zlota-warszawa',
-  'zegarki-z-diamentami-warszawa',
-  'chronografy-warszawa',
-  // Poziom 3 — Polska, zegarki na zamówienie
-  'zegarki-na-zamowienie',
-  'rolex-na-zamowienie',
-  'patek-philippe-na-zamowienie',
-  'audemars-piguet-na-zamowienie',
-  'zegarki-kolekcjonerskie',
-]
+const frequencyForPath = (path: string): MetadataRoute.Sitemap[number]['changeFrequency'] => {
+  if (path === '/produkty') return 'daily'
+  if (path === '/') return 'weekly'
+  return 'monthly'
+}
+
+function entry(path: string, locale: Locale, priority = priorityForPath(path)): MetadataRoute.Sitemap[number] {
+  return {
+    url: absoluteUrl(path, locale),
+    lastModified: LAST_CONTENT_UPDATE,
+    changeFrequency: frequencyForPath(path),
+    priority,
+    alternates: {
+      languages: {
+        pl: absoluteUrl(path, 'pl'),
+        en: absoluteUrl(path, 'en'),
+        'uk-UA': absoluteUrl(path, 'ua'),
+        'x-default': absoluteUrl(path, 'pl'),
+      },
+    },
+  }
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = LAST_CONTENT_UPDATE
+  const routes = publicRoutePaths.filter((path) => path !== '/kontakt/dziekujemy')
 
-  const core: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}`, lastModified, changeFrequency: 'weekly', priority: 1 },
-    { url: `${baseUrl}/produkty`, lastModified, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/butik`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/uslugi`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/uslugi/skup`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/uslugi/komis`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${baseUrl}/uslugi/naprawa-i-serwis`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${baseUrl}/kontakt`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${baseUrl}/kolekcja-na-zapytanie`, lastModified, changeFrequency: 'monthly', priority: 0.6 },
-  ]
+  const pages: MetadataRoute.Sitemap = locales.flatMap((locale) =>
+    routes.map((path) => entry(path, locale)),
+  )
 
-  const products: MetadataRoute.Sitemap = mockProducts
-    .filter((p) => p.status !== 'Niedostępny')
-    .map((p) => {
-      const firstImage = p.images?.[0]
-      return {
-        url: `${baseUrl}/produkty/${productUrlSlug(p)}`,
-        lastModified,
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-        ...(firstImage ? { images: [`${baseUrl}${firstImage}`] } : {}),
-      }
-    })
+  const products: MetadataRoute.Sitemap = locales.flatMap((locale) =>
+    mockProducts
+      .filter((p) => p.status !== 'Niedostępny')
+      .map((p) => {
+        const path = `/produkty/${productUrlSlug(p)}`
+        const firstImage = p.images?.[0]
+        return {
+          ...entry(path, locale, 0.7),
+          changeFrequency: 'weekly' as const,
+          images: firstImage ? [absoluteUrl(firstImage)] : undefined,
+        }
+      }),
+  )
 
-  const seoLandings: MetadataRoute.Sitemap = seoLandingSlugs.map((slug) => ({
-    url: `${baseUrl}/${slug}`,
-    lastModified,
-    changeFrequency: 'monthly' as const,
-    priority: 0.85,
-  }))
-
-  return [...core, ...seoLandings, ...products]
+  return [...pages, ...products]
 }

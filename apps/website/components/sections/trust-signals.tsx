@@ -2,10 +2,12 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { Shield, Lock, Star, Users, Handshake, ArrowRight } from 'lucide-react'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { localeFromPathname, localizePath, type Locale } from '@/lib/i18n'
 
 // 15.3 Animowany licznik przy scroll
 function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
@@ -44,7 +46,186 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   )
 }
 
+function LocalizedTrustSignals({ locale }: { locale: Exclude<Locale, 'pl'> }) {
+  const en = locale === 'en'
+  const copy = {
+    eyebrow: en ? 'Trust' : 'Довіра',
+    h1a: en ? 'We build relationships,' : 'Ми будуємо відносини,',
+    h1b: en ? 'not transactions.' : 'а не транзакції.',
+    quote: en
+      ? 'I have used Jarosław’s services for many years and can always count on professionalism, real help and honest advice. The boutique location in central Warsaw is also very convenient.'
+      : 'Я багато років користуюся послугами Ярослава й завжди можу розраховувати на професіоналізм, реальну допомогу та чесну пораду. Розташування бутіка в центрі Варшави також дуже зручне.',
+    role: en ? 'Jewellery designer' : 'Дизайнерка ювелірних виробів',
+    verify: en ? 'Authenticity guarantee' : 'Гарантія автентичності',
+    verifyText: en
+      ? 'Every watch goes through multi-stage expert verification with clear documentation.'
+      : 'Кожен годинник проходить багатоступеневу експертну перевірку з чіткою документацією.',
+    verifyLink: en ? 'How we verify' : 'Як ми перевіряємо',
+    discreet: en ? 'Full discretion' : 'Повна дискретність',
+    discreetText: en
+      ? 'Buying, selling and valuation happen in a trusted environment. Client details are never shared with third parties.'
+      : 'Купівля, продаж і оцінка відбуваються в довіреному середовищі. Дані клієнтів не передаються третім особам.',
+    noMiddlemen: en ? 'No intermediaries' : 'Без посередників',
+    google: en ? 'Google rating' : 'Оцінка Google',
+    reviews: en ? 'based on reviews' : 'на основі відгуків',
+    seeReviews: en ? 'See reviews' : 'Переглянути відгуки',
+    expert: en ? 'An expert at every decision' : 'Експерт у кожному рішенні',
+    expertText: en
+      ? 'We help match a watch to style, budget and story. If the piece is not in stock, we help source it.'
+      : 'Ми допомагаємо підібрати годинник до стилю, бюджету та історії. Якщо потрібного екземпляра немає, допомагаємо його знайти.',
+    consult: en ? 'Book a consultation' : 'Записатися на консультацію',
+    privateText: en
+      ? 'Private consultations, verified pieces and a calm boutique process at Mokotowska 71.'
+      : 'Приватні консультації, перевірені екземпляри та спокійний процес у бутіку на Mokotowska 71.',
+  }
+
+  return (
+    <Section spacing="lg" className="relative">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px',
+        }}
+      />
+      <Container className="relative">
+        <FadeIn>
+          <div className="mb-12">
+            <p className="mb-4 font-sans text-[10px] font-bold uppercase tracking-[0.5em] text-accent-gold">
+              II &nbsp;——&nbsp; {copy.eyebrow}
+            </p>
+            <h2 className="max-w-2xl text-balance font-serif text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              {copy.h1a}<br />
+              <span className="italic font-normal">{copy.h1b}</span>
+            </h2>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.05}>
+          <div className="trust-card relative bg-background px-8 py-12 lg:px-16 lg:py-16">
+            <div className="absolute left-0 top-0 h-full w-[3px] bg-accent-gold" />
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+              <div className="flex items-center gap-5 lg:col-span-3">
+                <div className="relative flex h-20 w-20 items-center justify-center border border-accent-gold/30 bg-accent-gold/15">
+                  <span className="font-serif text-2xl italic text-accent-gold">IB</span>
+                </div>
+                <div className="lg:hidden">
+                  <p className="font-serif text-base font-medium text-foreground">Izabella Budryn</p>
+                  <p className="mt-1 font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{copy.role}</p>
+                </div>
+              </div>
+              <div className="lg:col-span-9">
+                <div className="mb-4 flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-3.5 w-3.5 fill-accent-gold text-accent-gold" />
+                  ))}
+                </div>
+                <blockquote className="font-serif text-xl font-normal italic leading-relaxed text-foreground text-pretty lg:text-2xl">
+                  {copy.quote}
+                </blockquote>
+                <div className="mt-6 hidden items-center gap-3 lg:flex">
+                  <div className="h-px w-12 bg-accent-gold/60" />
+                  <p className="font-serif text-base font-medium text-foreground">Izabella Budryn</p>
+                  <span className="text-muted-foreground/40">·</span>
+                  <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{copy.role}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-3 lg:gap-8">
+          <FadeIn delay={0.05}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-10">
+              <div className="flex h-10 w-10 items-center justify-center bg-accent-gold/10">
+                <Shield className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-medium text-foreground">{copy.verify}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">{copy.verifyText}</p>
+              <Link
+                href={localizePath('/uslugi', locale)}
+                className="mt-6 inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 group-hover:text-accent-gold"
+              >
+                {copy.verifyLink}
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-10">
+              <div className="flex h-10 w-10 items-center justify-center bg-accent-gold/10">
+                <Lock className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+              </div>
+              <h3 className="mt-6 font-serif text-xl font-medium text-foreground">{copy.discreet}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground text-pretty">{copy.discreetText}</p>
+              <div className="mt-6 flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/60">
+                <span className="h-1 w-1 bg-accent-gold/60" />
+                {copy.noMiddlemen}
+              </div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <div className="trust-card group relative flex h-full flex-col bg-background p-8 lg:p-10">
+              <p className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground">{copy.google}</p>
+              <div className="mt-6 flex items-baseline gap-3">
+                <span className="font-serif text-6xl font-medium leading-none text-accent-gold">5.0</span>
+                <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{copy.reviews}</span>
+              </div>
+              <a
+                href="https://maps.app.goo.gl/v3iC97EKPkc3BtkU8"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex items-center gap-2 pt-6 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/70 transition-colors duration-300 hover:text-accent-gold"
+              >
+                {copy.seeReviews}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </FadeIn>
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-2 lg:gap-8">
+          <FadeIn delay={0.05}>
+            <div className="trust-card group relative h-full bg-background p-8 lg:p-12">
+              <div className="flex items-start gap-6">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-accent-gold/10">
+                  <Handshake className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h3 className="font-serif text-2xl font-medium text-foreground">{copy.expert}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground text-pretty">{copy.expertText}</p>
+                  <ContactLink source="trust-signals" prefetch className="mt-6 inline-flex items-center gap-2 font-sans text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/80 transition-colors duration-300 hover:text-accent-gold">
+                    {copy.consult}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </ContactLink>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div className="trust-card relative h-full bg-[#0a0a0a] p-8 text-white lg:p-12">
+              <div className="flex items-start gap-6">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-accent-gold/15">
+                  <Users className="h-5 w-5 text-accent-gold" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h3 className="font-serif text-2xl font-medium">{en ? 'Private client process' : 'Приватний процес для клієнта'}</h3>
+                  <p className="mt-4 text-sm leading-relaxed text-white/60 text-pretty">{copy.privateText}</p>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </Container>
+    </Section>
+  )
+}
+
 export function TrustSignals() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  if (locale !== 'pl') return <LocalizedTrustSignals locale={locale} />
+
   return (
     <Section spacing="lg" className="relative">
       {/* Grain texture */}

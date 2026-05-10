@@ -2,8 +2,10 @@
 
 import Image from 'next/image'
 import { useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { Container, Section, ImagePlaceholder, KenBurns, ScrollDrift } from '@/components/ui'
 import { FadeIn } from '@/components/ui/fade-in'
+import { localeFromPathname } from '@/lib/i18n'
 
 const values = [
   {
@@ -27,7 +29,52 @@ const values = [
 ]
 
 export function BrandPositioning() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
   const featureRef = useRef<HTMLDivElement>(null)
+  const copy = {
+    pl: {
+      eyebrow: 'Filozofia butiku',
+      h1a: 'Zegarek to nie przedmiot.',
+      h1b: 'To',
+      h1c: 'wybór',
+      h1d: 'który mówi, kim',
+      h1e: 'jesteś',
+      text: 'Warszawski Czas to butik, w którym mechaniczna precyzja spotyka się z kulturą i historią. Każdy zegarek to rozmowa — o stylu, o czasie, o człowieku, który go wybiera.',
+      imageLabel: 'Zdjęcie: makro tarczy / dłonie zegarmistrza',
+      values,
+    },
+    en: {
+      eyebrow: 'Boutique philosophy',
+      h1a: 'A watch is not just an object.',
+      h1b: 'It is',
+      h1c: 'a choice',
+      h1d: 'that says who',
+      h1e: 'you are',
+      text: 'Warszawski Czas is a boutique where mechanical precision meets culture and history. Every watch begins a conversation about style, time and the person who chooses it.',
+      imageLabel: 'Photo: dial macro / watchmaker hands',
+      values: [
+        { num: '01', title: 'Verification and authenticity', description: 'Every piece goes through expert verification with documentation and clear provenance.' },
+        { num: '02', title: 'Watches with history', description: 'We do not sell anonymous stock. We care about origin, reference and the story behind every model.' },
+        { num: '03', title: 'Relationship, not transaction', description: 'After purchase, we remain available for service, advice and future resale guidance.' },
+      ],
+    },
+    ua: {
+      eyebrow: 'Філософія бутіка',
+      h1a: 'Годинник — це не просто предмет.',
+      h1b: 'Це',
+      h1c: 'вибір',
+      h1d: 'який говорить, ким',
+      h1e: 'ви є',
+      text: 'Warszawski Czas — бутік, де механічна точність зустрічається з культурою та історією. Кожен годинник починає розмову про стиль, час і людину, яка його обирає.',
+      imageLabel: 'Фото: макро циферблата / руки годинникаря',
+      values: [
+        { num: '01', title: 'Перевірка та автентичність', description: 'Кожен екземпляр проходить експертну перевірку з документами та зрозумілим походженням.' },
+        { num: '02', title: 'Годинники з історією', description: 'Ми не продаємо анонімний товар. Нас цікавить походження, референс і історія кожної моделі.' },
+        { num: '03', title: 'Відносини, не транзакція', description: 'Після покупки ми залишаємося доступними для сервісу, порад і майбутнього перепродажу.' },
+      ],
+    },
+  }[locale]
 
   return (
     <Section variant="muted" spacing="lg" className="relative overflow-hidden">
@@ -36,7 +83,7 @@ export function BrandPositioning() {
           <div className="mb-12 flex items-center gap-4">
             <div className="h-px w-12 bg-accent-gold/60" />
             <p className="text-[10px] font-sans font-bold uppercase tracking-[0.5em] text-accent-gold">
-              III &nbsp;——&nbsp; Filozofia butiku
+              III &nbsp;——&nbsp; {copy.eyebrow}
             </p>
           </div>
         </FadeIn>
@@ -54,15 +101,13 @@ export function BrandPositioning() {
               </span>
 
               <h2 className="relative font-serif text-4xl font-medium tracking-tight text-foreground text-balance leading-[1.1] sm:text-5xl lg:text-6xl">
-                Zegarek to nie przedmiot.<br />
-                To <span className="font-serif italic font-normal text-accent-gold">wybór</span>,
-                który mówi, kim <span className="font-serif italic font-normal">jesteś</span>.
+                {copy.h1a}<br />
+                {copy.h1b} <span className="font-serif italic font-normal text-accent-gold">{copy.h1c}</span>,
+                {' '}{copy.h1d} <span className="font-serif italic font-normal">{copy.h1e}</span>.
               </h2>
 
               <p className="mt-10 max-w-lg font-sans text-base leading-relaxed text-muted-foreground text-pretty">
-                Warszawski Czas to butik, w którym mechaniczna precyzja spotyka się
-                z kulturą i historią. Każdy zegarek to rozmowa — o stylu, o czasie,
-                o człowieku, który go wybiera.
+                {copy.text}
               </p>
 
               {/* Placeholder zdjęcia makro tarczy — wystaje poza kontener */}
@@ -75,7 +120,7 @@ export function BrandPositioning() {
                   <ImagePlaceholder
                     className="h-full w-full"
                     variant="light"
-                    label="Zdjęcie: makro tarczy / dłonie zegarmistrza"
+                    label={copy.imageLabel}
                   />
                   <Image
                     src="/Patek Philippe Nautilus-12.jpg"
@@ -99,7 +144,7 @@ export function BrandPositioning() {
             end={150}
             className="flex flex-col gap-10 lg:col-span-5 lg:pt-16"
           >
-            {values.map((v, index) => (
+            {copy.values.map((v, index) => (
               <FadeIn key={v.num} direction="left" delay={index * 0.1}>
                 <div className="group relative border-t border-border pt-6">
                   <div className="flex items-baseline gap-6">

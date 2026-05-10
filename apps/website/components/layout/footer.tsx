@@ -1,24 +1,11 @@
+'use client'
+
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { ContactLink } from '@/components/contact-link'
+import { localeFromPathname, localizePath, ui } from '@/lib/i18n'
 
-const footerLinks = {
-  oferta: [
-    { href: '/produkty', label: 'Produkty' },
-    { href: '/kolekcja-na-zapytanie', label: 'Ukryta Kolekcja' },
-  ],
-  uslugi: [
-    { href: '/uslugi/naprawa-i-serwis', label: 'Naprawa i serwis' },
-    { href: '/uslugi/skup', label: 'Skup zegarków' },
-    { href: '/uslugi/komis', label: 'Komis' },
-  ],
-  informacje: [
-    { href: '/butik', label: 'O butiku' },
-    { href: '/kontakt', label: 'Kontakt', contactSource: 'nav-footer' as const },
-  ],
-}
-
-// 10.6 Social media — Instagram, TikTok, Facebook SVG icons
 function InstagramIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -46,34 +33,43 @@ function FacebookIcon({ className }: { className?: string }) {
 }
 
 export function Footer() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const t = ui[locale]
+  const footerLinks = {
+    oferta: [
+      { href: '/produkty', label: t.products },
+      { href: '/kolekcja-na-zapytanie', label: t.hiddenCollection },
+    ],
+    uslugi: [
+      { href: '/uslugi/naprawa-i-serwis', label: t.repair },
+      { href: '/uslugi/skup', label: t.buyingWatches },
+      { href: '/uslugi/komis', label: t.consignment },
+    ],
+    informacje: [
+      { href: '/butik', label: t.aboutBoutique },
+      { href: '/kontakt', label: t.contact, contactSource: 'nav-footer' as const },
+    ],
+  }
+
   return (
     <footer className="relative bg-[#0a0a0a] text-white/90">
-      {/* 10.7 Gold decorative line on top */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-accent-gold/50 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-4 lg:gap-8">
-          {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block">
+            <Link href={localizePath('/', locale)} className="inline-block">
               <span className="font-serif text-2xl font-semibold tracking-tight text-white">
                 Warszawski Czas
               </span>
             </Link>
-            {/* 10.3 Mokotowska 71 wyróżnione */}
-            <p className="mt-3 font-serif text-lg tracking-wide text-accent-gold">
-              Mokotowska 71
+            <p className="mt-3 font-serif text-lg tracking-wide text-accent-gold">Mokotowska 71</p>
+            <p className="mt-5 whitespace-pre-line font-serif text-base italic leading-snug text-white/80">
+              {t.footerTagline}
             </p>
-            <p className="mt-5 font-serif italic text-base leading-snug text-white/80">
-              Zegarki z historią.<br />
-              Eksperci z pasją.
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-white/45">
-              Butik zegarków premium w sercu Warszawy.
-              Mechaniczna precyzja, wiedza i dyskrecja od 2019 roku.
-            </p>
+            <p className="mt-4 text-sm leading-relaxed text-white/45">{t.footerDescription}</p>
 
-            {/* 10.6 Social Media Icons — Instagram, TikTok, Facebook */}
             <div className="mt-6 flex items-center gap-4">
               <a
                 href="https://instagram.com/warszawskiczas"
@@ -105,18 +101,16 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links Columns */}
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-2">
             <div>
-              {/* 10.2 Nagłówki uppercase tracking */}
-              <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-white/40">
-                Oferta
+              <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/40">
+                {t.offer}
               </h3>
               <ul className="mt-4 space-y-3">
                 {footerLinks.oferta.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={localizePath(link.href, locale)}
                       className="text-sm text-white/60 transition-colors hover:text-accent-gold"
                     >
                       {link.label}
@@ -127,14 +121,14 @@ export function Footer() {
             </div>
 
             <div>
-              <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-white/40">
-                Usługi
+              <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/40">
+                {t.services}
               </h3>
               <ul className="mt-4 space-y-3">
                 {footerLinks.uslugi.map((link) => (
                   <li key={link.href}>
                     <Link
-                      href={link.href}
+                      href={localizePath(link.href, locale)}
                       className="text-sm text-white/60 transition-colors hover:text-accent-gold"
                     >
                       {link.label}
@@ -145,8 +139,8 @@ export function Footer() {
             </div>
 
             <div>
-              <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-white/40">
-                Informacje
+              <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/40">
+                {t.info}
               </h3>
               <ul className="mt-4 space-y-3">
                 {footerLinks.informacje.map((link) => (
@@ -160,7 +154,7 @@ export function Footer() {
                       </ContactLink>
                     ) : (
                       <Link
-                        href={link.href}
+                        href={localizePath(link.href, locale)}
                         className="text-sm text-white/60 transition-colors hover:text-accent-gold"
                       >
                         {link.label}
@@ -172,10 +166,9 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Contact Column */}
           <div className="lg:col-span-1">
-            <h3 className="text-[10px] font-sans font-bold uppercase tracking-[0.4em] text-white/40">
-              Kontakt
+            <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-white/40">
+              {t.contact}
             </h3>
             <ul className="mt-4 space-y-4">
               <li className="flex items-start gap-3">
@@ -187,52 +180,41 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 flex-shrink-0 text-accent-gold" />
-                <a
-                  href="tel:+48604501000"
-                  className="text-sm text-white/60 transition-colors hover:text-accent-gold"
-                >
+                <a href="tel:+48604501000" className="text-sm text-white/60 transition-colors hover:text-accent-gold">
                   +48 604 50 1000
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-4 w-4 flex-shrink-0 text-accent-gold" />
-                <a
-                  href="mailto:biuro@warszawskiczas.pl"
-                  className="text-sm text-white/60 transition-colors hover:text-accent-gold"
-                >
+                <a href="mailto:biuro@warszawskiczas.pl" className="text-sm text-white/60 transition-colors hover:text-accent-gold">
                   biuro@warszawskiczas.pl
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-gold" />
-                <span className="text-sm text-white/60">
-                  Pon – Pt: 11:00 – 18:00<br />
-                  Sob: 11:00 – 15:00<br />
-                  Nd: Zamknięte
-                </span>
+                <span className="whitespace-pre-line text-sm text-white/60">{t.hours}</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* 10.4 Copyright + linki prawne */}
         <div className="mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-center text-xs uppercase tracking-[0.25em] text-white/30 sm:text-left">
             &copy; {new Date().getFullYear()} Warszawski Czas
           </p>
           <nav className="flex items-center gap-6">
             <Link
-              href="/polityka-prywatnosci"
+              href={localizePath('/polityka-prywatnosci', locale)}
               className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-accent-gold"
             >
-              Polityka prywatności
+              {t.privacy}
             </Link>
             <span className="h-1 w-1 rounded-full bg-white/20" aria-hidden />
             <Link
-              href="/regulamin"
+              href={localizePath('/regulamin', locale)}
               className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-accent-gold"
             >
-              Regulamin
+              {t.terms}
             </Link>
           </nav>
         </div>
