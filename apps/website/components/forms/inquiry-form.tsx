@@ -6,23 +6,90 @@ import { FormField } from './form-field'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { readSessionPath } from '@/components/session-tracker'
+import { localizePath, type Locale } from '@/lib/i18n'
 
 interface InquiryFormProps {
   subject?: string
   submitLabel?: string
   successMessage?: string
+  locale?: Locale
 }
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
+const copy = {
+  pl: {
+    defaultSubmit: 'Wyślij zapytanie',
+    defaultSuccess: 'Dziękujemy za zapytanie. Skontaktujemy się wkrótce.',
+    thanksTitle: 'Dziękujemy za wiadomość',
+    urgent: 'W sprawach pilnych dzwoń:',
+    errorFallback: 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub zadzwoń: +48 604 50 1000.',
+    connectionError: 'Brak połączenia. Sprawdź internet i spróbuj ponownie.',
+    honeypot: 'Nie wypełniaj',
+    name: 'Imię i nazwisko',
+    namePlaceholder: 'Jan Kowalski',
+    email: 'Email',
+    emailPlaceholder: 'jan@example.com',
+    phone: 'Telefon',
+    details: 'Szczegóły zapytania',
+    detailsPlaceholder: 'Opisz czego szukasz lub jakie masz pytanie...',
+    consentPrefix: 'Wyrażam zgodę na przetwarzanie moich danych osobowych w celu odpowiedzi na zapytanie.',
+    consentMiddle: 'Szczegóły w',
+    privacy: 'polityce prywatności',
+    submitting: 'Wysyłanie...',
+  },
+  en: {
+    defaultSubmit: 'Send enquiry',
+    defaultSuccess: 'Thank you for your enquiry. We will contact you shortly.',
+    thanksTitle: 'Thank you for your message',
+    urgent: 'For urgent matters call:',
+    errorFallback: 'We could not send the message. Please try again or call: +48 604 50 1000.',
+    connectionError: 'No connection. Check your internet connection and try again.',
+    honeypot: 'Do not fill in',
+    name: 'Full name',
+    namePlaceholder: 'John Smith',
+    email: 'Email',
+    emailPlaceholder: 'john@example.com',
+    phone: 'Phone',
+    details: 'Enquiry details',
+    detailsPlaceholder: 'Describe what you are looking for or what you would like to ask...',
+    consentPrefix: 'I agree to the processing of my personal data in order to answer my enquiry.',
+    consentMiddle: 'Details in the',
+    privacy: 'privacy policy',
+    submitting: 'Sending...',
+  },
+  ua: {
+    defaultSubmit: 'Надіслати запит',
+    defaultSuccess: 'Дякуємо за запит. Ми скоро зв’яжемося з вами.',
+    thanksTitle: 'Дякуємо за повідомлення',
+    urgent: 'У термінових питаннях телефонуйте:',
+    errorFallback: 'Не вдалося надіслати повідомлення. Спробуйте ще раз або зателефонуйте: +48 604 50 1000.',
+    connectionError: 'Немає з’єднання. Перевірте інтернет і спробуйте ще раз.',
+    honeypot: 'Не заповнюйте',
+    name: 'Ім’я та прізвище',
+    namePlaceholder: 'Іван Петренко',
+    email: 'Email',
+    emailPlaceholder: 'ivan@example.com',
+    phone: 'Телефон',
+    details: 'Деталі запиту',
+    detailsPlaceholder: 'Опишіть, що ви шукаєте або яке маєте питання...',
+    consentPrefix: 'Я погоджуюся на обробку моїх персональних даних з метою відповіді на запит.',
+    consentMiddle: 'Деталі в',
+    privacy: 'політиці конфіденційності',
+    submitting: 'Надсилання...',
+  },
+} satisfies Record<Locale, Record<string, string>>
+
 export function InquiryForm({
   subject,
-  submitLabel = 'Wyślij zapytanie',
-  successMessage = 'Dziękujemy za zapytanie. Skontaktujemy się wkrótce.',
+  submitLabel,
+  successMessage,
+  locale = 'pl',
 }: InquiryFormProps) {
   const mountedAt = useRef<number>(Date.now())
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState<string>('')
+  const t = copy[locale]
 
   useEffect(() => {
     mountedAt.current = Date.now()
@@ -65,14 +132,10 @@ export function InquiryForm({
       }
 
       const data = await res.json().catch(() => ({}))
-      setErrorMsg(
-        typeof data?.error === 'string'
-          ? data.error
-          : 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub zadzwoń: +48 604 50 1000.',
-      )
+      setErrorMsg(typeof data?.error === 'string' ? data.error : t.errorFallback)
       setStatus('error')
     } catch {
-      setErrorMsg('Brak połączenia. Sprawdź internet i spróbuj ponownie.')
+      setErrorMsg(t.connectionError)
       setStatus('error')
     }
   }
@@ -84,13 +147,13 @@ export function InquiryForm({
           <Check className="h-5 w-5 text-accent-gold" />
         </div>
         <h3 className="mt-6 font-serif text-2xl font-medium italic text-foreground">
-          Dziękujemy za wiadomość
+          {t.thanksTitle}
         </h3>
         <div className="mx-auto mt-4 h-px w-12 bg-accent-gold/60" />
         <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-muted-foreground text-pretty">
-          {successMessage}
+          {successMessage ?? t.defaultSuccess}
           <br />
-          W sprawach pilnych dzwoń:{' '}
+          {t.urgent}{' '}
           <a href="tel:+48604501000" className="whitespace-nowrap text-accent-gold">
             +48 604 50 1000
           </a>
@@ -104,39 +167,33 @@ export function InquiryForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Honeypot */}
       <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
         <label>
-          Nie wypełniaj
+          {t.honeypot}
           <input type="text" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
         </label>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <FormField label="Imię i nazwisko" name="name" type="text" placeholder="Jan Kowalski" required />
-        <FormField label="Email" name="email" type="email" placeholder="jan@example.com" required />
+        <FormField label={t.name} name="name" type="text" placeholder={t.namePlaceholder} required />
+        <FormField label={t.email} name="email" type="email" placeholder={t.emailPlaceholder} required />
       </div>
-      <FormField label="Telefon" name="phone" type="tel" placeholder="+48 604 50 1000" required />
+      <FormField label={t.phone} name="phone" type="tel" placeholder="+48 604 50 1000" required />
       <FormField
         as="textarea"
-        label="Szczegóły zapytania"
+        label={t.details}
         name="details"
-        placeholder="Opisz czego szukasz lub jakie masz pytanie..."
+        placeholder={t.detailsPlaceholder}
         required
       />
 
-      <label className="flex items-start gap-3 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          required
-          name="rodo"
-          className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold"
-        />
+      <label className="flex cursor-pointer select-none items-start gap-3">
+        <input type="checkbox" required name="rodo" className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold" />
         <span className="font-sans text-xs leading-relaxed text-muted-foreground text-pretty">
-          Wyrażam zgodę na przetwarzanie moich danych osobowych w celu odpowiedzi na zapytanie.{' '}
-          Szczegóły w{' '}
-          <a href="/polityka-prywatnosci" target="_blank" rel="noopener" className="text-accent-gold underline">
-            polityce prywatności
+          {t.consentPrefix}{' '}
+          {t.consentMiddle}{' '}
+          <a href={localizePath('/polityka-prywatnosci', locale)} target="_blank" rel="noopener" className="text-accent-gold underline">
+            {t.privacy}
           </a>
           . *
         </span>
@@ -149,7 +206,7 @@ export function InquiryForm({
       )}
 
       <Button type="submit" className="w-full" disabled={submitting}>
-        {submitting ? 'Wysyłanie...' : submitLabel}
+        {submitting ? t.submitting : (submitLabel ?? t.defaultSubmit)}
       </Button>
     </form>
   )

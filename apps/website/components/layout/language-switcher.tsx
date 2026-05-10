@@ -31,8 +31,8 @@ export function LanguageSwitcher({ isTransparent = false, className, onChange }:
         className={cn(
           'h-8 appearance-none border bg-transparent pl-3 pr-7 font-sans text-[10px] font-bold uppercase tracking-[0.22em] outline-none transition-colors',
           isTransparent
-            ? 'border-white/25 text-white hover:border-white/60'
-            : 'border-foreground/15 text-foreground hover:border-accent-gold',
+            ? 'border-accent-gold/60 text-white hover:border-accent-gold'
+            : 'border-accent-gold/60 text-foreground hover:border-accent-gold',
         )}
         aria-label="Language"
       >
@@ -44,10 +44,7 @@ export function LanguageSwitcher({ isTransparent = false, className, onChange }:
       </select>
       <ChevronDown
         aria-hidden
-        className={cn(
-          'pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2',
-          isTransparent ? 'text-white/70' : 'text-foreground/60',
-        )}
+        className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-accent-gold"
       />
     </label>
   )

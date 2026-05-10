@@ -13,11 +13,11 @@
     --muted-foreground: 24 6% 45%;
     /* Accent colors */
     --accent-green: 153 42% 18%;
-    --accent-gold: 42 50% 45%;
+    --accent-gold: 42 65% 36%;
     /* Borders */
     --border: 30 10% 90%;
     --input: 30 10% 90%;
-    --ring: 42 50% 45%;
+    --ring: 42 65% 36%;
   }
 
   * {

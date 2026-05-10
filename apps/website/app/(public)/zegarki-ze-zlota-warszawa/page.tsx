@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { localizedAlternates } from '@/lib/i18n'
 import { SeoLanding, landingBreadcrumbJsonLd, serviceJsonLd, itemListJsonLd } from '@/components/seo/seo-landing'
 import { goldWatches } from '@/lib/seo-product-filters'
 
@@ -11,7 +12,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `/${SLUG}` },
+  alternates: localizedAlternates(`/${SLUG}`, 'pl'),
   openGraph: {
     type: 'website',
     url: URL,

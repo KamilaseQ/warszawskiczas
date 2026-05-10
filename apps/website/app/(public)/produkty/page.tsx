@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { localizedAlternates } from '@/lib/i18n'
 import Link from 'next/link'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button } from '@/components/ui'
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Zegarki luksusowe w Warszawie — katalog Warszawski Czas',
   description:
     'Katalog zegarków luksusowych dostępnych w butiku przy Mokotowskiej 71. Rolex, Patek Philippe, Audemars Piguet, Omega, Cartier, Breitling — certyfikowane egzemplarze z gwarancją autentyczności.',
-  alternates: { canonical: '/produkty' },
+  alternates: localizedAlternates('/produkty', 'pl'),
   openGraph: {
     type: 'website',
     url: 'https://warszawskiczas.pl/produkty',

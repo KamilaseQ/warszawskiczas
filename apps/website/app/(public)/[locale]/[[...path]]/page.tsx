@@ -23,6 +23,17 @@ import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
 import { absoluteUrl, canonicalPath, isLocale, localizedAlternates, localizePath, publicRoutePaths, type Locale } from '@/lib/i18n'
 import { getLocalizedLanding, localizedLandingSlugs } from '@/lib/localized-landings'
 import { formatProductPrice, localizeProduct } from '@/lib/localized-products'
+import { PrivateCollectionPage } from '@/components/pages/private-collection-page'
+import { AccessibilityStatementPage } from '@/components/pages/accessibility-statement-page'
+import { BoutiquePage } from '@/components/pages/boutique-page'
+import { ContactPage } from '@/components/pages/contact-page'
+import { ThankYouPage } from '@/components/pages/thank-you-page'
+import {
+  ConsignmentServicePage,
+  RepairServicePage,
+  ServicesPage,
+  WatchBuyingServicePage,
+} from '@/components/pages/services-pages'
 
 // dynamicParams = true so URL-encoded Unicode segments (Cyrillic UA slugs)
 // route reliably; unknown routes still 404 via notFound() after canonicalisation.
@@ -185,6 +196,15 @@ export default async function LocalizedPage({ params }: PageProps) {
   const route = routeFromPath(path, locale)
 
   if (route === '/') return <LocalizedHome />
+  if (route === '/kolekcja-na-zapytanie') return <PrivateCollectionPage locale={locale} />
+  if (route === '/butik') return <BoutiquePage locale={locale} />
+  if (route === '/kontakt') return <ContactPage locale={locale} />
+  if (route === '/kontakt/dziekujemy') return <ThankYouPage locale={locale} />
+  if (route === '/deklaracja-dostepnosci') return <AccessibilityStatementPage locale={locale} />
+  if (route === '/uslugi') return <ServicesPage locale={locale} />
+  if (route === '/uslugi/skup') return <WatchBuyingServicePage locale={locale} />
+  if (route === '/uslugi/komis') return <ConsignmentServicePage locale={locale} />
+  if (route === '/uslugi/naprawa-i-serwis') return <RepairServicePage locale={locale} />
   if (route === '/produkty') return <LocalizedProducts locale={locale} />
   if (route.startsWith('/produkty/')) return <LocalizedProductDetail route={route} locale={locale} />
 
@@ -389,9 +409,22 @@ function LocalizedProductDetail({ route, locale }: { route: string; locale: Excl
     },
   }
 
+  const homeName = locale === 'en' ? 'Home' : 'Головна'
+  const catalogueName = locale === 'en' ? 'Watches' : 'Годинники'
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: homeName, item: absoluteUrl('/', locale) },
+      { '@type': 'ListItem', position: 2, name: catalogueName, item: absoluteUrl('/produkty', locale) },
+      { '@type': 'ListItem', position: 3, name: productLabel, item: productUrl },
+    ],
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Section spacing="sm" className="pt-28 lg:pt-32">
         <Container>
           <Link
@@ -553,6 +586,21 @@ function simplePageCopy(route: string, locale: Exclude<Locale, 'pl'>): SimplePag
     },
     '/polityka-prywatnosci': legalCopy(locale, 'privacy'),
     '/regulamin': legalCopy(locale, 'terms'),
+    '/deklaracja-dostepnosci': {
+      title: en ? 'Accessibility statement - Warszawski Czas' : 'Декларація доступності - Warszawski Czas',
+      description: en
+        ? 'Digital accessibility statement for the Warszawski Czas website.'
+        : 'Декларація цифрової доступності сайту Warszawski Czas.',
+      eyebrow: en ? 'Legal document' : 'Юридичний документ',
+      h1: en ? 'Accessibility statement' : 'Декларація доступності',
+      intro: en
+        ? 'This page describes the accessibility status of the website and how to report barriers.'
+        : 'Ця сторінка описує статус доступності сайту та спосіб повідомлення про бар’єри.',
+      cta: en ? 'Contact the boutique' : 'Зв’язатися з бутіком',
+      bullets: en
+        ? ['WCAG 2.2 AA is the target standard.', 'Accessibility barriers can be reported by form, email or phone.', 'Every report is handled as a priority.']
+        : ['Цільовий стандарт - WCAG 2.2 AA.', 'Про бар’єри доступності можна повідомити через форму, email або телефон.', 'Кожне повідомлення розглядається як пріоритетне.'],
+    },
     '/uslugi': serviceCopy(locale, 'services'),
     '/uslugi/skup': serviceCopy(locale, 'buying'),
     '/uslugi/komis': serviceCopy(locale, 'consignment'),

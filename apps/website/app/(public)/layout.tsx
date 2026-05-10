@@ -23,10 +23,16 @@ export default function PublicLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[1000] focus:bg-foreground focus:px-4 focus:py-2 focus:text-background focus:outline focus:outline-2 focus:outline-accent-gold"
+      >
+        Przejdź do treści
+      </a>
       <LoadingScreen />
       <ScrollProgress />
       <Header />
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <PageTransition>{children}</PageTransition>
       </main>
       <Footer />

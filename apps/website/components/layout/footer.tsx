@@ -216,6 +216,13 @@ export function Footer() {
             >
               {t.terms}
             </Link>
+            <span className="h-1 w-1 rounded-full bg-white/20" aria-hidden />
+            <Link
+              href={localizePath('/deklaracja-dostepnosci', locale)}
+              className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-accent-gold"
+            >
+              {t.accessibility}
+            </Link>
           </nav>
         </div>
       </div>

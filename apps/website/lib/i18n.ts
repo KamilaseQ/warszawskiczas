@@ -69,6 +69,7 @@ const SEGMENT_TRANSLATIONS: Record<NonPlLocale, Record<string, string>> = {
     'kolekcja-na-zapytanie': 'private-collection',
     'polityka-prywatnosci': 'privacy-policy',
     regulamin: 'terms',
+    'deklaracja-dostepnosci': 'accessibility-statement',
     'skup-zegarkow-warszawa': 'sell-luxury-watches-warsaw',
     'skup-rolex-warszawa': 'sell-rolex-warsaw',
     'wycena-zegarka-warszawa': 'watch-valuation-warsaw',
@@ -101,6 +102,7 @@ const SEGMENT_TRANSLATIONS: Record<NonPlLocale, Record<string, string>> = {
     'kolekcja-na-zapytanie': 'приватна-колекція',
     'polityka-prywatnosci': 'політика-конфіденційності',
     regulamin: 'правила',
+    'deklaracja-dostepnosci': 'декларація-доступності',
     'skup-zegarkow-warszawa': 'викуп-годинників-варшава',
     'skup-rolex-warszawa': 'викуп-rolex-варшава',
     'wycena-zegarka-warszawa': 'оцінка-годинника-варшава',
@@ -128,6 +130,14 @@ const REVERSE_SEGMENT_TRANSLATIONS: Record<NonPlLocale, Record<string, string>> 
   ua: Object.fromEntries(Object.entries(SEGMENT_TRANSLATIONS.ua).map(([pl, t]) => [t, pl])),
 }
 
+function safeDecodeSegment(seg: string): string {
+  try {
+    return decodeURIComponent(seg)
+  } catch {
+    return seg
+  }
+}
+
 export function stripLocale(pathname: string | null | undefined): string {
   if (!pathname) return '/'
   const clean = pathname.split('?')[0]?.split('#')[0] || '/'
@@ -140,7 +150,13 @@ export function stripLocale(pathname: string | null | undefined): string {
 export function localizePath(path: string, locale: Locale): string {
   const clean = stripLocale(path)
   if (locale === 'pl') return clean
-  const segs = clean.split('/').filter(Boolean).map((s) => SEGMENT_TRANSLATIONS[locale][s] ?? s)
+  const segs = clean
+    .split('/')
+    .filter(Boolean)
+    .map((s) => {
+      const decoded = safeDecodeSegment(s)
+      return SEGMENT_TRANSLATIONS[locale][decoded] ?? decoded
+    })
   const prefix = localeConfig[locale].prefix
   return segs.length ? `${prefix}/${segs.join('/')}` : prefix
 }
@@ -148,8 +164,14 @@ export function localizePath(path: string, locale: Locale): string {
 /** Reverse a localized path (for `locale`) back to the canonical (PL) path. */
 export function canonicalPath(path: string, locale: Locale): string {
   const clean = stripLocale(path)
-  if (locale === 'pl') return clean
-  const segs = clean.split('/').filter(Boolean).map((s) => REVERSE_SEGMENT_TRANSLATIONS[locale][s] ?? s)
+  const segs = clean
+    .split('/')
+    .filter(Boolean)
+    .map((s) => {
+      const decoded = safeDecodeSegment(s)
+      if (locale === 'pl') return decoded
+      return REVERSE_SEGMENT_TRANSLATIONS[locale][decoded] ?? decoded
+    })
   return segs.length ? `/${segs.join('/')}` : '/'
 }
 
@@ -205,6 +227,7 @@ export const publicRoutePaths = [
   '/kolekcja-na-zapytanie',
   '/polityka-prywatnosci',
   '/regulamin',
+  '/deklaracja-dostepnosci',
   '/skup-zegarkow-warszawa',
   '/skup-rolex-warszawa',
   '/wycena-zegarka-warszawa',
@@ -247,6 +270,7 @@ export const ui = {
     aboutBoutique: 'O butiku',
     privacy: 'Polityka prywatności',
     terms: 'Regulamin',
+    accessibility: 'Deklaracja dostępności',
     footerTagline: 'Zegarki z historią.\nEksperci z pasją.',
     footerDescription:
       'Butik zegarków premium w sercu Warszawy. Mechaniczna precyzja, wiedza i dyskrecja od 2019 roku.',
@@ -310,6 +334,7 @@ export const ui = {
     aboutBoutique: 'About the boutique',
     privacy: 'Privacy policy',
     terms: 'Terms',
+    accessibility: 'Accessibility statement',
     footerTagline: 'Watches with history.\nExperts with passion.',
     footerDescription:
       'A premium watch boutique in the heart of Warsaw. Mechanical precision, expertise and discretion since 2019.',
@@ -373,6 +398,7 @@ export const ui = {
     aboutBoutique: 'Про бутік',
     privacy: 'Політика конфіденційності',
     terms: 'Правила',
+    accessibility: 'Декларація доступності',
     footerTagline: 'Годинники з історією.\nЕксперти з пристрастю.',
     footerDescription:
       'Бутік преміальних годинників у центрі Варшави. Механічна точність, знання та дискретність з 2019 року.',

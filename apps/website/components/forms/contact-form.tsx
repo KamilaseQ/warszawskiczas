@@ -5,17 +5,99 @@ import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { readSessionPath } from '@/components/session-tracker'
 import { clearContactSource, readContactSource } from '@/components/contact-link'
+import { localizePath, type Locale } from '@/lib/i18n'
 
 interface ContactFormProps {
   variant?: 'light' | 'dark'
+  locale?: Locale
 }
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-export function ContactForm({ variant = 'light' }: ContactFormProps) {
+const copy = {
+  pl: {
+    thanksTitle: 'Dziękujemy za wiadomość',
+    thanksText: 'Odpowiadamy w ciągu 24 godzin w dni robocze.',
+    urgent: 'W sprawach pilnych dzwoń na',
+    errorFallback: 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub zadzwoń: +48 604 50 1000.',
+    connectionError: 'Brak połączenia. Sprawdź internet i spróbuj ponownie.',
+    honeypot: 'Nie wypełniaj tego pola',
+    name: 'Imię i nazwisko *',
+    email: 'E-mail *',
+    phone: 'Numer telefonu *',
+    message: 'Wiadomość *',
+    messagePlaceholder: 'Opisz, w czym możemy pomóc...',
+    consent:
+      'Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu w celu odpowiedzi na zapytanie. *',
+    dataInfo: 'Informacja o przetwarzaniu danych',
+    dataP1:
+      'Administratorem Twoich danych jest butik Warszawski Czas, ul. Mokotowska 71, 00-530 Warszawa. Dane przetwarzamy w celu udzielenia odpowiedzi na zapytanie złożone przez formularz, na podstawie Twojej zgody (art. 6 ust. 1 lit. a RODO) oraz w celu podjęcia działań na Twoje żądanie (art. 6 ust. 1 lit. b RODO).',
+    dataP2:
+      'Dane przechowujemy przez okres niezbędny do prowadzenia korespondencji i obsługi sprawy, z uwzględnieniem obowiązujących przepisów prawa. Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu, przenoszenia oraz cofnięcia zgody w dowolnym momencie, a także wniesienia skargi do PUODO.',
+    dataP3Prefix: 'Pełne informacje znajdziesz w',
+    privacy: 'polityce prywatności',
+    submitting: 'Wysyłanie...',
+    submit: 'Wyślij wiadomość',
+    responseTime: 'Odpowiadamy w ciągu 24 godzin.',
+    urgentShort: 'W sprawach pilnych:',
+  },
+  en: {
+    thanksTitle: 'Thank you for your message',
+    thanksText: 'We usually respond within 24 hours on business days.',
+    urgent: 'For urgent matters call',
+    errorFallback: 'We could not send the message. Please try again or call: +48 604 50 1000.',
+    connectionError: 'No connection. Check your internet connection and try again.',
+    honeypot: 'Do not fill in this field',
+    name: 'Full name *',
+    email: 'E-mail *',
+    phone: 'Phone number *',
+    message: 'Message *',
+    messagePlaceholder: 'Tell us how we can help...',
+    consent: 'I agree to the processing of my personal data provided in the form in order to answer my enquiry. *',
+    dataInfo: 'Data processing information',
+    dataP1:
+      'The controller of your data is Warszawski Czas boutique, ul. Mokotowska 71, 00-530 Warsaw. We process the data to answer the enquiry submitted through the form, based on your consent and to take steps at your request.',
+    dataP2:
+      'We store the data for the period necessary to handle correspondence and the matter, subject to applicable law. You have the right to access, correct, delete, restrict processing, object, transfer data and withdraw consent at any time.',
+    dataP3Prefix: 'Full information is available in the',
+    privacy: 'privacy policy',
+    submitting: 'Sending...',
+    submit: 'Send message',
+    responseTime: 'We respond within 24 hours.',
+    urgentShort: 'Urgent matters:',
+  },
+  ua: {
+    thanksTitle: 'Дякуємо за повідомлення',
+    thanksText: 'Зазвичай ми відповідаємо протягом 24 годин у робочі дні.',
+    urgent: 'У термінових питаннях телефонуйте',
+    errorFallback: 'Не вдалося надіслати повідомлення. Спробуйте ще раз або зателефонуйте: +48 604 50 1000.',
+    connectionError: 'Немає з’єднання. Перевірте інтернет і спробуйте ще раз.',
+    honeypot: 'Не заповнюйте це поле',
+    name: 'Ім’я та прізвище *',
+    email: 'E-mail *',
+    phone: 'Номер телефону *',
+    message: 'Повідомлення *',
+    messagePlaceholder: 'Опишіть, як ми можемо допомогти...',
+    consent: 'Я погоджуюся на обробку моїх персональних даних, указаних у формі, з метою відповіді на запит. *',
+    dataInfo: 'Інформація про обробку даних',
+    dataP1:
+      'Адміністратором ваших даних є бутік Warszawski Czas, ul. Mokotowska 71, 00-530 Warszawa. Ми обробляємо дані, щоб відповісти на запит, надісланий через форму, на підставі вашої згоди та для виконання дій на ваш запит.',
+    dataP2:
+      'Ми зберігаємо дані протягом періоду, необхідного для ведення листування та обслуговування справи, з урахуванням чинного законодавства. Ви маєте право на доступ, виправлення, видалення, обмеження обробки, заперечення, перенесення даних і відкликання згоди.',
+    dataP3Prefix: 'Повна інформація доступна в',
+    privacy: 'політиці конфіденційності',
+    submitting: 'Надсилання...',
+    submit: 'Надіслати повідомлення',
+    responseTime: 'Ми відповідаємо протягом 24 годин.',
+    urgentShort: 'Термінові питання:',
+  },
+} satisfies Record<Locale, Record<string, string>>
+
+export function ContactForm({ variant = 'light', locale = 'pl' }: ContactFormProps) {
   const mountedAt = useRef<number>(Date.now())
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState<string>('')
+  const t = copy[locale]
 
   useEffect(() => {
     mountedAt.current = Date.now()
@@ -59,14 +141,10 @@ export function ContactForm({ variant = 'light' }: ContactFormProps) {
       }
 
       const data = await res.json().catch(() => ({}))
-      setErrorMsg(
-        typeof data?.error === 'string'
-          ? data.error
-          : 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub zadzwoń: +48 604 50 1000.',
-      )
+      setErrorMsg(typeof data?.error === 'string' ? data.error : t.errorFallback)
       setStatus('error')
     } catch {
-      setErrorMsg('Brak połączenia. Sprawdź internet i spróbuj ponownie.')
+      setErrorMsg(t.connectionError)
       setStatus('error')
     }
   }
@@ -75,26 +153,16 @@ export function ContactForm({ variant = 'light' }: ContactFormProps) {
 
   if (status === 'success') {
     return (
-      <div
-        className={cn(
-          'p-10 text-center',
-          isDark ? 'bg-[#0a0a0a] text-white' : 'bg-background',
-        )}
-      >
+      <div className={cn('p-10 text-center', isDark ? 'bg-[#0a0a0a] text-white' : 'bg-background')}>
         <div className="mx-auto flex h-14 w-14 items-center justify-center border border-accent-gold/50 bg-accent-gold/10">
           <Check className="h-5 w-5 text-accent-gold" />
         </div>
-        <h3 className="mt-6 font-serif text-2xl font-medium italic">Dziękujemy za wiadomość</h3>
+        <h3 className="mt-6 font-serif text-2xl font-medium italic">{t.thanksTitle}</h3>
         <div className="mx-auto mt-4 h-px w-12 bg-accent-gold/60" />
-        <p
-          className={cn(
-            'mx-auto mt-6 max-w-md text-sm leading-relaxed text-pretty',
-            isDark ? 'text-white/60' : 'text-muted-foreground',
-          )}
-        >
-          Odpowiadamy w ciągu 24 godzin w dni robocze.
+        <p className={cn('mx-auto mt-6 max-w-md text-sm leading-relaxed text-pretty', isDark ? 'text-white/60' : 'text-muted-foreground')}>
+          {t.thanksText}
           <br />
-          W sprawach pilnych dzwoń na{' '}
+          {t.urgent}{' '}
           <a href="tel:+48604501000" className="whitespace-nowrap text-accent-gold">
             +48 604 50 1000
           </a>
@@ -119,33 +187,26 @@ export function ContactForm({ variant = 'light' }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate={false}>
-      {/* Honeypot — niewidoczne dla ludzi, wypełniają tylko boty */}
       <div aria-hidden="true" className="absolute left-[-9999px] top-[-9999px] h-0 w-0 overflow-hidden">
         <label>
-          Nie wypełniaj tego pola
-          <input
-            type="text"
-            name="company"
-            tabIndex={-1}
-            autoComplete="off"
-            defaultValue=""
-          />
+          {t.honeypot}
+          <input type="text" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
         </label>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor="cf-name">Imię i nazwisko *</label>
+          <label className={labelClass} htmlFor="cf-name">{t.name}</label>
           <input id="cf-name" name="name" type="text" required maxLength={100} className={inputClass} />
         </div>
         <div>
-          <label className={labelClass} htmlFor="cf-email">E-mail *</label>
+          <label className={labelClass} htmlFor="cf-email">{t.email}</label>
           <input id="cf-email" name="email" type="email" required maxLength={150} className={inputClass} />
         </div>
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="cf-phone">Numer telefonu *</label>
+        <label className={labelClass} htmlFor="cf-phone">{t.phone}</label>
         <input
           id="cf-phone"
           name="phone"
@@ -158,79 +219,47 @@ export function ContactForm({ variant = 'light' }: ContactFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="cf-message">Wiadomość *</label>
+        <label className={labelClass} htmlFor="cf-message">{t.message}</label>
         <textarea
           id="cf-message"
           name="message"
           rows={5}
           required
           maxLength={2000}
-          placeholder="Opisz, w czym możemy pomóc..."
+          placeholder={t.messagePlaceholder}
           className={cn(inputClass, 'resize-none')}
         />
       </div>
 
       <div className="space-y-3">
-        <label className="flex items-start gap-3 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            required
-            name="rodo"
-            className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold"
-          />
-          <span
-            className={cn(
-              'font-sans text-xs leading-relaxed text-pretty',
-              isDark ? 'text-white/50' : 'text-muted-foreground',
-            )}
-          >
-            Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w formularzu
-            w celu odpowiedzi na zapytanie. *
+        <label className="flex cursor-pointer select-none items-start gap-3">
+          <input type="checkbox" required name="rodo" className="mt-1 h-4 w-4 flex-shrink-0 accent-accent-gold" />
+          <span className={cn('font-sans text-xs leading-relaxed text-pretty', isDark ? 'text-white/50' : 'text-muted-foreground')}>
+            {t.consent}
           </span>
         </label>
 
-        <details
-          className={cn(
-            'group border-l-2 pl-4 text-xs',
-            isDark ? 'border-white/15' : 'border-border',
-          )}
-        >
+        <details className={cn('group border-l-2 pl-4 text-xs', isDark ? 'border-white/15' : 'border-border')}>
           <summary
             className={cn(
               'cursor-pointer select-none font-sans text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-accent-gold',
               isDark ? 'text-white/40' : 'text-muted-foreground/70',
             )}
           >
-            Informacja o przetwarzaniu danych
+            {t.dataInfo}
           </summary>
-          <div
-            className={cn(
-              'mt-3 space-y-2 font-sans leading-relaxed text-pretty',
-              isDark ? 'text-white/50' : 'text-muted-foreground',
-            )}
-          >
+          <div className={cn('mt-3 space-y-2 font-sans leading-relaxed text-pretty', isDark ? 'text-white/50' : 'text-muted-foreground')}>
+            <p>{t.dataP1}</p>
+            <p>{t.dataP2}</p>
             <p>
-              Administratorem Twoich danych jest butik Warszawski Czas, ul. Mokotowska 71,
-              00-530 Warszawa. Dane przetwarzamy w celu udzielenia odpowiedzi na zapytanie
-              złożone przez formularz, na podstawie Twojej zgody (art. 6 ust. 1 lit. a RODO)
-              oraz w celu podjęcia działań na Twoje żądanie (art. 6 ust. 1 lit. b RODO).
-            </p>
-            <p>
-              Dane przechowujemy przez okres niezbędny do prowadzenia korespondencji
-              i obsługi sprawy, z uwzględnieniem obowiązujących przepisów prawa.
-              Masz prawo dostępu do danych,
-              ich sprostowania, usunięcia, ograniczenia przetwarzania, sprzeciwu, przenoszenia
-              oraz cofnięcia zgody w dowolnym momencie, a także wniesienia skargi do PUODO.
-            </p>
-            <p>
-              Pełne informacje znajdziesz w{' '}
+              {t.dataP3Prefix}{' '}
               <a
-                href="/polityka-prywatnosci"
+                href={localizePath('/polityka-prywatnosci', locale)}
                 target="_blank"
                 rel="noopener"
                 className="text-accent-gold underline"
               >
-                polityce prywatności
+                {t.privacy}
               </a>
               .
             </p>
@@ -253,28 +282,18 @@ export function ContactForm({ variant = 'light' }: ContactFormProps) {
       <button
         type="submit"
         disabled={submitting}
-        className={cn(
-          'w-full',
-          isDark ? 'btn-premium-white' : 'btn-sharp',
-          submitting && 'cursor-wait opacity-70',
-        )}
+        className={cn('w-full', isDark ? 'btn-premium-white' : 'btn-sharp', submitting && 'cursor-wait opacity-70')}
         style={{ display: 'block' }}
       >
-        {submitting ? 'Wysyłanie...' : 'Wyślij wiadomość'}
+        {submitting ? t.submitting : t.submit}
       </button>
 
-      <p
-        className={cn(
-          'text-center text-[10px] uppercase tracking-[0.3em]',
-          isDark ? 'text-white/40' : 'text-muted-foreground/60',
-        )}
-      >
-        Odpowiadamy w ciągu 24 godzin.
+      <p className={cn('text-center text-[10px] uppercase tracking-[0.3em]', isDark ? 'text-white/40' : 'text-muted-foreground/60')}>
+        {t.responseTime}
         <br />
-        W sprawach pilnych:{' '}
+        {t.urgentShort}{' '}
         <a href="tel:+48604501000" className="whitespace-nowrap text-accent-gold">+48 604 50 1000</a>
       </p>
     </form>
   )
 }
-

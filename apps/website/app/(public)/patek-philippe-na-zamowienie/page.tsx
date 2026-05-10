@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { localizedAlternates } from '@/lib/i18n'
 import { SeoLanding, landingBreadcrumbJsonLd, serviceJsonLd } from '@/components/seo/seo-landing'
 
 const SLUG = 'patek-philippe-na-zamowienie'
@@ -10,7 +11,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: `/${SLUG}` },
+  alternates: localizedAlternates(`/${SLUG}`, 'pl'),
   openGraph: { type: 'website', url: URL, title: TITLE, description: DESCRIPTION, siteName: 'Warszawski Czas', locale: 'pl_PL' },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 }

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
+import { localizedAlternates } from '@/lib/i18n'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ContactLink } from '@/components/contact-link'
 import { Container, Section, Heading, Text, Button, FaqAccordion, type FaqItem } from '@/components/ui'
 import { RelatedGrid } from '@/components/products'
 import { ProductGallery } from '@/components/products/product-gallery'
+import { faqJsonLd } from '@/components/seo/seo-landing'
 import { mockProducts, productUrlSlug, findProductByUrlSlug } from '@/data/mock-products'
 import { CONTACT_PHONE, CONTACT_PHONE_RAW } from '@/lib/config'
 
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: localizedAlternates(`/produkty/${canonicalSlug}`, 'pl'),
     openGraph: {
       type: 'article',
       url,
@@ -196,6 +198,10 @@ export default async function ProductPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(certificationFaq)) }}
       />
 
       {/* Breadcrumb / nav back */}
